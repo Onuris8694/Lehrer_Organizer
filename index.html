@@ -342,7 +342,9 @@ async function loadLocal(){
 /* ================= Cloud-Speicher (Artifact) ================= */
 const chains={};
 let inflight=0; const wq=[];
-function pumpQ(){ while(inflight<4&&wq.length){ const j=wq.shift(); inflight++; j().finally(()=>{ inflight--; pumpQ(); }); } }
+function pumpQ(){ while(inflight<4&&wq.length){ const j=wq.shift(); inflight++; j().finally(()=>{ inflight--; pumpQ(); }); } saveBar(); }
+function saveBar(){ const n=wq.length+inflight; let el=document.getElementById('savebar'); if(n>6){ if(!el){ el=document.createElement('div'); el.id='savebar'; el.style.cssText='position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:9999;background:#1e2430;color:#fff;padding:9px 16px;border-radius:12px;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.25)'; document.body.appendChild(el); } el.textContent='Speichere … noch '+n+' Einträge – bitte die App geöffnet lassen'; } else if(el) el.remove(); }
+window.addEventListener('beforeunload',e=>{ if(wq.length+inflight>0){ e.preventDefault(); e.returnValue=''; } });
 function limited(fn){ return new Promise((res,rej)=>{ wq.push(()=>fn().catch(e=>{ if(e&&(e.code==='resource_exhausted'||e.code==='unavailable')) return new Promise(r=>setTimeout(r,1200+Math.random()*800)).then(fn); throw e; }).then(res,rej)); pumpQ(); }); }
 function dbWrite(path,data){
   if(!DB) return Promise.resolve();
@@ -1516,7 +1518,7 @@ async function init(){
   const db=ENV.inArtifact?await cap('db'):null;
   if(db){ await initCloud(db); ENV.assets=await cap('assets'); ENV.sample=await cap('sample'); ENV.downloads=await cap('downloads'); await loadLocalFilesOnly(); }
   else { await loadLocal(); if(ENV.inArtifact){ ENV.sample=await cap('sample'); ENV.downloads=await cap('downloads'); } }
-  loaded=true; migrateDocs(); if(faecher().length&&S.settings.lpDone!==(S.settings.lehrplan||'bisher')+'-'+LP_VERSION){ const n=createLehrplanOrdner(); saveSettings(); if(n) setTimeout(()=>toast(n+' Themenordner laut Rahmenplan angelegt'),600); } render();
+  loaded=true; migrateDocs(); if(faecher().length){ const was=S.settings.lpDone; const n=createLehrplanOrdner(); if(n||was!==S.settings.lpDone) saveSettings(); if(n) setTimeout(()=>toast(n+' Themenordner laut Rahmenplan ergänzt'),600); } render();
   if(!faecher().length) profilEditor(true);
   if('serviceWorker' in navigator&&!ENV.inArtifact&&location.protocol==='https:'){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 }
