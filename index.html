@@ -218,7 +218,7 @@ const TYPFARBE={'Präsentation':'#c2662d','Arbeitsblatt':'#1f6f68','Lösung':'#5
 const ROLLEN={praes:'Präsentation',kopie:'Kopiervorlage',loesung:'Lösung',lehrer:'Lehrermaterial'};
 const FARBEN=['#1f6f68','#c2662d','#2d6aa0','#7a4fb5','#a1478a','#5d7a3a','#b42318','#8a6d1f','#3b82a0','#475467'];
 const FACH_VORLAGEN=[
-  {name:'Mathematik',farbe:'#2d6aa0',on:true},{name:'Informatik',farbe:'#7a4fb5',on:true},{name:'Physik',farbe:'#c2662d',on:true},{name:'Astronomie',farbe:'#1f3b6f',on:true},
+  {name:'Mathematik',farbe:'#2d6aa0',on:true},{name:'Informatik',farbe:'#7a4fb5',on:true},{name:'Physik',farbe:'#c2662d',on:true,stufen:[6,7,8,9,10]},{name:'Astronomie',farbe:'#1f3b6f',on:true,stufen:[9]},
   {name:'Chemie',farbe:'#5d7a3a'},{name:'Biologie',farbe:'#3f8f4f'},{name:'Deutsch',farbe:'#b42318'},{name:'Englisch',farbe:'#8a6d1f'},{name:'Geografie',farbe:'#3b82a0'},{name:'AWT',farbe:'#6b5b4b'}];
 const BEREICH_VORLAGEN=[{name:'Klassenleitung',farbe:'#a1478a',on:true},{name:'Schule & Verwaltung',farbe:'#475467',on:true}];
 const STUFEN_ALLE=[5,6,7,8,9,10,11,12,13];
@@ -235,13 +235,43 @@ const KEYWORDS={
   'klassenleitung':'elternbrief elternabend wandertag klassenfahrt zeugnis entschuldigung einverstaendnis einverstaendniserklaerung sitzplan klassenrat elterngespraech elternsprechtag klassenbuch belehrung hausordnung klassensprecher geburtstag',
   'schule & verwaltung':'konferenz dienstberatung vertretungsplan stundenplan formular antrag dienstreise fortbildung schulordnung protokoll gesamtkonferenz fachkonferenz haushalt inventar'
 };
+
+/* Themen laut Rahmenplänen M-V (Regionale Schule/Gesamtschule; Orientierungsstufe 5/6) */
+const LP_OS={
+  mathematik:{5:['Natürliche Zahlen','Gebrochene Zahlen','Größen','Stochastik','Planimetrie'],6:['Natürliche Zahlen','Gebrochene Zahlen','Stochastik','Planimetrie','Stereometrie']},
+  physik:{6:['Materie – Körper und Teilchen','Bewegungen – Geradlinige gleichförmige Bewegung','Wechselwirkung – Licht','System – Stromkreise und Schaltungen','Energie – Temperatur und Temperaturveränderungen']},
+  informatik:{5:['Programmieren? Kinderleicht!','Bilder und Grafiken gestalten','Präsentationen mit Bildern gestalten'],6:['Entscheidungen treffen und Spiele gestalten','In der vernetzten Welt kommunizieren','Texte strukturieren und gestalten']},
+  astronomie:{9:['Vom Himmel zum Weltall','Orientierung am Sternenhimmel','Das Sonnensystem – unsere kosmische Nachbarschaft','Die Sonne – unser Stern','Sterne und Sternentwicklung','Sternsysteme und Kosmologie']}
+};
+const LP={
+  bisher:{
+    mathematik:{7:['Zuordnungen','Prozent- und Zinsrechnung','Ganze Zahlen und rationale Zahlen','Planimetrie','Körperdarstellung'],8:['Lineare und konstante Funktionen','Arbeiten mit Variablen','Satz des Pythagoras','Stereometrie','Wahrscheinlichkeitsrechnung'],9:['Statistik','Potenzen und Wurzeln, reelle Zahlen','Ähnlichkeit','Systeme linearer Gleichungen','Quadratische Funktionen und quadratische Gleichungen'],10:['Potenzieren und Radizieren','Potenz-, Wurzel- und Exponentialfunktionen','Trigonometrie','Sinusfunktionen','Stereometrie','Wahrscheinlichkeitsrechnung','Aufgabenpraktikum']},
+    physik:{7:['Materie – Dichte','Wechselwirkung – Kräfte','Kontext – Physik auf der Baustelle','Energie – Arbeit, Leistung, Wirkungsgrad'],8:['Materie – Elektrische Ladung und Strom','System – Stromkreise','Kontext – Warum fließt Strom durch Kabel?','Energie – Temperatur und Wärme','Wechselwirkung – Licht'],9:['Wechselwirkung – Magnetismus','Energie – Gleichstrommotor und Induktion','Bewegungen – Geradlinige gleichförmige Bewegung','Kontext – Mit dem E-Bike unterwegs']},
+    informatik:{7:['Spiele entwickeln und multimedial dokumentieren','Sicher kommunizieren','Daten erfassen und darstellen'],8:['Sensorgesteuerte Anwendungen entwickeln','Daten automatisiert auswerten','Suchmaschinen verstehen'],9:['Sensorwerte erfassen und auswerten','Publikationen und Präsentationen gestalten','Prinzipien der Datenübertragung verstehen'],10:['Digitalisierung in meiner Umgebung untersuchen']}
+  },
+  neu:{
+    mathematik:{7:['Ganze Zahlen und rationale Zahlen','Terme und Gleichungen','Antiproportionale Zuordnungen','Prozent- und Zinsrechnung','Statistische Erhebungen','Planimetrie'],8:['Terme, Gleichungen und Ungleichungen','Lineare Funktionen','Wahrscheinlichkeitsrechnung','Satz des Pythagoras','Stereometrie'],9:['Potenzen und Wurzeln','Statistische Erhebungen','Systeme linearer Gleichungen','Ähnlichkeit','Stereometrie','Aufgabenpraktikum'],10:['Quadratische Funktionen und quadratische Gleichungen','Potenz- und Exponentialfunktionen','Trigonometrie','Sinusfunktionen','Wahrscheinlichkeitsrechnung']},
+    physik:{7:['Dichte','Gleichförmige Bewegung','Kräfte','Licht','Energie und Leistung','Kraftumformende Einrichtungen'],8:['Elektrische Ladungen und elektrischer Strom','Stromkreise','Unsichtbares Licht','Temperatur und Wärme','Magnetismus'],9:['Elektromagnetische Induktion','Mobilfunkstrahlung','Gleichmäßig beschleunigte Bewegung'],10:['Kräfte und ihre Gesetze','Kreisbewegungen','Ionisierende Strahlung','Perspektiven für die Zukunft']},
+    informatik:{7:['Spiele entwickeln und multimedial dokumentieren','Sicher kommunizieren','Daten erfassen und darstellen'],8:['Sensorgesteuerte Anwendungen entwickeln','Daten automatisiert auswerten','Suchmaschinen verstehen'],9:['Sensorwerte erfassen und auswerten','Publikationen und Präsentationen gestalten','Prinzipien der Datenübertragung verstehen'],10:['Digitalisierung in meiner Umgebung untersuchen']}
+  }
+};
+const TUEB='Themenübergreifend';
+function lpThemen(fachName,stufe,ver){ const k=norm(fachName); return (LP[ver||'bisher'][k]||{})[stufe]||(LP_OS[k]||{})[stufe]||[]; }
+function createLehrplanOrdner(){
+  let n=0; const ver=S.settings.lehrplan||'bisher';
+  faecher().forEach(f=>{ (f.stufen||[]).forEach(st=>{
+    lpThemen(f.name,st,ver).forEach((t,i)=>{ if(!ordnerIn(f.id,st).some(o=>norm(o.name)===norm(t))){ ensureOrdner(f.id,st,t,{lp:true,sort:i}); n++; } });
+    if(!ordnerIn(f.id,st).some(o=>norm(o.name)===norm(TUEB))){ ensureOrdner(f.id,st,TUEB,{sort:900,tueb:true}); n++; }
+  }); });
+  S.settings.lpDone=ver; return n;
+}
 const COLLS=['klassen','kurse','docs','logs','aufgaben','ordner'];
 const DEFAULT_SETTINGS={
   schuljahr:'2026/27', sjStart:'2026-08-24', sjEnde:'2027-07-02', reserve:2,
   periods:[["07:45","08:30"],["08:35","09:20"],["09:40","10:25"],["10:30","11:15"],["11:35","12:20"],["12:25","13:10"],["13:30","14:15"],["14:20","15:05"]],
   ferien:[{name:'Schulfreie Tage',von:'2026-11-26',bis:'2026-11-27'},{name:'Weihnachtsferien',von:'2026-12-21',bis:'2027-01-02'},{name:'Winterferien',von:'2027-02-08',bis:'2027-02-19'},{name:'Frauentag',von:'2027-03-08',bis:'2027-03-08'},{name:'Osterferien',von:'2027-03-24',bis:'2027-04-02'},{name:'Himmelfahrt + Brückentag',von:'2027-05-06',bis:'2027-05-07'},{name:'Pfingstferien',von:'2027-05-14',bis:'2027-05-18'},{name:'Sommerferien',von:'2027-07-05',bis:'2027-08-14'}],
   kiKontext:'Ich bin Lehrkraft an einer Regionalschule/Gesamtschule in Mecklenburg-Vorpommern und unterrichte Mathematik, Informatik, Physik und Astronomie (Klassen 7–10). Viele Klassen sind leistungsschwach; Materialien sollen klar, einfach und rahmenplankonform (Rahmenpläne M-V) sein.',
-  profil:null, autoSort:true
+  profil:null, autoSort:true, lehrplan:'bisher', lpDone:''
 };
 let S={settings:clone(DEFAULT_SETTINGS),druck:{},klassen:{},kurse:{},docs:{},logs:{},aufgaben:{},ordner:{}};
 let DB=null, MODE='lokal', loaded=false;
@@ -277,9 +307,12 @@ async function loadLocal(){
 }
 /* ================= Cloud-Speicher (Artifact) ================= */
 const chains={};
+let inflight=0; const wq=[];
+function pumpQ(){ while(inflight<4&&wq.length){ const j=wq.shift(); inflight++; j().finally(()=>{ inflight--; pumpQ(); }); } }
+function limited(fn){ return new Promise((res,rej)=>{ wq.push(()=>fn().catch(e=>{ if(e&&(e.code==='resource_exhausted'||e.code==='unavailable')) return new Promise(r=>setTimeout(r,1200+Math.random()*800)).then(fn); throw e; }).then(res,rej)); pumpQ(); }); }
 function dbWrite(path,data){
   if(!DB) return Promise.resolve();
-  chains[path]=(chains[path]||Promise.resolve()).then(()=>data===null?DB.doc(path).delete():DB.doc(path).set(data)).catch(e=>{
+  chains[path]=(chains[path]||Promise.resolve()).then(()=>limited(()=>data===null?DB.doc(path).delete():DB.doc(path).set(data))).catch(e=>{
     toast(e&&e.code==='quota_exceeded'?'Speicher voll – bitte alte Einträge löschen.':'Speichern fehlgeschlagen ('+(e&&e.code||'Fehler')+')');
   });
   return chains[path];
@@ -335,12 +368,12 @@ const fachById=id=>faecher().find(f=>f.id===id);
 const fachName=id=>fachById(id)?.name||'';
 const fachFarbe=id=>fachById(id)?.farbe||'#7a7f88';
 function fachIdByName(n){ const x=norm(n); return (faecher().find(f=>norm(f.name)===x)||{}).id||''; }
-function ordnerIn(fachId,stufe){ return Object.values(S.ordner).filter(o=>o.fachId===fachId&&String(o.stufe||'')===String(stufe||'')).sort((a,b)=>a.name.localeCompare(b.name,'de')); }
+function ordnerIn(fachId,stufe){ const sk=o=>o.sort!=null?o.sort:500; return Object.values(S.ordner).filter(o=>o.fachId===fachId&&String(o.stufe||'')===String(stufe||'')).sort((a,b)=>sk(a)-sk(b)||a.name.localeCompare(b.name,'de')); }
 function docsIn(fachId,stufe,ordnerId,deep){ return Object.values(S.docs).filter(d=>d.fachId===fachId&&(stufe==null||String(d.stufe||'')===String(stufe||''))&&(deep||ordnerId===undefined||(d.ordnerId||'')===(ordnerId||''))); }
 function countIn(fachId,stufe){ return Object.values(S.docs).filter(d=>d.fachId===fachId&&(stufe==null||String(d.stufe||'')===String(stufe))).length; }
 function inbox(){ return Object.values(S.docs).filter(d=>!d.fachId).sort((a,b)=>(b.created||0)-(a.created||0)); }
 function folderLabel(fachId,stufe,ordnerId){ const f=fachById(fachId); if(!f) return 'Eingang'; let t=f.name; if(stufe) t+=' › Kl. '+stufe; const o=S.ordner[ordnerId]; if(o) t+=' › '+o.name; return t; }
-function ensureOrdner(fachId,stufe,name){ const n=String(name||'').trim(); if(!n) return ''; const ex=ordnerIn(fachId,stufe).find(o=>norm(o.name)===norm(n)); if(ex) return ex.id; const o={id:uid(),fachId,stufe:stufe?+stufe:'',name:n}; save('ordner',o,true); return o.id; }
+function ensureOrdner(fachId,stufe,name,extra){ const n=String(name||'').trim(); if(!n) return ''; const ex=ordnerIn(fachId,stufe).find(o=>norm(o.name)===norm(n)); if(ex) return ex.id; const o={id:uid(),fachId,stufe:stufe?+stufe:'',name:n,...(extra||{})}; save('ordner',o,true); return o.id; }
 function kurseFuer(fachId,stufe){ return Object.values(S.kurse).filter(k=>k.fachId===fachId&&String(k.stufe)===String(stufe)&&!k.archiv); }
 function makeProfil(name,schule,fs){ return {name,schule,faecher:fs}; }
 
@@ -356,6 +389,7 @@ function guessTyp(name){ const n=norm(name);
   if(/\b(ab|arbeitsblatt|uebung|uebungsblatt|aufgaben)\b/.test(n)) return 'Arbeitsblatt';
   return '';
 }
+const STOPW=new Set(['meiner','umgebung','verstehen','entwickeln','gestalten','erfassen','darstellen','zukunft','perspektiven','integrativ','kontext','ihre','gesetze','einrichtungen','unterwegs','kinderleicht','unsere','unser','kosmische','nachbarschaft','untersuchen','treffen','mit','und','materie','wechselwirkung','energie','system','bewegungen','energie']);
 function classify(d){
   const titleN=norm([d.titel,d.fileName].join(' '));
   const text=' '+norm([d.titel,d.fileName,d.thema,(d.tags||[]).join(' '),d.snippet||'',d.kind==='md'?String(d.md||'').slice(0,2000):''].join(' '))+' ';
@@ -367,7 +401,7 @@ function classify(d){
   if(!stufe){ m=text.match(/\b(5|6|7|8|9|10)\s?(r|g|ra|rb|rc|a|b|c)\b/); if(m) stufe=+m[1]; }
   // Themenordner-Treffer
   const ordHits=[];
-  Object.values(S.ordner).forEach(o=>{ const on=norm(o.name); if(on.length>=4&&text.includes(on)) ordHits.push({o,score:(titleN.includes(on)?4:3)+(stufe&&+o.stufe===stufe?2:0)}); });
+  Object.values(S.ordner).forEach(o=>{ if(o.tueb||!fachById(o.fachId)) return; const on=norm(o.name); let sc=0; if(on.length>=4&&text.includes(on)) sc=titleN.includes(on)?6:5; else { const ws=on.split(/[^a-z0-9]+/).filter(w=>w.length>=5&&!STOPW.has(w)); const hit=ws.filter(w=>text.includes(w)); if(hit.length) sc=2+hit.length+(hit.some(w=>titleN.includes(w))?1:0); } if(sc) ordHits.push({o,score:sc+(stufe&&+o.stufe===stufe?2:0)}); });
   ordHits.sort((a,b)=>b.score-a.score);
   // Fach-Punkte
   const scores=fs.map(f=>{ let s=0; const fn=norm(f.name); if(text.includes(' '+fn)) s+=3;
@@ -379,7 +413,7 @@ function classify(d){
   scores.filter(x=>x.s>0).slice(0,3).forEach((x,i)=>{ const st=x.f.stufen&&x.f.stufen.length?(stufe&&x.f.stufen.includes(stufe)?stufe:''):''; const ord=st?ordnerIn(x.f.id,st).find(o=>text.includes(norm(o.name))):null; push(x.f.id,st,ord?ord.id:'',i===0?Math.min(.95,.4+x.s*.08):.3,'auto'); });
   const top=scores[0], sec=scores[1]||{s:0};
   let sure=false;
-  if(ordHits.length&&ordHits[0].score>=5&&(!ordHits[1]||ordHits[1].score<ordHits[0].score)) sure=true;
+  if(ordHits.length&&ordHits[0].score>=5&&(!ordHits[1]||ordHits[1].score<ordHits[0].score)&&(!top||top.f.id===ordHits[0].o.fachId||top.s<4)) sure=true;
   else if(top&&top.s>=3&&top.s>=sec.s*2){ const f=top.f; const needsStufe=f.stufen&&f.stufen.length; if(!needsStufe||(stufe&&f.stufen.includes(stufe))) sure=true; }
   alts.sort((a,b)=>b.conf-a.conf);
   if(sure&&alts[0]) alts[0].conf=Math.max(alts[0].conf,.85);
@@ -678,7 +712,7 @@ function viewMaterial(){
       if(!MAT.o){
         const ords=ordnerIn(f.id,st); const loose=docsIn(f.id,st,'');
         sub=(ks.length?'Genutzt von '+ks.map(k=>k.titel).join(', '):'Noch kein Kurs nutzt diesen Ordner')+' · '+docsIn(f.id,st,undefined,true).length+' Dokumente';
-        content=(ords.length?`<div class="sec">Themenordner</div><div class="grid g4">${ords.map(o=>folderTile('folder',f.farbe,esc(o.name),`${docsIn(f.id,st,o.id).length} Dokumente`,`data-act="openFolder" data-f="${f.id}" data-s="${st}" data-o="${o.id}" href="#material"`)).join('')}</div>`:'')+
+        content=(ords.length?`<div class="sec">Themenordner</div><div class="grid g4">${ords.map(o=>folderTile('folder',o.tueb?'#8a9099':f.farbe,esc(o.name),`${docsIn(f.id,st,o.id).length} Dokumente`,`data-act="openFolder" data-f="${f.id}" data-s="${st}" data-o="${o.id}" href="#material"`)).join('')}</div>`:'')+
           `<div class="sec">Dokumente${ords.length?' ohne Themenordner':''}</div>`+(loose.length?`<div class="card" style="padding:4px 6px">${loose.map(d=>docRow(d)).join('')}</div>`:`<div class="empty">${ords.length?'Keine losen Dokumente.':'Dieser Ordner ist leer. Lade Material hoch oder lege Themenordner an (z. B. „Teilchenmodell“).'}</div>`);
       } else {
         const o=S.ordner[MAT.o]; const l=docsIn(f.id,st,MAT.o); sub=`Themenordner · ${l.length} Dokumente`;
@@ -973,13 +1007,14 @@ function openKursEditor(id,klId){
 function profilEditor(first){
   const pf=clone(P_()); const existing=pf.faecher||[];
   const vor=[...FACH_VORLAGEN.map(v=>({...v,kind:'fach'})),...BEREICH_VORLAGEN.map(v=>({...v,kind:'bereich'}))];
-  const rows=vor.map(v=>{ const ex=existing.find(f=>norm(f.name)===norm(v.name)); return {name:v.name,farbe:ex?.farbe||v.farbe,kind:v.kind,on:ex?true:(first&&!!v.on),stufen:ex?.stufen||(v.kind==='fach'?[5,6,7,8,9,10]:[]),id:ex?.id}; });
+  const rows=vor.map(v=>{ const ex=existing.find(f=>norm(f.name)===norm(v.name)); return {name:v.name,farbe:ex?.farbe||v.farbe,kind:v.kind,on:ex?true:(first&&!!v.on),stufen:ex?.stufen||(v.kind==='fach'?(v.stufen||[5,6,7,8,9,10]):[]),id:ex?.id}; });
   existing.forEach(f=>{ if(!rows.some(r=>norm(r.name)===norm(f.name))) rows.push({name:f.name,farbe:f.farbe,kind:(f.stufen||[]).length?'fach':'bereich',on:true,stufen:f.stufen||[],id:f.id}); });
   let globalSt=[5,6,7,8,9,10];
   const m=openModal(first?'Willkommen! Dein Lehrerprofil':'Profil & Ordnerstruktur',`<div class="stack">
     ${first?'<p>Aus deinen Fächern wird automatisch die Ordnerstruktur erstellt: <b>Fach › Klassenstufe › Themenordner</b>. Kurse wie „Physik 7Ra“ und „Physik 7Rb“ nutzen dann gemeinsam den Ordner „Physik › Klasse 7“.</p>':''}
     <div class="fields"><div><label class="f">Name</label><input type="text" id="pName" value="${esc(pf.name||'')}" placeholder="z. B. Herr Muster"></div><div><label class="f">Schule</label><input type="text" id="pSchule" value="${esc(pf.schule||'')}" placeholder="optional"></div></div>
     <div><label class="f">Klassenstufen deiner Schule (gilt für alle Fächer, einzeln anpassbar)</label><div class="stchips" id="pGlob">${STUFEN_ALLE.map(s=>`<button class="${globalSt.includes(s)?'on':''}" data-gs="${s}">${s}</button>`).join('')}</div></div>
+    <div><label class="f">Themenordner nach Rahmenplan M-V</label><select id="pLP" style="max-width:520px">${opt([["bisher","Bisher gültige Rahmenpläne (Mathe 2019, Physik 2021, Informatik 2019)"],["neu","Neue Rahmenpläne 2026 (Mathematik, Physik)"]],S.settings.lehrplan||"bisher")}</select><div class="tiny muted" style="margin-top:4px">In jedem Klassenordner werden die Themen laut Rahmenplan als Unterordner angelegt, dazu „Themenübergreifend“. Ein Wechsel ergänzt nur Ordner – nichts wird gelöscht.</div></div>
     <div><label class="f">Fächer</label><div id="pF"></div></div>
     <div class="row nw"><input type="text" id="pNew" placeholder="weiteres Fach, z. B. Wirtschaft"><button class="btn" id="pAdd">${ic('plus')} Fach</button></div>
     <div class="info" id="pSum"></div></div>`,
@@ -989,7 +1024,7 @@ function profilEditor(first){
       <label class="row nw" style="min-width:170px;cursor:pointer"><input type="checkbox" data-pi="${i}" ${r.on?'checked':''} style="width:22px;height:22px"><span class="sw" style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${r.farbe}"></span><b>${esc(r.name)}</b></label>
       ${kind==='fach'&&r.on?`<div class="stchips">${STUFEN_ALLE.map(s=>`<button class="${r.stufen.includes(s)?'on':''}" data-ri="${i}" data-rs="${s}" style="min-width:38px;min-height:34px">${s}</button>`).join('')}</div>`:''}</div>`).join('')).join('');
     const on=rows.filter(r=>r.on); const nf_=on.filter(r=>r.kind==='fach'); const n=nf_.reduce((a,r)=>a+r.stufen.length,0);
-    $('#pSum',m).innerHTML=`${ic('folder')} Es entstehen <b>${nf_.length} Fachordner</b> mit zusammen <b>${n} Klassenstufen-Ordnern</b>${on.length-nf_.length?` und ${on.length-nf_.length} weitere Bereiche`:''}. Themenordner legst du später selbst an – oder sie entstehen automatisch aus deinen Unterrichtseinheiten.`;
+    $('#pSum',m).innerHTML=`${ic('folder')} Es entstehen <b>${nf_.length} Fachordner</b> mit zusammen <b>${n} Klassenstufen-Ordnern</b>${on.length-nf_.length?` und ${on.length-nf_.length} weitere Bereiche`:''}. In jedem Klassenordner entstehen automatisch die Themen laut Rahmenplan (Mathematik, Physik, Informatik, Astronomie) und ein Ordner „Themenübergreifend“.`;
   };
   m.addEventListener('click',e=>{ const b=e.target.closest('button,input'); if(!b) return;
     if(b.dataset.gs){ const s=+b.dataset.gs; globalSt=globalSt.includes(s)?globalSt.filter(x=>x!==s):[...globalSt,s].sort((a,c)=>a-c); rows.forEach(r=>{ if(r.kind==='fach') r.stufen=[...globalSt]; }); $('#pGlob',m).innerHTML=STUFEN_ALLE.map(x=>`<button class="${globalSt.includes(x)?'on':''}" data-gs="${x}">${x}</button>`).join(''); draw(); }
@@ -1003,7 +1038,7 @@ function profilEditor(first){
     const removed=existing.filter(f=>!fs.some(x=>x.id===f.id)&&countIn(f.id));
     S.settings.profil=makeProfil($('#pName',m).value.trim(),$('#pSchule',m).value.trim(),fs);
     if(removed.length){ Object.values(S.docs).filter(d=>removed.some(f=>f.id===d.fachId)).forEach(d=>save('docs',applyFolder(d,'','',''),true)); toast('Dokumente entfernter Fächer liegen jetzt im Eingang.'); }
-    migrateDocs(); saveSettings(); closeModal(); if(first){ MAT={f:'',s:'',o:''}; go('material'); toast('Ordnerstruktur angelegt'); }
+    S.settings.lehrplan=$('#pLP',m).value; const nOrd=createLehrplanOrdner(); migrateDocs(); saveSettings(); closeModal(); if(first){ MAT={f:'',s:'',o:''}; go('material'); } toast(first?'Ordnerstruktur angelegt ('+nOrd+' Themenordner)':(nOrd?nOrd+' Themenordner ergänzt':'Gespeichert'));
   };
   draw();
 }
@@ -1341,7 +1376,7 @@ async function init(){
   const db=ENV.inArtifact?await cap('db'):null;
   if(db){ await initCloud(db); ENV.assets=await cap('assets'); ENV.sample=await cap('sample'); ENV.downloads=await cap('downloads'); await loadLocalFilesOnly(); }
   else { await loadLocal(); if(ENV.inArtifact){ ENV.sample=await cap('sample'); ENV.downloads=await cap('downloads'); } }
-  loaded=true; migrateDocs(); render();
+  loaded=true; migrateDocs(); if(faecher().length&&!S.settings.lpDone){ const n=createLehrplanOrdner(); saveSettings(); if(n) setTimeout(()=>toast(n+' Themenordner laut Rahmenplan angelegt'),600); } render();
   if(!faecher().length) profilEditor(true);
   if('serviceWorker' in navigator&&!ENV.inArtifact&&location.protocol==='https:'){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 }
