@@ -211,7 +211,7 @@ const TAGE=['','Mo','Di','Mi','Do','Fr','Sa','So'];
 const fmtD=s=>s?parseD(s).toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'}):'';
 const fmtLong=s=>s?parseD(s).toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
 const norm=s=>String(s||'').toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss').replace(/[_\-.]+/g,' ');
-const ICONS={clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',book:'<path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.2a6 6 0 0 1 3.5 5.8"/>',folder:'<path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z"/>',printer:'<path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/>',check:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12l3 3 5-6"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',inbox:'<path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 2h6l1-2h5"/>',upload:'<path d="M12 15V4M7.5 8.5L12 4l4.5 4.5"/><path d="M4 15v5h16v-5"/>',play:'<path d="M7 4.5l12 7.5-12 7.5z"/>',plus:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M9 6l6 6-6 6"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',doc:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/>',move:'<path d="M4 12h14M14 7l5 5-5 5"/>',link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',text:'<path d="M5 6h14M5 12h14M5 18h9"/>',wifi:'<path d="M2 8.8a15 15 0 0 1 20 0M5.5 12.4a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/><circle cx="12" cy="19.5" r="1"/>'};
+const ICONS={camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',book:'<path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.2a6 6 0 0 1 3.5 5.8"/>',folder:'<path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z"/>',printer:'<path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/>',check:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12l3 3 5-6"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',inbox:'<path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 2h6l1-2h5"/>',upload:'<path d="M12 15V4M7.5 8.5L12 4l4.5 4.5"/><path d="M4 15v5h16v-5"/>',play:'<path d="M7 4.5l12 7.5-12 7.5z"/>',plus:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M9 6l6 6-6 6"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',doc:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/>',move:'<path d="M4 12h14M14 7l5 5-5 5"/>',link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',text:'<path d="M5 6h14M5 12h14M5 18h9"/>',wifi:'<path d="M2 8.8a15 15 0 0 1 20 0M5.5 12.4a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/><circle cx="12" cy="19.5" r="1"/>'};
 const ic=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
 const TYPEN=['Präsentation','Arbeitsblatt','Lösung','Leistungskontrolle','Lernblatt','Tafelbild','Experiment/Protokoll','Medien','Link','Elternbrief','Formular/Protokoll','KI-Entwurf','Sonstiges'];
 const TYPFARBE={'Präsentation':'#c2662d','Arbeitsblatt':'#1f6f68','Lösung':'#5d7a3a','Leistungskontrolle':'#b42318','Lernblatt':'#2d6aa0','Tafelbild':'#475467','Experiment/Protokoll':'#7a4fb5','Medien':'#a1478a','Link':'#3b82a0','Elternbrief':'#8a6d1f','Formular/Protokoll':'#6b5b4b','KI-Entwurf':'#6d4fc2','Sonstiges':'#7a7f88'};
@@ -219,7 +219,7 @@ const ROLLEN={praes:'Präsentation',kopie:'Kopiervorlage',loesung:'Lösung',lehr
 const FARBEN=['#1f6f68','#c2662d','#2d6aa0','#7a4fb5','#a1478a','#5d7a3a','#b42318','#8a6d1f','#3b82a0','#475467'];
 const FACH_VORLAGEN=[
   {name:'Mathematik',farbe:'#2d6aa0',on:true},{name:'Informatik',farbe:'#7a4fb5',on:true},{name:'Physik',farbe:'#c2662d',on:true,stufen:[6,7,8,9,10]},{name:'Astronomie',farbe:'#1f3b6f',on:true,stufen:[9]},
-  {name:'Chemie',farbe:'#5d7a3a'},{name:'Biologie',farbe:'#3f8f4f'},{name:'Deutsch',farbe:'#b42318'},{name:'Englisch',farbe:'#8a6d1f'},{name:'Geografie',farbe:'#3b82a0'},{name:'AWT',farbe:'#6b5b4b'}];
+  {name:'Chemie',farbe:'#5d7a3a',stufen:[7,8,9,10]},{name:'Biologie',farbe:'#3f8f4f'},{name:'Deutsch',farbe:'#b42318'},{name:'Englisch',farbe:'#8a6d1f'},{name:'Geografie',farbe:'#3b82a0'},{name:'AWT',farbe:'#6b5b4b',stufen:[7,8,9,10]},{name:'Geschichte',farbe:'#7a4f2b'},{name:'Sozialkunde',farbe:'#2d5aa0',stufen:[7,8,9,10]},{name:'Musik',farbe:'#a1478a'},{name:'Kunst',farbe:'#c2662d'},{name:'Religion evangelisch',farbe:'#5b3fb0'},{name:'Religion katholisch',farbe:'#7a3fb0'},{name:'Philosophie',farbe:'#475467'}];
 const BEREICH_VORLAGEN=[{name:'Klassenleitung',farbe:'#a1478a',on:true},{name:'Schule & Verwaltung',farbe:'#475467',on:true}];
 const STUFEN_ALLE=[5,6,7,8,9,10,11,12,13];
 const KEYWORDS={
@@ -231,39 +231,73 @@ const KEYWORDS={
   'biologie':'biologie zelle zellen pflanze pflanzen tier tiere oekosystem fotosynthese genetik evolution organ koerper mensch ernaehrung blut herz atmung',
   'deutsch':'deutsch grammatik rechtschreibung aufsatz gedicht lyrik roman erzaehlung epik drama wortarten satzglieder diktat',
   'englisch':'english englisch vocabulary grammar simple past present perfect',
-  'geografie':'geografie geographie karte klima kontinent kontinente atlas',
+  'geografie':'geografie geographie karte klima kontinent kontinente atlas tourismus vegetation weltmeere stadt geoinformationssysteme tiefland mittelgebirge alpen europa',
+  'geschichte':'geschichte mittelalter neuzeit antike absolutismus reformation weltkrieg nationalsozialismus ddr diktatur demokratie kaiserreich revolution quelle quellen',
+  'sozialkunde':'sozialkunde politik politische bildung demokratie grundrechte verfassung parteien wahlen bundestag gemeinde sozialstaat europaeische union',
+  'musik':'musik lied lieder instrumente rhythmus noten komponist sinfonie musical pop rock oper',
+  'kunst':'kunst malerei zeichnen grafik farbe architektur design skulptur gestaltung bild collage',
+  'religion evangelisch':'religion bibel gott jesus kirche glaube christentum judentum islam hinduismus buddhismus reformation schoepfung',
+  'religion katholisch':'religion bibel gott jesus kirche glaube christentum judentum islam hinduismus buddhismus sakramente schoepfung',
+  'philosophie':'philosophie philosophieren ethik moral glueck freiheit gerechtigkeit wahrheit sinn identitaet verantwortung',
+  'awt':'awt arbeit wirtschaft technik beruf berufsorientierung praktikum haushalt wohnung wohnraum unternehmen markt einkommen verbrauch',
   'klassenleitung':'elternbrief elternabend wandertag klassenfahrt zeugnis entschuldigung einverstaendnis einverstaendniserklaerung sitzplan klassenrat elterngespraech elternsprechtag klassenbuch belehrung hausordnung klassensprecher geburtstag',
   'schule & verwaltung':'konferenz dienstberatung vertretungsplan stundenplan formular antrag dienstreise fortbildung schulordnung protokoll gesamtkonferenz fachkonferenz haushalt inventar'
 };
 
-/* Themen laut Rahmenplänen M-V (Regionale Schule/Gesamtschule; Orientierungsstufe 5/6) */
-const LP_OS={
-  mathematik:{5:['Natürliche Zahlen','Gebrochene Zahlen','Größen','Stochastik','Planimetrie'],6:['Natürliche Zahlen','Gebrochene Zahlen','Stochastik','Planimetrie','Stereometrie']},
-  physik:{6:['Materie – Körper und Teilchen','Bewegungen – Geradlinige gleichförmige Bewegung','Wechselwirkung – Licht','System – Stromkreise und Schaltungen','Energie – Temperatur und Temperaturveränderungen']},
-  informatik:{5:['Programmieren? Kinderleicht!','Bilder und Grafiken gestalten','Präsentationen mit Bildern gestalten'],6:['Entscheidungen treffen und Spiele gestalten','In der vernetzten Welt kommunizieren','Texte strukturieren und gestalten']},
-  astronomie:{9:['Vom Himmel zum Weltall','Orientierung am Sternenhimmel','Das Sonnensystem – unsere kosmische Nachbarschaft','Die Sonne – unser Stern','Sterne und Sternentwicklung','Sternsysteme und Kosmologie']}
+/* Themen laut Rahmenplänen M-V (Regionale Schule/Gesamtschule; Orientierungsstufe 5/6), Stand 09.11.2026
+   LP_ALLE: gilt in beiden Einstellungen; LP.bisher: auslaufende Pläne; LP.neu: neue Pläne (RegS 7–10 gültig ab 01.08.2027) */
+const LP_ALLE={
+  mathematik:{5:['Natürliche Zahlen','Terme und Gleichungen','Planimetrie','Gebrochene Zahlen','Statistische Erhebungen'],6:['Gebrochene Zahlen','Planimetrie','Proportionale Zuordnungen','Stereometrie']},
+  physik:{6:['Materie – Körper und Teilchen','Bewegungen – Geradlinige, gleichförmige Bewegung','Wechselwirkung – Licht','System – Stromkreise und Schaltungen','Energie – Temperatur und Temperaturveränderungen']},
+  informatik:{5:['Programmieren? Kinderleicht!','Bilder und Grafiken gestalten','Präsentationen mit Bildern gestalten'],6:['Entscheidungen treffen und Spiele gestalten','In der vernetzten Welt kommunizieren','Texte strukturieren und gestalten'],7:['Spiele entwickeln und multimedial dokumentieren','Sicher kommunizieren','Daten erfassen und darstellen'],8:['Sensorgesteuerte Anwendungen entwickeln','Daten automatisiert auswerten','Suchmaschinen verstehen'],9:['Sensorwerte erfassen und auswerten','Publikationen und Präsentationen gestalten','Prinzipien der Datenübertragung verstehen'],10:['Digitalisierung in meiner Umgebung untersuchen']},
+  astronomie:{9:['Vom Himmel zum Weltall','Orientierung am Sternenhimmel','Das Sonnensystem – unsere kosmische Nachbarschaft','Die Sonne – Unser Stern','Sterne und Sternentwicklung','Sternsysteme und Kosmologie']},
+  biologie:{5:['Lebendes und Nichtlebendes','Wirbeltierklasse Fische','Wirbeltierklasse Lurche','Wirbeltierklasse Kriechtiere','Wirbeltierklasse Vögel','Wirbeltierklasse Säugetiere und der Mensch'],6:['Samenpflanzen','Lebensgemeinschaft Wald','Zellen und Mikroskopie','Wirbellose']},
+  deutsch:{5:['A – Wir müssen reden!','B – Es war einmal …','C – Seite an Seite','D – Schreib mal wieder …','E – Richtig geschrieben ist halb gewonnen'],6:['A – Sprich mit mir','B – Und die Moral von der Geschicht’ …','C – Ich les’ mir die Welt, wie sie mir gefällt','D – Am Anfang war das Wort','E – Wenn ich könnte, würde ich …'],7:['A – Ich verstehe dich, verstehst du mich?','B – Die Geister, die ich rief …','C – Auf die Plätze, fertig, LESEN!','D – Arbeitstechniken und Methoden im Deutschunterricht'],8:['A – Wie bitte? Wat? Hä?','B – Kurz und gut!','C – Ran an die Bücher!','D – Arbeitstechniken und Methoden im Deutschunterricht'],9:['A – Reden ist Silber, Zuhören ist Gold','B – Zwischen den Zeilen','C – Ich lese, also bin ich!','D – Arbeitstechniken und Methoden im Deutschunterricht'],10:['A – Rede!','B – Eines Tages werden wir alt sein …','C – Des Pudels Kern','D – Können wir auch mal was anderes lesen?','E – Arbeitstechniken und Methoden']},
+  geografie:{5:['Wir orientieren uns!','Wir im Norddeutschen Tiefland'],6:['Das Mittelgebirgsland und die Alpen in Deutschland','Europa'],7:['Klima und Vegetation','Nachhaltigkeit und Tourismus'],8:['Wasser und Weltmeere','Endogene und exogene Prozesse'],9:['Wetter – Klima – Klimawandel','Lebens- und Wirtschaftsraum M-V'],10:['Globale Herausforderungen des 21. Jahrhunderts','Stadt','Digitale Geoinformationssysteme']},
+  geschichte:{5:['Zeit und Geschichte', 'Mensch und Natur', 'Wirtschaft und Gesellschaft', 'Medien und Gesellschaft'],6:['Herrschaft und Teilhabe', 'Mensch und Gesellschaft', 'Antikes Europa'],7:['Vom Reisekönigtum zum Absolutismus', 'Prägung und Wahrnehmung von Gesellschaften durch religiöse Vorstellungen', 'Lebenswelten auf dem Land und in der Stadt', 'Formen der öffentlichen Kommunikation in der Frühen Neuzeit', 'Religiöse und konfessionelle Konflikte'],8:['Technischer Fortschritt und dessen Auswirkungen auf Gesellschaft und Umwelt', 'Freiheitsbewegungen und deren Auswirkungen auf die Organisation von Herrschaft', 'Radikalisierung von Weltbildern im Deutschen Reich', 'Herausbildung einer bürgerlich-demokratischen Öffentlichkeit', 'Kooperation und Konkurrenz der europäischen Großmächte'],9:['Legitimation und Sicherung von Herrschaft in Demokratie und Diktatur', 'Nationale Wirtschaftspolitik und internationale Wirtschaftsverflechtungen', 'Nationalsozialistische Ideologie – Ausgrenzung und Vernichtung, Widerstand und Erinnerung', 'Medien in Demokratie und Diktatur', 'Globale Friedensordnungen im internationalen Spannungsfeld'],10:['Ringen um Demokratie in Europa und der Welt', 'Pluralisierung und Konkurrenz von Normen und Wertesystemen', 'Konkurrierende Systeme und Auswirkungen auf Wirtschaft und Gesellschaft', 'Konfrontation und Kooperation internationaler Bündnisse', 'Herausbildung einer globalen Öffentlichkeit']},
+  sozialkunde:{7:['A 1 – Schule und Demokratie', 'A 2 – Demokratie in der Gemeinde', 'B 1 – Verfassung und Grundrechte', 'B 2 – Verantwortlich handeln im analogen und digitalen Raum', 'C 1 – Verantwortlich handeln im Anthropozän'],8:['A 3 – Parteien und Interessengruppen als Ausdruck von Pluralismus', 'A 4 – Repräsentative Demokratie auf Landesebene', 'B 3 – Sozialisation und soziale Ungleichheit', 'C 2 – Grenzüberschreitende Zusammenarbeit in der Europäischen Union'],9:['A 5 – Föderalismus als Staatsstrukturprinzip', 'A 6 – Das Parlamentarische Regierungssystem der Bundesrepublik', 'B 4 – Grundrechte und Rechtsstaat', 'C 3 – Internationale Friedenssicherung'],10:['A 7 – Herausforderungen für die offene Gesellschaft und die repräsentative Demokratie', 'B 5 – Zukunft des Sozialstaats', 'C 4 – Zukunft der internationalen Beziehungen']},
+  musik:{5:['Vom Klang der Instrumente', 'Was die Stimme alles kann', 'Die Form in der Musik', 'Jahreszeiten in der Musik', 'Talent und Fleiß? Der Werdegang berühmter Komponistinnen/Komponisten und Musikerinnen/Musiker', 'Der Rhythmus macht die Musik', 'Bausteine der Musik'],6:['Vom Klang der Instrumente', 'Was die Stimme alles kann', 'Die Form in der Musik', 'Jahreszeiten in der Musik', 'Talent und Fleiß? Der Werdegang berühmter Komponistinnen/Komponisten und Musikerinnen/Musiker', 'Der Rhythmus macht die Musik', 'Bausteine der Musik'],7:['Lieder aus aller Welt', 'Programmmusik – international', 'Bausteine der Musik'],8:['Rock- und Pop-Klassiker, Musical-Hits', 'Musik und Bühne', 'Bausteine der Musik'],9:['Friedens- und Freiheitslieder', 'Die Sinfonie der Klassik', 'Sinfonische Filmmusik', 'Bausteine der Musik'],10:['Musik als geistiges Eigentum', 'Original und Bearbeitung', 'Bausteine der Musik']},
+  kunst:{5:['Bildende Kunst', 'Architektur', 'Medien', 'Design'],6:['Bildende Kunst', 'Architektur', 'Medien', 'Design'],7:['Bildende Kunst', 'Architektur', 'Medien'],8:['Bildende Kunst', 'Design'],9:['Bildende Kunst', 'Medien'],10:['Bildende Kunst', 'Architektur']},
+  'religion evangelisch':{5:['Vertrauensvoll ins Neue gehen', 'Freiheit erfahren, leben, respektieren', 'Zeit gestalten, Zeiten feiern, von Zeiten erzählen', 'Schriften in den Religionen – von Erfahrungen mit dem Göttlichen erzählen'],6:['Gemeinschaften bilden sich – sich öffnen und abgrenzen', 'Sich akzeptieren, sich streiten und sich versöhnen', 'Die Welt als Schöpfung wahrnehmen und verantwortlich in ihr leben', 'Bedeutsame Räume in den Religionen entdecken, gestalten und deuten'],7:['Identitätsfragen zwischen Aufbruch, Zuspruch und Erwartung', 'Wenn sich das Gewissen meldet …', 'Woran du dein Herz hängst: Vertrauen, Glauben und reformatorische Grundeinsichten', 'Judentum – Orte, Praxen, Objekte – gegenwärtige Perspektiven'],8:['Selbstbilder – Vorbilder – Rollenzuweisungen', 'Ich sehe das anders … – Propheten und Protestbewegungen', 'Sehnsüchte – Heilsversprechen – Sinnangebote', 'Islam: Orte, Praxen, Objekte, gegenwärtige Perspektiven'],9:['Arbeit – Leistung – Lebensentscheidungen', 'Verantwortung für die Welt als Schöpfung – eine globale Zukunftsfrage', 'Sprache finden für Tod, Trauer und Hoffnung im Horizont von Religionen', 'Hinduismus – Orte, Praxen, Objekte – gegenwärtige Perspektiven'],10:['Gelingendes Leben – Glück, Liebe und Sinn', 'Religion(en), Kirche und Staat – ein spannungsreiches Verhältnis', 'Hoffnung, Sehnsucht, Zukunftsvisionen – Erfahrungen und Vorstellungen von (Gottes) Macht und Ohnmacht', 'Buddhismus – Orte, Praxen, Objekte – gegenwärtige Perspektiven']},
+  'religion katholisch':{5:['Eine Tür öffnen – Freundschaften und Konflikte im Kurs', 'Ein Haus für viele – Gemeinschaft in Religionen leben', 'Besondere Zeiten – Feste des Lebens feiern', 'Bücher der Religionen – Redeversuche vom Göttlichen'],6:['Anker setzen – im Vertrauen lernen', 'Mit offenen Augen durch die Welt – dem Göttlichen begegnen', 'Sich auf den Weg machen – hoffen, vertrauen, wagen', 'Gehör schenken – zentralen Persönlichkeiten der Religionen begegnen'],7:['Wer ist Jesus? – Mensch und Gott', 'Gibt es Gott? – Gottesbilder in den verschiedenen Religionen', 'Was ist, wenn ich Fehler mache? – Vergebung und Versöhnung erfahren', 'Woran glauben Juden? – Das Judentum kennenlernen'],8:['Womit fing alles an? – die Welt als Gottes Schöpfung', 'Wofür mache ich mich stark? – Propheten unterwegs im Auftrag Gottes', 'Wer will ich sein? – Orientierung für mich und andere', 'Woran glauben Muslime? – Den Islam kennenlernen'],9:['Was sagt mir Jesus? – Die Reich Gottes-Botschaft Jesu', 'Was ist, wenn vieles nicht mehr stimmt? – Aus einer Krise neue Einsichten gewinnen: Reformen in der Kirche', 'Ich + Du = WIR? – Partnerschaftliche Lebensformen', 'Woran glauben Hindus und Buddhisten? – Fernöstliche Religionen kennenlernen'],10:['Welchen Sinn hat mein Leben? – Sinnsuche in den Religionen', 'Wozu religiöse Gemeinschaften? – Auftrag und aktuelle Herausforderungen', 'Was kommt nach dem Tod? – Hoffnung über das Ende hinaus', 'Warum gibt es Leid? – Antwortversuche der Religionen']},
+  awt:{7:['Arbeitswelt und Berufsorientierung','Warum arbeiten und wirtschaften wir?','Güter werden entwickelt und realisiert','Güter werden vermarktet'],8:['Arbeitswelt und Berufsorientierung','Ich brauche eine Wohnung','Wohnräume bauen','Wohnraum kaufen und erhalten','Wohnqualität nachhaltig sichern','Wahlthema: Reparatur und Renovierung / Modernisierung'],9:['Arbeitswelt und Berufsorientierung','Wirtschaften im Haushalt','Geld und Einkommen','Bewusster Verbrauch','Durch Haushaltstechnik Ressourcen effizient nutzen','Wahlthema: Kommunikationstechnologien / Mobilität'],10:['Arbeitswelt und Berufsorientierung','Unternehmen als Wirtschaftseinheit','Unternehmen und Märkte','Wirtschaftsentwicklung und wirtschaftliche Herausforderungen aus der Perspektive von Unternehmen','Technische Lösungen zur Steigerung der Effizienz']}
 };
 const LP={
   bisher:{
-    mathematik:{7:['Zuordnungen','Prozent- und Zinsrechnung','Ganze Zahlen und rationale Zahlen','Planimetrie','Körperdarstellung'],8:['Lineare und konstante Funktionen','Arbeiten mit Variablen','Satz des Pythagoras','Stereometrie','Wahrscheinlichkeitsrechnung'],9:['Statistik','Potenzen und Wurzeln, reelle Zahlen','Ähnlichkeit','Systeme linearer Gleichungen','Quadratische Funktionen und quadratische Gleichungen'],10:['Potenzieren und Radizieren','Potenz-, Wurzel- und Exponentialfunktionen','Trigonometrie','Sinusfunktionen','Stereometrie','Wahrscheinlichkeitsrechnung','Aufgabenpraktikum']},
-    physik:{7:['Materie – Dichte','Wechselwirkung – Kräfte','Kontext – Physik auf der Baustelle','Energie – Arbeit, Leistung, Wirkungsgrad'],8:['Materie – Elektrische Ladung und Strom','System – Stromkreise','Kontext – Warum fließt Strom durch Kabel?','Energie – Temperatur und Wärme','Wechselwirkung – Licht'],9:['Wechselwirkung – Magnetismus','Energie – Gleichstrommotor und Induktion','Bewegungen – Geradlinige gleichförmige Bewegung','Kontext – Mit dem E-Bike unterwegs']},
-    informatik:{7:['Spiele entwickeln und multimedial dokumentieren','Sicher kommunizieren','Daten erfassen und darstellen'],8:['Sensorgesteuerte Anwendungen entwickeln','Daten automatisiert auswerten','Suchmaschinen verstehen'],9:['Sensorwerte erfassen und auswerten','Publikationen und Präsentationen gestalten','Prinzipien der Datenübertragung verstehen'],10:['Digitalisierung in meiner Umgebung untersuchen']}
+    mathematik:{7:['Zuordnungen','Prozent- und Zinsrechnung','Ganze Zahlen, rationale Zahlen','Planimetrie','Körperdarstellung'],8:['Lineare Funktionen, konstante Funktionen','Arbeiten mit Variablen','Satz des Pythagoras','Stereometrie','Wahrscheinlichkeitsrechnung'],9:['Statistik','Potenzen und Wurzeln, reelle Zahlen','Ähnlichkeit','Systeme linearer Gleichungen','Quadratische Funktionen und quadratische Gleichungen'],10:['Potenzieren und Radizieren','Potenz-, Wurzel- und Exponentialfunktionen','Trigonometrie','Sinusfunktionen','Stereometrie','Wahrscheinlichkeitsrechnung','Aufgabenpraktikum']},
+    physik:{7:['Materie – Dichte','Wechselwirkung – Kräfte','Kontext – Physik auf der Baustelle','Energie – Arbeit, Leistung, Wirkungsgrad'],8:['Materie – Elektrische Ladung und Strom','System – Stromkreise','Kontext – Warum fließt Strom durch Kabel?','Energie – Temperatur und Wärme','Wechselwirkung – Licht'],9:['Wechselwirkung – Magnetismus','Energie – Gleichstrommotor und Induktion','Bewegungen – Geradlinige, gleichförmige Bewegung','Kontext – Mit dem E-Bike unterwegs'],10:['Wechselwirkung – Gleichmäßig beschleunigte Bewegung','Energie – Energiegewinnung','Bewegungen – Mechanische Schwingungen und Wellen','Materie – Radioaktivität']},
+    biologie:{7:['Mikroorganismen und ihre Bedeutung: Pilze, Bakterien und Viren','Ernährung des Menschen','Verdauung','Sexualbildung'],8:['Stoff- und Energiewechsel des Menschen','Atmung und Herz-Kreislaufsystem','Viren, Immunreaktion und Immunisierung','Reizbarkeit und Sinne','Nervensystem'],9:['Grundlagen der Ökologie','Abiotische Umweltfaktoren','Biotische Umweltfaktoren','Unser Planet im Wandel','Zelluläre Grundlagen der Genetik'],10:['Molekulare Genetik','Klassische Genetik','Entstehung des Lebens auf der Erde','Evolutionstheorien','Evolutionsfaktoren und Ergebnisse der Evolution','Belege der Evolution und Anthropogenese']},
+    chemie:{8:['Naturwissenschaft Chemie – die Vielfalt der Stoffe','Metalle und das Periodensystem der Elemente','Kontext – Warum fließt Strom durch Kabel?','Luft und Sauerstoff','Wasserstoff und Wasser'],9:['Kochsalz – eine bedeutende chemische Verbindung','Saure und alkalische Lösungen','Salze'],10:['Organische Chemie']},
+    'religion evangelisch':{10:['Hinduismus','Buddhismus','Gewalt','Kirchen im Dritten Reich','Okkultismus, Spiritismus, Satanismus']},
+    'religion katholisch':{10:['Sehnsucht nach Glück und Heil – Sinnfindung unter der befreienden Zusage Gottes','Einander lieben, miteinander leben – „Als Mann und Frau schuf er sie“','Arbeit und Beruf – Soziale Gerechtigkeit als christlicher Auftrag','Gemeinsame Erfahrungen nehmen Gestalt an – das Markus-Evangelium','„Ich will meine Freiheit!“ – Befreiungs- und Erlösungswege mit Jesus Christus']},
+    philosophie:{5:['Basismodul', 'Ich – Du – Wir'],6:['I – Was kann ich wissen?', 'II – Was soll ich tun?', 'III – Was darf ich hoffen?', 'IV – Was ist der Mensch?'],7:['Basismodul', 'Medien – Wahrheit – Mensch', 'Freundschaft – Liebe – Verantwortung'],8:['I – Was kann ich wissen?', 'II – Was soll ich tun?', 'III – Was darf ich hoffen?', 'IV – Was ist der Mensch?'],9:['I – Was kann ich wissen?', 'II – Was soll ich tun?', 'III – Was darf ich hoffen?', 'IV – Was ist der Mensch?'],10:['I – Was kann ich wissen?', 'II – Was soll ich tun?', 'III – Was darf ich hoffen?', 'IV – Was ist der Mensch?']},
+    englisch:{5:['All about me','My school life','My freetime','Let’s celebrate'],6:['Holidays','City Life','Dreams','Teen life'],7:['Finding your place', 'The British Isles'],8:['The United States of America', 'Teen Life in the USA', 'My well-being'],9:['Australia','The Road Ahead','English around the World'],10:['Living in a globalized world','Being a young adult','Life in the 21st century']}
   },
   neu:{
     mathematik:{7:['Ganze Zahlen und rationale Zahlen','Terme und Gleichungen','Antiproportionale Zuordnungen','Prozent- und Zinsrechnung','Statistische Erhebungen','Planimetrie'],8:['Terme, Gleichungen und Ungleichungen','Lineare Funktionen','Wahrscheinlichkeitsrechnung','Satz des Pythagoras','Stereometrie'],9:['Potenzen und Wurzeln','Statistische Erhebungen','Systeme linearer Gleichungen','Ähnlichkeit','Stereometrie','Aufgabenpraktikum'],10:['Quadratische Funktionen und quadratische Gleichungen','Potenz- und Exponentialfunktionen','Trigonometrie','Sinusfunktionen','Wahrscheinlichkeitsrechnung']},
     physik:{7:['Dichte','Gleichförmige Bewegung','Kräfte','Licht','Energie und Leistung','Kraftumformende Einrichtungen'],8:['Elektrische Ladungen und elektrischer Strom','Stromkreise','Unsichtbares Licht','Temperatur und Wärme','Magnetismus'],9:['Elektromagnetische Induktion','Mobilfunkstrahlung','Gleichmäßig beschleunigte Bewegung'],10:['Kräfte und ihre Gesetze','Kreisbewegungen','Ionisierende Strahlung','Perspektiven für die Zukunft']},
-    informatik:{7:['Spiele entwickeln und multimedial dokumentieren','Sicher kommunizieren','Daten erfassen und darstellen'],8:['Sensorgesteuerte Anwendungen entwickeln','Daten automatisiert auswerten','Suchmaschinen verstehen'],9:['Sensorwerte erfassen und auswerten','Publikationen und Präsentationen gestalten','Prinzipien der Datenübertragung verstehen'],10:['Digitalisierung in meiner Umgebung untersuchen']}
+    biologie:{7:['Lebewesen bestehen aus Zellen','Ernährung und Verdauung','Herz-Kreislauf-System','Maßnahmen der Ersten Hilfe'],8:['Sexualbildung','Mechanismen der Immunabwehr','Sinnesorgane'],9:['Wechselbeziehungen zwischen Lebewesen und ihrer Umwelt','Dynamik von Ökosystemen'],10:['Genetische Variabilität','Vererbung','Vielfalt und Veränderungen von Lebewesen','Stammesgeschichte und Verwandtschaft']},
+    chemie:{7:['Sicherheit im Chemieunterricht','Stoffe und ihre Eigenschaften','Mischen und Trennen','Metalle','Chemische Reaktion'],8:['Luft und Sauerstoff','Atombau und PSE','Metall- und Nichtmetallreaktionen mit Sauerstoff','Wasserstoff'],9:['Wasser','Salze und Ionenverbindungen','Säuren','Basen','Neutralisation'],10:['Einführung in die organische Chemie','Alkohole','Carbonsäuren','Wahlthema: Kunststoffe / Kohlenhydrate / Fette und Seifen']},
+    philosophie:{5: ['Basismodul', 'Ich – Du – Wir'], 6: ['Basismodul', 'Glauben – Meinen – Wissen', 'Leben in Vielfalt'], 7: ['Basismodul', 'Medien – Wahrheit – Mensch', 'Freundschaft – Liebe – Verantwortung'], 8: ['Basismodul', 'Schönheit und Verantwortung', 'Identität und Sprache'], 9: ['Basismodul', 'Grenzen des Lebens', 'Natur – Mensch – Technik'], 10: ['Basismodul', 'Freiheit und Verantwortung', 'Utopien und Gerechtigkeit']},
+    englisch:{5:['All about me','My school life','My freetime','Let’s celebrate'],6:['Holidays','City Life','Dreams','Teen Life'],7:['Finding your place','The British Isles'],8:['The United States of America','Teen Life in the USA','My well-being'],9:['Commonwealth Countries','The Road Ahead'],10:['Being young – joys and challenges','Living in a globalized world']}
   }
 };
-const TUEB='Themenübergreifend';
-function lpThemen(fachName,stufe,ver){ const k=norm(fachName); return (LP[ver||'bisher'][k]||{})[stufe]||(LP_OS[k]||{})[stufe]||[]; }
+const TUEB='Themenübergreifend', LP_VERSION='6';
+const LP_ALIAS={'lineare und konstante funktionen':'Lineare Funktionen, konstante Funktionen','ganze zahlen und rationale zahlen':'Ganze Zahlen, rationale Zahlen','bewegungen – geradlinige gleichfoermige bewegung':'Bewegungen – Geradlinige, gleichförmige Bewegung'};
+function lpThemen(fachName,stufe,ver){ const k=norm(fachName); return (LP[ver||'bisher'][k]||{})[stufe]||(LP_ALLE[k]||{})[stufe]||[]; }
 function createLehrplanOrdner(){
   let n=0; const ver=S.settings.lehrplan||'bisher';
   faecher().forEach(f=>{ (f.stufen||[]).forEach(st=>{
-    lpThemen(f.name,st,ver).forEach((t,i)=>{ if(!ordnerIn(f.id,st).some(o=>norm(o.name)===norm(t))){ ensureOrdner(f.id,st,t,{lp:true,sort:i}); n++; } });
+    lpThemen(f.name,st,ver).forEach((t,i)=>{ const ords=ordnerIn(f.id,st);
+      if(ords.some(o=>norm(o.name)===norm(t))) return;
+      const old=ords.find(o=>o.lp&&LP_ALIAS[norm(o.name)]&&norm(LP_ALIAS[norm(o.name)])===norm(t));
+      if(old){ save('ordner',{...old,name:t,sort:i},true); n++; return; }
+      ensureOrdner(f.id,st,t,{lp:true,sort:i}); n++; });
     if(!ordnerIn(f.id,st).some(o=>norm(o.name)===norm(TUEB))){ ensureOrdner(f.id,st,TUEB,{sort:900,tueb:true}); n++; }
+    const ziel=lpThemen(f.name,st,ver).map(norm);
+    ordnerIn(f.id,st).forEach(o=>{ if(o.lp&&!ziel.includes(norm(o.name))&&!Object.values(S.docs).some(d=>d.ordnerId===o.id)&&!Object.values(S.kurse).some(k=>k.fachId===f.id&&String(k.stufe)===String(st)&&(k.einheiten||[]).some(e=>norm(e.titel)===norm(o.name)))){ remove('ordner',o.id,true); } });
   }); });
-  S.settings.lpDone=ver; return n;
+  S.settings.lpDone=ver+'-'+LP_VERSION; return n;
 }
 const COLLS=['klassen','kurse','docs','logs','aufgaben','ordner'];
 const DEFAULT_SETTINGS={
@@ -546,8 +580,8 @@ function viewHeute(){
   const d=viewDate, isToday=d===today();
   const head=`<div class="page-h"><div class="grow"><h1>${isToday?'Heute':esc(fmtLong(d).split(',')[0])}</h1><div class="sub">${esc(fmtLong(d))}</div></div>
     <div class="row nw"><button class="btn" data-act="day" data-n="-1" aria-label="Vortag">‹</button><button class="btn" data-act="day" data-n="0">Heute</button><button class="btn" data-act="day" data-n="1" aria-label="Folgetag">›</button></div></div>`;
-  if(!Object.keys(S.kurse).length) return head+`<div class="card stack"><h2>Los geht's</h2><p>Deine Ordnerstruktur ist angelegt. Jetzt: <b>1.</b> Klasse mit Schülerzahl anlegen → <b>2.</b> Kurs anlegen (z. B. Physik 7Ra) und Unterrichtszeiten antippen → <b>3.</b> Material in den Materialordner laden und Stunden planen.</p>
-    <div class="row"><button class="btn pri" data-act="editKlasse">${ic('plus')} Klasse anlegen</button><button class="btn" data-act="demo">Beispieldaten laden</button></div></div>`;
+  if(!Object.keys(S.kurse).length) return head+`<div class="card stack"><h2>Los geht's</h2><p>Deine Ordnerstruktur ist angelegt. Am schnellsten: <b>Stundenplan fotografieren</b> – Klassen und Kurse mit Unterrichtszeiten werden automatisch angelegt. Oder von Hand: <b>1.</b> Klasse mit Schülerzahl anlegen → <b>2.</b> Kurs anlegen (z. B. Physik 7Ra) und Unterrichtszeiten antippen → <b>3.</b> Material in den Materialordner laden und Stunden planen.</p>
+    <div class="row"><button class="btn pri" data-act="stundenplanFoto">${ic('camera')} Stundenplan fotografieren</button><button class="btn" data-act="editKlasse">${ic('plus')} Klasse anlegen</button><button class="btn" data-act="demo">Beispieldaten laden</button></div></div>`;
   const items=dayItems(d);
   let body='';
   if(!items.length) body=`<div class="empty">${isFree(d)?esc(ferienName(d)||'Kein Unterricht')+' – kein Unterricht.':'An diesem Tag hast du laut Kursplänen keinen Unterricht.'}</div>`;
@@ -592,7 +626,7 @@ function lessonCard(it,d,isNext){
 function viewKurse(){
   const ks=kurseAktiv(); const arch=Object.values(S.kurse).filter(k=>k.archiv);
   const byFach={}; ks.forEach(k=>{ (byFach[k.fachId||'']=byFach[k.fachId||'']||[]).push(k); });
-  return `<div class="page-h"><div class="grow"><h1>Kurse</h1><div class="sub">Stoffverteilung, Fortschritt und Soll-Ist-Vergleich</div></div><button class="btn pri" data-act="editKurs">${ic('plus')} Neuer Kurs</button></div>
+  return `<div class="page-h"><div class="grow"><h1>Kurse</h1><div class="sub">Stoffverteilung, Fortschritt und Soll-Ist-Vergleich</div></div><div class="row nw"><button class="btn" data-act="stundenplanFoto">${ic('camera')} Stundenplan-Foto</button><button class="btn pri" data-act="editKurs">${ic('plus')} Neuer Kurs</button></div></div>
   ${ks.length?Object.entries(byFach).map(([fid,list])=>`<div class="sec">${esc(fachName(fid)||'Ohne Fach')}</div><div class="grid g2">${list.map(kursCard).join('')}</div>`).join(''):`<div class="empty">Noch keine Kurse. Ein Kurs verbindet eine Klasse mit einem Fach-Ordner, z. B. „Physik 7Ra“ → Ordner „Physik › Klasse 7“.</div>`}
   ${arch.length?`<div class="sec">Archiviert</div><div class="grid g2">${arch.map(kursCard).join('')}</div>`:''}`;
 }
@@ -1014,7 +1048,7 @@ function profilEditor(first){
     ${first?'<p>Aus deinen Fächern wird automatisch die Ordnerstruktur erstellt: <b>Fach › Klassenstufe › Themenordner</b>. Kurse wie „Physik 7Ra“ und „Physik 7Rb“ nutzen dann gemeinsam den Ordner „Physik › Klasse 7“.</p>':''}
     <div class="fields"><div><label class="f">Name</label><input type="text" id="pName" value="${esc(pf.name||'')}" placeholder="z. B. Herr Muster"></div><div><label class="f">Schule</label><input type="text" id="pSchule" value="${esc(pf.schule||'')}" placeholder="optional"></div></div>
     <div><label class="f">Klassenstufen deiner Schule (gilt für alle Fächer, einzeln anpassbar)</label><div class="stchips" id="pGlob">${STUFEN_ALLE.map(s=>`<button class="${globalSt.includes(s)?'on':''}" data-gs="${s}">${s}</button>`).join('')}</div></div>
-    <div><label class="f">Themenordner nach Rahmenplan M-V</label><select id="pLP" style="max-width:520px">${opt([["bisher","Bisher gültige Rahmenpläne (Mathe 2019, Physik 2021, Informatik 2019)"],["neu","Neue Rahmenpläne 2026 (Mathematik, Physik)"]],S.settings.lehrplan||"bisher")}</select><div class="tiny muted" style="margin-top:4px">In jedem Klassenordner werden die Themen laut Rahmenplan als Unterordner angelegt, dazu „Themenübergreifend“. Ein Wechsel ergänzt nur Ordner – nichts wird gelöscht.</div></div>
+    <div><label class="f">Themenordner nach Rahmenplan M-V</label><select id="pLP" style="max-width:520px">${opt([["bisher","Aktuell gültige Rahmenpläne (Schuljahr 2026/27)"],["neu","Neue Rahmenpläne (Regionale Schule ab 01.08.2027)"]],S.settings.lehrplan||"bisher")}</select><div class="tiny muted" style="margin-top:4px">In jedem Klassenordner werden die Themen laut Rahmenplan als Unterordner angelegt, dazu „Themenübergreifend“. Ein Wechsel ergänzt nur Ordner – nichts wird gelöscht.</div></div>
     <div><label class="f">Fächer</label><div id="pF"></div></div>
     <div class="row nw"><input type="text" id="pNew" placeholder="weiteres Fach, z. B. Wirtschaft"><button class="btn" id="pAdd">${ic('plus')} Fach</button></div>
     <div class="info" id="pSum"></div></div>`,
@@ -1024,7 +1058,7 @@ function profilEditor(first){
       <label class="row nw" style="min-width:170px;cursor:pointer"><input type="checkbox" data-pi="${i}" ${r.on?'checked':''} style="width:22px;height:22px"><span class="sw" style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${r.farbe}"></span><b>${esc(r.name)}</b></label>
       ${kind==='fach'&&r.on?`<div class="stchips">${STUFEN_ALLE.map(s=>`<button class="${r.stufen.includes(s)?'on':''}" data-ri="${i}" data-rs="${s}" style="min-width:38px;min-height:34px">${s}</button>`).join('')}</div>`:''}</div>`).join('')).join('');
     const on=rows.filter(r=>r.on); const nf_=on.filter(r=>r.kind==='fach'); const n=nf_.reduce((a,r)=>a+r.stufen.length,0);
-    $('#pSum',m).innerHTML=`${ic('folder')} Es entstehen <b>${nf_.length} Fachordner</b> mit zusammen <b>${n} Klassenstufen-Ordnern</b>${on.length-nf_.length?` und ${on.length-nf_.length} weitere Bereiche`:''}. In jedem Klassenordner entstehen automatisch die Themen laut Rahmenplan (Mathematik, Physik, Informatik, Astronomie) und ein Ordner „Themenübergreifend“.`;
+    $('#pSum',m).innerHTML=`${ic('folder')} Es entstehen <b>${nf_.length} Fachordner</b> mit zusammen <b>${n} Klassenstufen-Ordnern</b>${on.length-nf_.length?` und ${on.length-nf_.length} weitere Bereiche`:''}. In jedem Klassenordner entstehen automatisch die Themen laut Rahmenplan M-V und ein Ordner „Themenübergreifend“.`;
   };
   m.addEventListener('click',e=>{ const b=e.target.closest('button,input'); if(!b) return;
     if(b.dataset.gs){ const s=+b.dataset.gs; globalSt=globalSt.includes(s)?globalSt.filter(x=>x!==s):[...globalSt,s].sort((a,c)=>a-c); rows.forEach(r=>{ if(r.kind==='fach') r.stufen=[...globalSt]; }); $('#pGlob',m).innerHTML=STUFEN_ALLE.map(x=>`<button class="${globalSt.includes(x)?'on':''}" data-gs="${x}">${x}</button>`).join(''); draw(); }
@@ -1247,7 +1281,113 @@ function loadDemo(){
 
 /* ================= Aktionen ================= */
 function lessonByIdStr(str){ const [kid,sid]=str.split('|'); const k=S.kurse[kid]; const x=k&&findLesson(k,sid); return x?{k,x}:null; }
+/* ================= Stundenplan per Foto ================= */
+const FACH_ABK={ma:'Mathematik',mathe:'Mathematik',de:'Deutsch',deu:'Deutsch',en:'Englisch',eng:'Englisch',ph:'Physik',phy:'Physik',ch:'Chemie',che:'Chemie',bi:'Biologie',bio:'Biologie',geo:'Geografie',ek:'Geografie',ge:'Geschichte',gesch:'Geschichte',sk:'Sozialkunde',soz:'Sozialkunde',mu:'Musik',ku:'Kunst',kug:'Kunst',inf:'Informatik',info:'Informatik',if:'Informatik',awt:'AWT',ast:'Astronomie',as:'Astronomie',astro:'Astronomie',phil:'Philosophie',pmk:'Philosophie',ph_k:'Philosophie',er:'Religion evangelisch',ev:'Religion evangelisch',evre:'Religion evangelisch',kr:'Religion katholisch',kath:'Religion katholisch',kre:'Religion katholisch',re:'Religion evangelisch'};
+function spFachName(raw){ const r=String(raw||'').trim(); if(!r) return ''; const n=norm(r).replace(/[^a-z0-9 ]/g,'').trim();
+  const all=[...faecher().map(f=>f.name),...FACH_VORLAGEN.map(v=>v.name)];
+  const ex=all.find(x=>norm(x)===n); if(ex) return ex;
+  if(FACH_ABK[n.replace(/ /g,'')]) return FACH_ABK[n.replace(/ /g,'')];
+  const pre=all.find(x=>norm(x).startsWith(n)&&n.length>=3); return pre||r; }
+function spPrompt(){
+  const fs=[...new Set([...faecher().filter(f=>(f.stufen||[]).length).map(f=>f.name),...FACH_VORLAGEN.map(v=>v.name)])];
+  return `Du liest das Foto eines Stundenplans einer Schule in Mecklenburg-Vorpommern aus (Lehrer- oder Klassenstundenplan, Montag–Freitag).
+Gib NUR JSON zurück, ohne Erklärung, in genau diesem Format:
+{"art":"lehrer"|"klasse","klasse":"<nur bei Klassenstundenplan: Klassenname>","zeiten":[["07:45","08:30"],...],"eintraege":[{"tag":1,"std":1,"fach":"Physik","fach_roh":"Ph","klasse":"7Ra","raum":"112"}],"hinweis":"<Besonderheiten, z. B. A/B-Wochen, unleserliche Felder>"}
+Regeln:
+- tag: 1=Montag … 5=Freitag. std: Nummer der Unterrichtsstunde (1. Stunde = 1). Bei Doppelstunden JEDE Stunde als eigenen Eintrag.
+- Werden Blöcke statt Stunden gezählt (z. B. Block 1 = 1./2. Stunde), rechne in Einzelstunden um.
+- fach: wenn möglich einer dieser Namen: ${fs.join(', ')}. Sonst den ausgeschriebenen Fachnamen (z. B. Sport). fach_roh: Text genau wie auf dem Foto.
+- klasse: Klassenbezeichnung genau wie auf dem Foto (z. B. 7Ra, 8b, 10/1). Beim Klassenstundenplan bei jedem Eintrag dieselbe Klasse.
+- zeiten: Uhrzeiten der Stunden, falls auf dem Foto erkennbar, sonst [].
+- Leere Felder, Pausen, Aufsichten und Sprechzeiten weglassen. Erfinde nichts; Unleserliches in "hinweis" nennen.`; }
+async function spPrepImage(file){
+  const url=URL.createObjectURL(file);
+  try{ const img=await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
+    const max=2000, sc=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
+    const c=document.createElement('canvas'); c.width=Math.round(img.naturalWidth*sc); c.height=Math.round(img.naturalHeight*sc);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    return await new Promise(res=>c.toBlob(b=>res(b||file),'image/jpeg',0.86));
+  } catch(e){ return file; } finally{ setTimeout(()=>URL.revokeObjectURL(url),1000); }
+}
+function spParse(raw){ if(raw&&typeof raw==='object') return raw; const s=String(raw||''); const m=s.match(/\{[\s\S]*\}/); return JSON.parse(m?m[0]:s); }
+async function openStundenplanFoto(){
+  let canImg=false; if(ENV.sample){ try{ const l=ENV.sample.limits?await ENV.sample.limits():null; canImg=!!(l&&l.images); }catch(e){} }
+  const m=openModal('Stundenplan per Foto',`<div class="stack">
+    <p>Fotografiere deinen Stundenplan (oder wähle ein Foto/Screenshot). Die App erkennt Fächer, Klassen und Stunden und schlägt dir Klassen und Kurse mit den passenden Unterrichtszeiten vor. <b>Du prüfst alles, bevor etwas übernommen wird.</b></p>
+    <label class="btn pri" style="align-self:flex-start">${ic('camera')} Foto aufnehmen oder auswählen<input type="file" accept="image/*" class="vh" id="spFile"></label>
+    <div class="tiny muted">Tipp: Plan gerade von oben, gut ausgeleuchtet, ganze Tabelle im Bild.</div>
+    <div id="spPrev"></div><div id="spOut"></div></div>`,`<button class="btn" data-act="closeModal">Abbrechen</button>`,{wide:true,sticky:true});
+  const out=$('#spOut',m);
+  const bridge=(why)=>{ out.innerHTML=`<div class="stack"><div class="info">${why} So geht's mit der Claude-App:<br><b>1.</b> „Prompt kopieren“ tippen. <b>2.</b> In der Claude-App einen neuen Chat öffnen, das Stundenplan-Foto anhängen und den Prompt einfügen. <b>3.</b> Die Antwort (JSON) kopieren und hier einfügen.</div>
+      <div class="row"><button class="btn" id="spCopy">Prompt kopieren</button></div>
+      <textarea id="spIn" style="min-height:140px" placeholder='Antwort aus der Claude-App hier einfügen, z. B. {"art":"lehrer", …}'></textarea>
+      <div class="row"><button class="btn pri" id="spGo">Auswerten</button></div></div>`;
+    $('#spCopy',m).onclick=()=>copyText(spPrompt());
+    $('#spGo',m).onclick=()=>{ try{ const d=spParse($('#spIn',m).value); closeModal(); spReview(d); }catch(e){ toast('Antwort konnte nicht gelesen werden – bitte die komplette JSON-Antwort einfügen'); } }; };
+  if(!canImg) bridge(ENV.sample?'Die direkte Bilderkennung ist hier nicht freigegeben.':'Offline bzw. in der iPad-App gibt es keine eingebaute KI.');
+  $('#spFile',m).onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(!f) return;
+    const u=URL.createObjectURL(f); $('#spPrev',m).innerHTML=`<img src="${u}" alt="Stundenplan" style="max-width:100%;max-height:260px;border-radius:10px;border:1px solid var(--line)">`;
+    if(!canImg){ toast('Foto ausgewählt – jetzt Prompt kopieren und in der Claude-App mit dem Foto senden'); return; }
+    out.innerHTML='<div class="info">'+ic('spark')+' Stundenplan wird gelesen … (dauert meist 10–30 Sekunden)</div>';
+    try{ const blob=await spPrepImage(f); const r=await ENV.sample(spPrompt(),{images:[blob],cache:false,modelTier:'complex'}); const d=spParse(r.text); closeModal(); spReview(d); }
+    catch(err){ if(err&&err.code==='not_granted'){ bridge('Die KI wurde nicht freigegeben.'); return; } bridge('Das hat nicht geklappt ('+esc(err&&(err.message||err.code)||'unbekannter Fehler')+'). Versuche ein schärferes Foto – oder nutze die Claude-App.'); }
+  };
+}
+function spReview(d){
+  const ein=(d&&Array.isArray(d.eintraege)?d.eintraege:[]).map(e=>({tag:+e.tag,std:+e.std,fach:spFachName(e.fach||e.fach_roh),roh:e.fach_roh||e.fach||'',klasse:String(e.klasse||d.klasse||'').replace(/\s+/g,'').trim()})).filter(e=>e.tag>=1&&e.tag<=5&&e.std>=1&&e.std<=12&&e.fach);
+  if(!ein.length){ toast('Im Foto wurden keine Unterrichtsstunden erkannt'); return; }
+  const groups={}; ein.forEach(e=>{ const key=norm(e.fach)+'|'+norm(e.klasse); const g=groups[key]||(groups[key]={fach:e.fach,roh:e.roh,klasse:e.klasse,slots:[]}); if(!g.slots.some(s=>s.tag===e.tag&&s.std===e.std)) g.slots.push({tag:e.tag,std:e.std}); });
+  const G=Object.values(groups).sort((a,b)=>a.klasse.localeCompare(b.klasse,'de',{numeric:true})||a.fach.localeCompare(b.fach,'de'));
+  const klByName=n=>Object.values(S.klassen).find(k=>norm(k.name).replace(/\s/g,'')===norm(n).replace(/\s/g,''));
+  G.forEach(g=>{ g.slots.sort((a,b)=>a.tag-b.tag||a.std-b.std); const fid=fachIdByName(g.fach); const v=FACH_VORLAGEN.find(x=>norm(x.name)===norm(g.fach));
+    g.fachId=fid; g.neuFach=!fid&&!!v; g.stufe=parseInt(g.klasse)||'';
+    const kl=klByName(g.klasse); g.klasseId=kl?kl.id:''; const ku=kl&&fid?Object.values(S.kurse).find(k=>!k.archiv&&k.klasseId===kl.id&&k.fachId===fid):null; g.kursId=ku?ku.id:'';
+    g.on=!!g.klasse&&(!!fid); });
+  const zeiten=Array.isArray(d.zeiten)?d.zeiten.filter(z=>Array.isArray(z)&&/^\d{1,2}:\d{2}$/.test(z[0]||'')&&/^\d{1,2}:\d{2}$/.test(z[1]||'')).map(z=>z.map(t=>t.padStart(5,'0'))):[];
+  const fOpts=g=>{ const list=faecher().filter(f=>(f.stufen||[]).length).map(f=>[f.id,f.name]); if(g.neuFach) list.unshift(['+'+g.fach,'+ '+g.fach+' (Fach neu anlegen)']); return list; };
+  const slotTxt=sl=>sl.map(s=>TAGE[s.tag]+' '+s.std+'.').join(', ');
+  const row=(g,i)=>{ const known=g.fachId||g.neuFach; return `<div class="card" style="padding:10px 12px;margin:0 0 8px;${g.on?'':'opacity:.6'}">
+    <label class="row nw" style="cursor:pointer"><input type="checkbox" data-gi="${i}" ${g.on?'checked':''} ${known&&g.klasse?'':'disabled'} style="width:22px;height:22px"><b>${esc(g.fach)}${g.klasse?' '+esc(g.klasse):''}</b><span class="tiny muted">${g.roh&&norm(g.roh)!==norm(g.fach)?'(„'+esc(g.roh)+'“) ':''}${g.slots.length} Std./Woche</span></label>
+    <div class="small" style="margin:4px 0 6px 30px">${esc(slotTxt(g.slots))}</div>
+    ${known&&g.klasse?`<div class="fields" style="margin-left:30px">
+      <div><label class="f">Fach</label><select data-gf="${i}">${opt(fOpts(g),g.fachId||('+'+g.fach))}</select></div>
+      <div><label class="f">Klasse</label><input type="text" data-gk="${i}" value="${esc(g.klasse)}"></div>
+      <div class="full tiny muted">${g.kursId?'Kurs „'+esc(S.kurse[g.kursId].titel)+'“ wird aktualisiert – bisherige Zeiten werden ersetzt.':'Neuer Kurs'+(g.klasseId?'':' und neue Klasse '+esc(g.klasse))+(g.neuFach?', Fach '+esc(g.fach)+' wird im Profil ergänzt':'')+'.'}</div></div>`
+    :`<div class="tiny muted" style="margin-left:30px">${g.klasse?'„'+esc(g.fach)+'“ ist kein Fach deines Profils und wird übersprungen.':'Keine Klasse erkannt – wird übersprungen.'}</div>`}</div>`; };
+  const m=openModal('Stundenplan prüfen',`<div class="stack">
+    <div class="info">${ic('check')} Erkannt: <b>${ein.length} Unterrichtsstunden</b> in <b>${G.length} Kursen</b>. Häkchen setzen, was übernommen werden soll. Fächer, die nicht zu deinem Profil gehören, sind abgewählt.</div>
+    ${d.hinweis?`<div class="hint">${esc(d.hinweis)}</div>`:''}
+    ${zeiten.length?`<label class="row nw card" style="padding:10px 12px;margin:0;cursor:pointer"><input type="checkbox" id="spZ" style="width:22px;height:22px"> Stundenzeiten übernehmen: <span class="small muted">${esc(zeiten.map((z,i)=>(i+1)+'. '+z[0]).join(' · '))}</span></label>`:''}
+    <div id="spG"></div></div>`,
+    `<button class="btn" data-act="closeModal">Abbrechen</button><button class="btn pri" id="spOk">Übernehmen</button>`,{wide:true,sticky:true});
+  const draw=()=>{ $('#spG',m).innerHTML=G.map(row).join(''); $('#spOk',m).textContent=G.filter(g=>g.on).length+' Kurse übernehmen'; };
+  const refresh=g=>{ const kl=klByName(g.klasse); g.klasseId=kl?kl.id:''; g.stufe=parseInt(g.klasse)||g.stufe; const ku=kl&&g.fachId?Object.values(S.kurse).find(k=>!k.archiv&&k.klasseId===kl.id&&k.fachId===g.fachId):null; g.kursId=ku?ku.id:''; };
+  m.addEventListener('change',e=>{ const t=e.target;
+    if(t.dataset.gi!=null){ G[+t.dataset.gi].on=t.checked; draw(); }
+    else if(t.dataset.gf!=null){ const g=G[+t.dataset.gf]; if(t.value.startsWith('+')){ g.fachId=''; g.neuFach=true; } else { g.fachId=t.value; g.fach=fachName(t.value); g.neuFach=false; } refresh(g); draw(); }
+    else if(t.dataset.gk!=null){ const g=G[+t.dataset.gk]; g.klasse=t.value.replace(/\s+/g,'').trim(); refresh(g); draw(); } });
+  draw();
+  $('#spOk',m).onclick=()=>{ const sel=G.filter(g=>g.on&&g.klasse); if(!sel.length&&!($('#spZ',m)&&$('#spZ',m).checked)){ toast('Nichts ausgewählt'); return; }
+    let nF=0,nK=0,nNeu=0,nUpd=0; const fs=[...faecher()];
+    sel.filter(g=>!g.fachId&&g.neuFach).forEach(g=>{ const ex=fs.find(f=>norm(f.name)===norm(g.fach)); if(ex){ g.fachId=ex.id; return; } const v=FACH_VORLAGEN.find(x=>norm(x.name)===norm(g.fach)); const f={id:norm(g.fach).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''),name:v?v.name:g.fach,farbe:v?v.farbe:FARBEN[fs.length%FARBEN.length],stufen:(v&&v.stufen)||[5,6,7,8,9,10]}; fs.push(f); g.fachId=f.id; nF++; });
+    if(nF){ const pf=P_(); S.settings.profil=makeProfil(pf.name||'',pf.schule||'',fs); }
+    sel.forEach(g=>{ const f=fs.find(x=>x.id===g.fachId); if(!f) return; const st=parseInt(g.klasse)||'';
+      if(st&&!(f.stufen||[]).includes(st)){ f.stufen=[...(f.stufen||[]),st].sort((a,b)=>a-b); }
+      let kl=klByName(g.klasse); if(!kl){ kl={id:uid(),name:g.klasse,stufe:st,schueler:0,reserve:'',kl:false,notiz:''}; save('klassen',kl,true); nK++; }
+      const ku=Object.values(S.kurse).find(k=>!k.archiv&&k.klasseId===kl.id&&k.fachId===f.id);
+      if(ku){ save('kurse',{...ku,slots:g.slots.map(s=>({...s}))},true); nUpd++; }
+      else { const used=Object.values(S.kurse).map(k=>k.farbe); const stufe=(f.stufen||[]).includes(st)?st:((f.stufen||[])[0]||''); save('kurse',{id:uid(),titel:f.name+' '+kl.name,klasseId:kl.id,fachId:f.id,stufe,start:today(),slots:g.slots.map(s=>({...s})),einheiten:[],farbe:FARBEN.find(c=>!used.includes(c))||FARBEN[0],archiv:false},true); nNeu++; } });
+    S.settings.profil=makeProfil(P_().name||'',P_().schule||'',fs);
+    if($('#spZ',m)&&$('#spZ',m).checked){ S.settings.periods=zeiten.map(z=>[z[0],z[1]]); }
+    const maxStd=Math.max(0,...sel.flatMap(g=>g.slots.map(s=>s.std))); while((S.settings.periods||[]).length<maxStd) S.settings.periods.push(['','']);
+    createLehrplanOrdner(); saveSettings(); closeModal(); render();
+    toast([nNeu?nNeu+' Kurse angelegt':'',nUpd?nUpd+' Kurse aktualisiert':'',nK?nK+' Klassen neu':'',nF?nF+' Fächer ergänzt':''].filter(Boolean).join(', ')||'Gespeichert');
+    if(nK) setTimeout(()=>toast('Bitte bei den neuen Klassen noch die Schülerzahl eintragen'),3600);
+    go('kurse'); };
+}
+
 const ACT={
+  stundenplanFoto:()=>openStundenplanFoto(),
   closeModal:()=>closeModal(),
   day:o=>{ viewDate=+o.n===0?today():addDays(viewDate,+o.n); render(); },
   demo:()=>loadDemo(),
@@ -1376,7 +1516,7 @@ async function init(){
   const db=ENV.inArtifact?await cap('db'):null;
   if(db){ await initCloud(db); ENV.assets=await cap('assets'); ENV.sample=await cap('sample'); ENV.downloads=await cap('downloads'); await loadLocalFilesOnly(); }
   else { await loadLocal(); if(ENV.inArtifact){ ENV.sample=await cap('sample'); ENV.downloads=await cap('downloads'); } }
-  loaded=true; migrateDocs(); if(faecher().length&&!S.settings.lpDone){ const n=createLehrplanOrdner(); saveSettings(); if(n) setTimeout(()=>toast(n+' Themenordner laut Rahmenplan angelegt'),600); } render();
+  loaded=true; migrateDocs(); if(faecher().length&&S.settings.lpDone!==(S.settings.lehrplan||'bisher')+'-'+LP_VERSION){ const n=createLehrplanOrdner(); saveSettings(); if(n) setTimeout(()=>toast(n+' Themenordner laut Rahmenplan angelegt'),600); } render();
   if(!faecher().length) profilEditor(true);
   if('serviceWorker' in navigator&&!ENV.inArtifact&&location.protocol==='https:'){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 }
