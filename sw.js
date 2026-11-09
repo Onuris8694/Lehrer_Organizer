@@ -1,5 +1,5 @@
 /* Lehrer-Organizer – Offline-Unterstützung */
-const VERSION = 'lo-v14';
+const VERSION = 'lo-v15';
 const CORE = ['./', './index.html', './pptxgen.bundle.js', './pdf-lib.min.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 const EXTERN = [
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
@@ -17,6 +17,7 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
+  if (new URL(req.url).hostname === 'api.github.com') return; // Synchronisation nie aus dem Cache
   // App-Seite: zuerst Netz (für Updates), sonst Offline-Kopie
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req).then(r => { const cp = r.clone(); caches.open(VERSION).then(c => c.put('./index.html', cp)); return r; })

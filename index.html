@@ -341,7 +341,7 @@ const idbDel=(s,k)=>idbTx(s,'readwrite',st=>st.delete(k));
 const dirty=new Set(); let flushT=null;
 function markDirty(k){ dirty.add(k); clearTimeout(flushT); flushT=setTimeout(flushLocal,250); }
 async function flushLocal(){
-  const keys=[...dirty]; dirty.clear();
+  const keys=[...dirty]; dirty.clear(); if(keys.length&&typeof ghSchedule==='function'&&!GH.busy) ghSchedule();
   if(IDB){ for(const k of keys){ try{ await idbPut('state',k,clone(S[k])); }catch(e){ toast('Speichern fehlgeschlagen – Speicher voll?'); } } }
   else { try{ localStorage.setItem('lehrer_organizer_v2',JSON.stringify(S)); }catch(e){} }
 }
@@ -579,7 +579,7 @@ function renderNav(){
   $('#nav').innerHTML=`<div class="brand">Lehrer-Organizer</div><div class="who">${esc(pf.name||'Mein Profil')}${pf.schule?' · '+esc(pf.schule):''}</div>`+
     NAV.map(([g,items])=>(g?`<div class="grp">${g}</div>`:'')+items.map(([id,icn,l])=>`<a href="#${id}" class="${r===id||(r==='kurs'&&id==='kurse')?'on':''}">${ic(icn)}<span>${l}</span>${badge[id]||''}</a>`).join('')).join('')+
     `<div class="spacer"></div><a href="#profil" class="${r==='profil'?'on':''}">${ic('gear')}<span>Profil & Einstellungen</span></a>
-    <div class="foot">${MODE==='cloud'?'● In deinem Claude-Konto gespeichert':'● Auf diesem Gerät gespeichert'}${navigator.onLine?'':' · offline'}</div>`;
+    <div class="foot">${MODE==='cloud'?'● In deinem Claude-Konto gespeichert':ghOn()?`<a href="#" data-act="ghSyncNow" style="color:inherit" id="ghStat">${esc(ghStatusText())}</a>`:'● Auf diesem Gerät gespeichert'}${navigator.onLine?'':' · offline'}</div>`;
 }
 function render(){
   renderNav(); if(!loaded) return;
@@ -1269,7 +1269,9 @@ function viewProfil(){
   <div class="card"><h2>Geräte verknüpfen</h2>
     ${MODE==='cloud'?`<div class="info" style="margin-bottom:10px">${ic('check')} <b>Diese Online-Version ist schon verknüpft:</b> Auf jedem Gerät, auf dem du mit deinem Claude-Konto angemeldet bist, siehst du über denselben Link automatisch dieselben Daten – iPad, Handy und Computer.</div>`:''}
     <p class="small">${MODE==='cloud'?'Die installierte Offline-App auf dem iPad speichert getrennt davon. Mit dem Abgleich über iCloud Drive bringst du beide auf denselben Stand.':'Die Offline-App speichert auf diesem Gerät. Mehrere Geräte (oder Offline-App und Online-Version) verknüpfst du über eine gemeinsame Abgleich-Datei in iCloud Drive.'} ${(()=>{ const l=+lsGet('lo-lastsync',0); return l?'Letzter Abgleich: '+esc(new Date(l).toLocaleString('de-DE',{dateStyle:'medium',timeStyle:'short'}))+' ('+changesSince(l)+' Änderungen seitdem).':'Noch nie abgeglichen.'; })()}</p>
-    <button class="btn pri" data-act="abgleich">${ic('wifi')} Geräte abgleichen</button></div>
+    ${MODE==='cloud'?`<div class="hint small" style="margin-bottom:10px"><b>Automatisch synchronisieren mit dem iPad?</b> Die Online-Version (dieser Link) und die installierte App sind zwei getrennte Speicher. Für automatische Synchronisation nutze auf <b>allen</b> Geräten die installierte App (iPad: Home-Bildschirm, Windows: in Edge/Chrome „App installieren“) und richte dort die GitHub-Synchronisation ein. Deine Daten von hier überträgst du einmalig mit „Sicherung mit allen Dateien“ → in der App „Importieren“.</div>`:`<div class="${ghOn()?'info':'card'}" style="margin:0 0 10px;padding:12px"><b>Automatische Synchronisation</b> ${ghOn()?`<span class="chip ok">aktiv</span><div class="small" style="margin-top:4px">${esc(ghStatusText())} · Repository ${esc(ghCfg().repo)}</div>`:'<div class="small">Empfohlen: iPad und Windows-PC gleichen sich automatisch über ein privates GitHub-Repository ab.</div>'}
+      <div class="row" style="margin-top:8px">${ghOn()?`<button class="btn sm pri" data-act="ghSyncNow">Jetzt synchronisieren</button>`:''}<button class="btn sm ${ghOn()?'':'pri'}" data-act="ghSetup">${ghOn()?'Einstellungen':'Einrichten'}</button></div></div>`}
+    <button class="btn" data-act="abgleich">${ic('wifi')} Manuell abgleichen (Datei)</button></div>
   <div class="card"><h2>Export & Import</h2>
     <p class="small">${MODE==='cloud'?'Daten liegen in deinem Claude-Konto.':'Alle Daten und Dateien liegen auf diesem Gerät – auch ohne Internet verfügbar.'} Eine Sicherung (z. B. in iCloud Drive) schützt vor Datenverlust. Beim Import kannst du zusammenführen oder alles ersetzen.</p>
     <div class="row"><button class="btn" data-act="exportBackup" data-files="0">Sicherung (ohne Dateien)</button><button class="btn" data-act="exportBackup" data-files="1">Sicherung mit allen Dateien</button><button class="btn" data-act="fachExport">Material eines Fachs teilen</button><label class="btn">${ic('upload')} Importieren<input type="file" class="vh" id="importFile" accept=".json,application/json"></label></div></div>
@@ -1520,6 +1522,79 @@ function backupBanner(){
   if(snooze>now) return ''; const days=last?Math.floor((now-last)/864e5):null; if(days!==null&&days<14) return '';
   return `<div class="card hint" style="margin-bottom:14px"><div class="row between"><div><b>${days===null?'Noch keine Sicherung':'Letzte Sicherung vor '+days+' Tagen'}</b><div class="small">Deine Daten liegen nur auf diesem iPad. iPadOS kann Webdaten bei Speichermangel löschen – eine Sicherung in iCloud Drive schützt davor.</div></div>
     <div class="row nw"><button class="btn sm pri" data-act="exportBackup" data-files="1">Jetzt sichern</button><button class="btn sm" data-act="abgleich">Abgleichen</button><button class="btn sm ghost" data-act="backupSnooze">Später</button></div></div></div>`; }
+
+/* ================= Automatische Synchronisation über GitHub ================= */
+const GH={busy:false,timer:null,status:'',err:'',last:0};
+function ghCfg(){ try{ return JSON.parse(lsGet('lo-gh','null')); }catch(e){ return null; } }
+function ghOn(){ const c=ghCfg(); return MODE!=='cloud'&&!!(c&&c.repo&&c.token); }
+async function ghFetch(path,opt={}){ const c=ghCfg(); const r=await fetch('https://api.github.com/repos/'+c.repo+'/contents/'+path,{cache:'no-store',...opt,headers:{'Authorization':'Bearer '+c.token,'Accept':opt.raw?'application/vnd.github.raw':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28',...(opt.headers||{})}}); return r; }
+function ghErrText(r){ return r.status===401?'Token ungültig oder abgelaufen':r.status===403?'Token hat keine Schreib-/Leserechte für das Repository':r.status===404?'Repository nicht gefunden (Name prüfen, Token-Zugriff auf dieses Repository?)':'GitHub-Fehler '+r.status; }
+async function ghGetJSON(path){ const r=await ghFetch(path); if(r.status===404) return {sha:null,data:null}; if(!r.ok) throw new Error(ghErrText(r)); const meta=await r.json();
+  let text; if(meta.content&&meta.encoding==='base64'){ const bin=atob(meta.content.replace(/\n/g,'')); const u8=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u8[i]=bin.charCodeAt(i); text=new TextDecoder().decode(u8); }
+  else { const rr=await ghFetch(path,{raw:true}); if(!rr.ok) throw new Error(ghErrText(rr)); text=await rr.text(); }
+  return {sha:meta.sha,data:JSON.parse(text)}; }
+async function ghPut(path,blob,sha,msg){ const content=await b64(blob); const r=await ghFetch(path,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg||'Lehrer-Organizer Sync',content,...(sha?{sha}:{})})}); return r; }
+function ghSetStatus(s,err){ GH.status=s; GH.err=err||''; const el=document.getElementById('ghStat'); if(el) el.textContent=ghStatusText(); renderNav(); }
+function ghStatusText(){ if(!ghOn()) return ''; if(GH.busy) return 'Synchronisiere …'; if(GH.err) return 'Sync-Fehler: '+GH.err; if(!GH.last) GH.last=+lsGet('lo-gh-last',0); return GH.last?'Synchronisiert '+new Date(GH.last).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}):'Noch nicht synchronisiert'; }
+function ghSchedule(ms){ if(!ghOn()||GH.busy) return; clearTimeout(GH.timer); GH.timer=setTimeout(()=>ghSync(),ms==null?15000:ms); }
+async function ghSync(opts={}){
+  if(!ghOn()||GH.busy) return false; if(!navigator.onLine){ ghSetStatus('','offline – wird nachgeholt'); return false; }
+  GH.busy=true; ghSetStatus('busy');
+  try{
+    for(let attempt=0;attempt<3;attempt++){
+      const rem=await ghGetJSON('lehrer-organizer/daten.json'); let st=null;
+      if(rem.data&&rem.data.app==='lehrer-organizer'){ st=await mergeImport(rem.data,{quiet:true}); await ghPullFiles(rem.data.ghFiles||[]); }
+      const lastPush=+lsGet('lo-gh-push',0); const remoteFiles=new Set((rem.data&&rem.data.ghFiles)||[]);
+      const up=await ghPushFiles(remoteFiles);
+      if(rem.data&&!up&&changesSince(lastPush)===0&&!opts.force){ break; }
+      const data=await buildExport({typ:'voll',files:false}); data.ghFiles=[...remoteFiles];
+      const r=await ghPut('lehrer-organizer/daten.json',new Blob([JSON.stringify(data)],{type:'application/json'}),rem.sha,'Sync von '+deviceName());
+      if(r.status===409||r.status===422){ continue; } if(!r.ok) throw new Error(ghErrText(r));
+      lsSet('lo-gh-push',String(Date.now())); break; }
+    GH.last=Date.now(); lsSet('lo-gh-last',String(GH.last)); lsSet('lo-lastbackup',String(GH.last)); GH.busy=false; ghSetStatus('ok');
+    if(!DB) await flushLocal(); render(); return true;
+  }catch(e){ GH.busy=false; ghSetStatus('err',e&&e.message||String(e)); return false; }
+}
+async function ghPushFiles(remoteFiles){ let n=0; const docs=Object.values(S.docs).filter(d=>d.kind==='file'&&!d._fehlt&&!remoteFiles.has(d.id));
+  for(const d of docs){ try{ const b=await fileBlob(d); if(!b) continue; if(b.size>45*1024*1024) continue; ghSetStatus('busy'); const r=await ghPut('lehrer-organizer/dateien/'+d.id,b,null,'Datei '+(d.fileName||d.titel));
+      if(r.ok||r.status===422){ remoteFiles.add(d.id); n++; } }catch(e){} } return n; }
+async function ghPullFiles(ids){ const set=new Set(ids); let n=0;
+  for(const d of Object.values(S.docs)){ if(!set.has(d.id)) continue; let need=!!d._fehlt; if(!need&&d.kind==='file'){ try{ need=!(await fileBlob(d)); }catch(e){ need=true; } } if(!need) continue;
+    try{ const r=await ghFetch('lehrer-organizer/dateien/'+d.id,{raw:true}); if(!r.ok) continue; const blob=await r.blob(); const st=await storeBlob(new Blob([blob],{type:d.mime||(d._fehlt&&'')||blob.type}),d.fileName);
+      const nd={...d,kind:'file'}; delete nd._fehlt; delete nd.ort; delete nd.fileId; delete nd.assetId; delete nd.url; Object.assign(nd,st); S.docs[d.id]=nd; if(DB) dbWrite('docs/'+d.id,clone(nd)); else markDirty('docs'); n++; }catch(e){} }
+  return n; }
+function openGhSetup(){
+  const c=ghCfg()||{repo:'',token:''};
+  const m=openModal('Automatische Synchronisation',`<div class="stack">
+    <p class="small">Deine Geräte (iPad, Windows-PC …) gleichen sich automatisch über ein <b>privates GitHub-Repository</b> ab – beim Öffnen, alle paar Minuten und kurz nach jeder Änderung. Offline gemachte Änderungen werden nachgeholt, sobald wieder Internet da ist. PDFs und Bilder werden mit übertragen.</p>
+    <details class="card" style="margin:0;padding:10px 12px"><summary><b>Einrichtung (einmalig, ca. 5 Minuten)</b></summary><ol class="small" style="padding-left:20px;margin:8px 0 0">
+      <li>Auf github.com: oben rechts <b>+ → New repository</b>, Name z. B. <code>lehrer-organizer-daten</code>, <b>Private</b> auswählen, „Create repository“.</li>
+      <li>Profilbild → <b>Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token</b>.</li>
+      <li>Name: „Lehrer-Organizer“, Ablauf: z. B. 1 Jahr. <b>Repository access: Only select repositories</b> → das neue Repository wählen.</li>
+      <li><b>Permissions → Repository permissions → Contents: Read and write</b>. „Generate token“ und den Token (beginnt mit <code>github_pat_</code>) kopieren.</li>
+      <li>Hier unten Repository und Token eintragen – <b>auf jedem Gerät einmal</b>.</li></ol></details>
+    <div class="fields"><div><label class="f">Repository (Benutzer/Name)</label><input type="text" id="ghRepo" value="${esc(c.repo)}" placeholder="deinname/lehrer-organizer-daten" autocapitalize="off" autocorrect="off"></div>
+      <div><label class="f">Token</label><input type="password" id="ghTok" value="${esc(c.token)}" placeholder="github_pat_…" autocapitalize="off" autocorrect="off"></div>
+      <div><label class="f">Name dieses Geräts</label><input type="text" id="ghDev" value="${esc(deviceName())}"></div></div>
+    <div class="tiny muted">Der Token wird nur auf diesem Gerät gespeichert – er ist nicht in Sicherungen oder Abgleich-Dateien enthalten. Das Repository muss privat sein.</div>
+    <div id="ghRes"></div></div>`,
+    `${c.token?'<button class="btn danger" id="ghOff">Trennen</button>':''}<span style="flex:1"></span><button class="btn" data-act="closeModal">Abbrechen</button><button class="btn pri" id="ghGo">Verbinden & synchronisieren</button>`,{wide:true});
+  $('#ghGo',m).onclick=async ev=>{ const repo=$('#ghRepo',m).value.trim().replace(/^https?:\/\/github\.com\//,'').replace(/\.git$/,'').replace(/\/$/,''); const token=$('#ghTok',m).value.trim();
+    if(!/^[\w.-]+\/[\w.-]+$/.test(repo)){ toast('Repository bitte als „benutzer/name“ eingeben'); return; } if(!token){ toast('Bitte den Token eintragen'); return; }
+    lsSet('lo-device',$('#ghDev',m).value.trim()); ev.target.disabled=true; $('#ghRes',m).innerHTML='<div class="info">Prüfe Zugang …</div>';
+    try{ const r=await fetch('https://api.github.com/repos/'+repo,{cache:'no-store',headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'}});
+      if(!r.ok){ $('#ghRes',m).innerHTML=`<div class="hint">${esc(ghErrText(r))}</div>`; ev.target.disabled=false; return; }
+      const info=await r.json(); if(!info.private){ $('#ghRes',m).innerHTML='<div class="hint">Das Repository ist öffentlich. Bitte auf github.com unter Settings → General → „Change visibility“ auf <b>Private</b> stellen – sonst könnte jeder deine Daten sehen.</div>'; ev.target.disabled=false; return; }
+      if(info.permissions&&info.permissions.push===false){ $('#ghRes',m).innerHTML='<div class="hint">Der Token darf nur lesen. Bitte „Contents: Read and write“ vergeben.</div>'; ev.target.disabled=false; return; }
+      lsSet('lo-gh',JSON.stringify({repo,token})); lsSet('lo-gh-push','0');
+      $('#ghRes',m).innerHTML='<div class="info">Verbunden – erste Synchronisation läuft …</div>';
+      const ok=await ghSync({force:true}); if(ok){ closeModal(); toast('Synchronisation eingerichtet'); } else { $('#ghRes',m).innerHTML=`<div class="hint">${esc(GH.err)}</div>`; ev.target.disabled=false; }
+    }catch(e){ $('#ghRes',m).innerHTML=`<div class="hint">Keine Verbindung zu GitHub (${esc(e.message||e)}).</div>`; ev.target.disabled=false; } };
+  if($('#ghOff',m)) $('#ghOff',m).onclick=()=>{ lsSet('lo-gh',''); try{ localStorage.removeItem('lo-gh'); }catch(e){} closeModal(); ghSetStatus(''); render(); toast('Synchronisation getrennt – Daten bleiben auf diesem Gerät'); };
+}
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') ghSchedule(800); });
+window.addEventListener('online',()=>ghSchedule(1500));
+setInterval(()=>{ if(document.visibilityState==='visible') ghSchedule(0); },5*60*1000);
 
 /* ================= PowerPoint zur Stunde ================= */
 let pptxP=null;
@@ -1969,6 +2044,8 @@ const ACT={
   exportBackup:o=>exportBackup(o.files==='1'),
   abgleich:()=>openAbgleich(),
   pptStunde:()=>openPptTool(),
+  ghSetup:()=>openGhSetup(),
+  ghSyncNow:(o,el,e)=>{ if(e) e.preventDefault(); ghSync({force:true}).then(ok=>toast(ok?'Synchronisiert':'Synchronisation fehlgeschlagen: '+GH.err)); },
   termin:(o,el,e)=>{ if(e) e.preventDefault(); const t=S.termine[o.id]; if(t){ if(modalStack.length) closeModal(); openTerminEditor(t); } },
   delTermin:o=>{ remove('termine',o.id); toast('Rückgängig gemacht'); },
   newTermin:o=>{ if(modalStack.length) closeModal(); openTerminEditor(null,{art:o.art||'ausfall',datum:o.d||viewDate||today(),kursId:o.k||'',std:o.std||''}); },
@@ -2016,6 +2093,7 @@ async function init(){
   else { await loadLocal(); if(ENV.inArtifact){ ENV.sample=await cap('sample'); ENV.downloads=await cap('downloads'); } }
   loaded=true; migrateDocs(); if(faecher().length){ const was=S.settings.lpDone; const n=createLehrplanOrdner(); if(n||was!==S.settings.lpDone) saveSettingsRaw(); if(n) setTimeout(()=>toast(n+' Themenordner laut Rahmenplan ergänzt'),600); } render();
   if(!faecher().length) profilEditor(true);
+  if(ghOn()) setTimeout(()=>ghSync(),1200);
   if('serviceWorker' in navigator&&!ENV.inArtifact&&location.protocol==='https:'){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 }
 async function loadLocalFilesOnly(){ try{ IDB=await idbOpen(); }catch(e){ IDB=null; } }
