@@ -229,9 +229,9 @@ const TYPFARBE={'Präsentation':'#c2662d','Arbeitsblatt':'#1f6f68','Lösung':'#5
 const ROLLEN={praes:'Präsentation',kopie:'Kopiervorlage',loesung:'Lösung',lehrer:'Lehrermaterial'};
 const FARBEN=['#1f6f68','#c2662d','#2d6aa0','#7a4fb5','#a1478a','#5d7a3a','#b42318','#8a6d1f','#3b82a0','#475467'];
 const FACH_VORLAGEN=[
-  {name:'Mathematik',farbe:'#2d6aa0',on:true},{name:'Informatik',farbe:'#7a4fb5',on:true},{name:'Physik',farbe:'#c2662d',on:true,stufen:[6,7,8,9,10]},{name:'Astronomie',farbe:'#1f3b6f',on:true,stufen:[9]},
+  {name:'Mathematik',farbe:'#2d6aa0'},{name:'Informatik',farbe:'#7a4fb5'},{name:'Physik',farbe:'#c2662d',stufen:[6,7,8,9,10]},{name:'Astronomie',farbe:'#1f3b6f',stufen:[9]},
   {name:'Chemie',farbe:'#5d7a3a',stufen:[7,8,9,10]},{name:'Biologie',farbe:'#3f8f4f'},{name:'Deutsch',farbe:'#b42318'},{name:'Englisch',farbe:'#8a6d1f'},{name:'Geografie',farbe:'#3b82a0'},{name:'AWT',farbe:'#6b5b4b',stufen:[7,8,9,10]},{name:'Geschichte',farbe:'#7a4f2b'},{name:'Sozialkunde',farbe:'#2d5aa0',stufen:[7,8,9,10]},{name:'Musik',farbe:'#a1478a'},{name:'Kunst',farbe:'#c2662d'},{name:'Religion evangelisch',farbe:'#5b3fb0'},{name:'Religion katholisch',farbe:'#7a3fb0'},{name:'Philosophie',farbe:'#475467'}];
-const BEREICH_VORLAGEN=[{name:'Klassenleitung',farbe:'#a1478a',on:true},{name:'Schule & Verwaltung',farbe:'#475467',on:true}];
+const BEREICH_VORLAGEN=[{name:'Klassenleitung',farbe:'#a1478a'},{name:'Schule & Verwaltung',farbe:'#475467'}];
 const STUFEN_ALLE=[5,6,7,8,9,10,11,12,13];
 const KEYWORDS={
   'mathematik':'mathe mathematik bruch brueche gleichung gleichungen funktion funktionen prozent prozentrechnung geometrie dreieck dreiecke pythagoras flaeche flaecheninhalt volumen term terme zins zinsen wahrscheinlichkeit statistik winkel kreis prisma zylinder pyramide kegel kugel linear lineare quadratisch quadratische parabel potenz potenzen wurzel zuordnung proportional antiproportional dreisatz rechteck koerperberechnung umfang diagramm mittelwert median kopfrechnen addition subtraktion multiplikation division rationale zahlen negative zahlen koordinatensystem trigonometrie sinus kosinus tangens',
@@ -315,7 +315,7 @@ const DEFAULT_SETTINGS={
   schuljahr:'2026/27', sjStart:'2026-08-24', sjEnde:'2027-07-02', reserve:2,
   periods:[["07:45","08:30"],["08:35","09:20"],["09:40","10:25"],["10:30","11:15"],["11:35","12:20"],["12:25","13:10"],["13:30","14:15"],["14:20","15:05"]],
   ferien:[{name:'Schulfreie Tage',von:'2026-11-26',bis:'2026-11-27'},{name:'Weihnachtsferien',von:'2026-12-21',bis:'2027-01-02'},{name:'Winterferien',von:'2027-02-08',bis:'2027-02-19'},{name:'Frauentag',von:'2027-03-08',bis:'2027-03-08'},{name:'Osterferien',von:'2027-03-24',bis:'2027-04-02'},{name:'Himmelfahrt + Brückentag',von:'2027-05-06',bis:'2027-05-07'},{name:'Pfingstferien',von:'2027-05-14',bis:'2027-05-18'},{name:'Sommerferien',von:'2027-07-05',bis:'2027-08-14'}],
-  kiKontext:'Ich bin Lehrkraft an einer Regionalschule/Gesamtschule in Mecklenburg-Vorpommern und unterrichte Mathematik, Informatik, Physik und Astronomie (Klassen 7–10). Viele Klassen sind leistungsschwach; Materialien sollen klar, einfach und rahmenplankonform (Rahmenpläne M-V) sein.',
+  kiKontext:'',
   profil:null, autoSort:true, lehrplan:'bisher', lpDone:''
 };
 let S={settings:clone(DEFAULT_SETTINGS),druck:{},klassen:{},kurse:{},docs:{},logs:{},aufgaben:{},ordner:{},termine:{}};
@@ -1084,6 +1084,7 @@ function profilEditor(first){
   existing.forEach(f=>{ if(!rows.some(r=>norm(r.name)===norm(f.name))) rows.push({name:f.name,farbe:f.farbe,kind:(f.stufen||[]).length?'fach':'bereich',on:true,stufen:f.stufen||[],id:f.id}); });
   let globalSt=[5,6,7,8,9,10];
   const m=openModal(first?'Willkommen! Dein Lehrerprofil':'Profil & Ordnerstruktur',`<div class="stack">
+    ${first&&MODE!=='cloud'?`<div class="info"><b>Du nutzt die App schon auf einem anderen Gerät?</b> Dann leg hier kein neues Profil an, sondern hol dir deine Daten:<div class="row" style="margin-top:8px"><button class="btn sm pri" data-act="ghSetup">Mit GitHub-Synchronisation verbinden</button><label class="btn sm">${ic('upload')} Sicherung / Abgleich-Datei laden<input type="file" class="vh" id="pImp" accept=".json,application/json"></label></div></div>`:''}
     ${first?'<p>Aus deinen Fächern wird automatisch die Ordnerstruktur erstellt: <b>Fach › Klassenstufe › Themenordner</b>. Kurse wie „Physik 7Ra“ und „Physik 7Rb“ nutzen dann gemeinsam den Ordner „Physik › Klasse 7“.</p>':''}
     <div class="fields"><div><label class="f">Name</label><input type="text" id="pName" value="${esc(pf.name||'')}" placeholder="z. B. Herr Muster"></div><div><label class="f">Schule</label><input type="text" id="pSchule" value="${esc(pf.schule||'')}" placeholder="optional"></div></div>
     <div><label class="f">Klassenstufen deiner Schule (gilt für alle Fächer, einzeln anpassbar)</label><div class="stchips" id="pGlob">${STUFEN_ALLE.map(s=>`<button class="${globalSt.includes(s)?'on':''}" data-gs="${s}">${s}</button>`).join('')}</div></div>
@@ -1104,6 +1105,7 @@ function profilEditor(first){
     else if(b.dataset.rs){ const r=rows[+b.dataset.ri], s=+b.dataset.rs; r.stufen=r.stufen.includes(s)?r.stufen.filter(x=>x!==s):[...r.stufen,s].sort((a,c)=>a-c); draw(); }
     else if(b.dataset.pi!=null&&b.type==='checkbox'){ rows[+b.dataset.pi].on=b.checked; draw(); }
   });
+  if($('#pImp',m)) $('#pImp',m).onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(!f) return; const o=await readJSONFile(f); if(!o){ toast('Keine gültige Lehrer-Organizer-Datei'); return; } const st=await mergeImport(o); if(faecher().length){ while(modalStack.length) closeModal(); render(); toast('Daten übernommen: '+statText(st)); } };
   $('#pAdd',m).onclick=()=>{ const n=$('#pNew',m).value.trim(); if(!n) return; rows.push({name:n,farbe:FARBEN[rows.length%FARBEN.length],kind:'fach',on:true,stufen:[...globalSt]}); $('#pNew',m).value=''; draw(); };
   $('#pSave',m).onclick=()=>{
     const fs=rows.filter(r=>r.on).map(r=>({id:r.id||norm(r.name).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||uid(),name:r.name,farbe:r.farbe,stufen:r.kind==='fach'?(r.stufen.length?r.stufen:[...globalSt]):[]}));
@@ -1169,7 +1171,7 @@ function kursKontext(k,full){
   return t;
 }
 function gapPrompt(ki){
-  const k=S.kurse[ki.kid]; const base=S.settings.kiKontext+'\n\n'; if(!k) return base;
+  const k=S.kurse[ki.kid]; const base=kiCtx()+'\n\n'; if(!k) return base;
   const x=ki.sid?findLesson(k,ki.sid):null; const ctx=kursKontext(k); const fmt='\n\nAntworte auf Deutsch, knapp und praxisnah, in Markdown.';
   switch(ki.kind){
     case 'stunde': return base+ctx+`\nFür die Stunde „${x.s.titel}“${x.s.ziele?' (Ziel: '+x.s.ziele+')':''} in der Einheit „${x.e.titel}“ fehlt Material. 1) Prüfe, ob etwas aus dem vorhandenen Materialordner passt. 2) Nenne 3 konkrete Materialideen. 3) Nenne seriöse, kostenlose Quellen mit Suchbegriffen (z. B. Bildungsserver M-V, LEIFIphysik, serlo.org). 4) Erstelle ein fertiges, einfach formuliertes Arbeitsblatt (Überschrift mit „# “, max. 6 Aufgaben, Lösungen am Ende).`+fmt;
@@ -1181,7 +1183,7 @@ function gapPrompt(ki){
 }
 function sortPrompt(list){
   const fs=faecher().map(f=>({fach:f.name,stufen:f.stufen,themenordner:Object.fromEntries((f.stufen.length?f.stufen:['']).map(s=>[s||'-',ordnerIn(f.id,s).map(o=>o.name)]))}));
-  return `${S.settings.kiKontext}\n\nOrdne die folgenden Unterrichtsdokumente in meine Ordnerstruktur ein. Struktur (Fach → Klassenstufe → Themenordner):\n${JSON.stringify(fs)}\n\nDokumente:\n${JSON.stringify(list.map(d=>({id:d.id,titel:d.titel,datei:d.fileName||'',typ:d.typ,auszug:String(d.snippet||d.md||'').slice(0,500)})))}\n\nAntworte NUR mit einem JSON-Array: [{"id":"…","fach":"exakter Fachname","stufe":7,"thema":"vorhandener oder neuer Themenordner (kurz) oder leer","typ":"Arbeitsblatt|Lösung|Leistungskontrolle|Präsentation|Lernblatt|Tafelbild|Experiment/Protokoll|Elternbrief|Sonstiges","sicher":0.0-1.0,"grund":"max. 8 Wörter","alternativen":[{"fach":"…","stufe":8,"thema":"…"}]}]. Bei Bereichen ohne Klassenstufen stufe=null.`;
+  return `${kiCtx()}\n\nOrdne die folgenden Unterrichtsdokumente in meine Ordnerstruktur ein. Struktur (Fach → Klassenstufe → Themenordner):\n${JSON.stringify(fs)}\n\nDokumente:\n${JSON.stringify(list.map(d=>({id:d.id,titel:d.titel,datei:d.fileName||'',typ:d.typ,auszug:String(d.snippet||d.md||'').slice(0,500)})))}\n\nAntworte NUR mit einem JSON-Array: [{"id":"…","fach":"exakter Fachname","stufe":7,"thema":"vorhandener oder neuer Themenordner (kurz) oder leer","typ":"Arbeitsblatt|Lösung|Leistungskontrolle|Präsentation|Lernblatt|Tafelbild|Experiment/Protokoll|Elternbrief|Sonstiges","sicher":0.0-1.0,"grund":"max. 8 Wörter","alternativen":[{"fach":"…","stufe":8,"thema":"…"}]}]. Bei Bereichen ohne Klassenstufen stufe=null.`;
 }
 function applyKISort(arr){
   let n=0; (Array.isArray(arr)?arr:[]).forEach(r=>{ const d=S.docs[r.id]; if(!d||d.fachId) return;
@@ -1260,7 +1262,7 @@ function viewProfil(){
     <button class="btn sm" data-act="addFerien" style="margin-top:8px">${ic('plus')} Zeitraum</button></div>
   <div class="card"><h2>Stundenraster</h2><table class="t">${(s.periods||[]).map((p,i)=>`<tr><td style="width:50px"><b>${i+1}.</b></td><td><input type="time" data-pi="${i}" data-k="0" value="${esc(p[0])}"></td><td><input type="time" data-pi="${i}" data-k="1" value="${esc(p[1])}"></td></tr>`).join('')}</table>
     <div class="row" style="margin-top:8px"><button class="btn sm" data-act="addPeriod">${ic('plus')} Stunde</button><button class="btn sm" data-act="delPeriod">− Stunde</button></div></div>
-  <div class="card"><h2>KI-Kontext</h2><p class="small muted">Wird jeder KI-Anfrage vorangestellt.</p><textarea id="sKi" style="min-height:110px">${esc(s.kiKontext)}</textarea></div>
+  <div class="card"><h2>KI-Kontext</h2><p class="small muted">Wird jeder KI-Anfrage vorangestellt.</p><textarea id="sKi" style="min-height:110px" placeholder="${esc(kiCtx())}">${esc(s.kiKontext)}</textarea><div class="tiny muted">Leer lassen = wird automatisch aus deinem Profil erzeugt.</div></div>
   <div class="row"><button class="btn pri" data-act="saveSettings">Einstellungen speichern</button></div>
   <div class="card"><h2>A/B-Wochen & Kalender</h2>
     <label class="row nw"><input type="checkbox" id="sAB" ${s.abAktiv?'checked':''} style="width:22px;height:22px"> Meine Schule arbeitet mit A/B-Wochen</label>
@@ -1332,12 +1334,12 @@ function openTerminEditor(t0,defaults){
     save('termine',t); closeModal(); toast(TERMIN_ARTEN[t.art]+' gespeichert'); };
   if($('#tmDel',m)) $('#tmDel',m).onclick=()=>{ remove('termine',t.id); closeModal(); };
 }
-function vertretungKI(t,cb){ const pr=`${S.settings.kiKontext}\n\nIch habe eine Vertretungsstunde (45 min) in Klasse ${t.klasse||'?'}, Fach ${t.fach||'?'}${t.titel?', Auftrag/Thema: '+t.titel:''}. Schlage einen einfachen, gut durchführbaren Ablauf vor, der ohne Vorbereitung und mit wenig Material funktioniert (Phasen mit Minuten, je 1–2 Zeilen). Nur die Phasenliste.`;
+function vertretungKI(t,cb){ const pr=`${kiCtx()}\n\nIch habe eine Vertretungsstunde (45 min) in Klasse ${t.klasse||'?'}, Fach ${t.fach||'?'}${t.titel?', Auftrag/Thema: '+t.titel:''}. Schlage einen einfachen, gut durchführbaren Ablauf vor, der ohne Vorbereitung und mit wenig Material funktioniert (Phasen mit Minuten, je 1–2 Zeilen). Nur die Phasenliste.`;
   if(!ENV.sample){ copyText(pr); toast('Prompt kopiert – in der Claude-App einfügen und Antwort ins Feld kopieren'); return; }
   pushED(); const m=openModal('Ablauf für die Vertretung',`<div class="ki-out md" id="vkout"></div>`,`<span style="flex:1"></span><button class="btn" data-act="closeModal">Verwerfen</button><button class="btn pri" id="vkok" disabled>Übernehmen</button>`,{wide:true});
   runKI(pr,$('#vkout',m)).then(txt=>{ if(!txt) return; const b=$('#vkok',m); b.disabled=false; b.onclick=()=>{ closeModal(); cb(txt); }; }); }
 function lkPrompt(t){ const k=S.kurse[t.kursId]; const e=(k.einheiten||[]).find(x=>x.titel===t.einheit); const st=e?(e.stunden||[]):flat(k).filter(x=>x.s.status!=='offen').map(x=>x.s);
-  return `${S.settings.kiKontext}\n\n${kursKontext(k,false)}\nErstelle eine schriftliche Leistungskontrolle (${t.std?'eine Unterrichtsstunde, ca. 30–35 min Bearbeitungszeit':'ca. 20 min'}) für ${k.titel}${t.einheit?' zur Einheit „'+t.einheit+'“':''}.\nBehandelte Stunden und Lernziele:\n${st.map(s=>'- '+s.titel+(s.ziele?' (Ziel: '+s.ziele+')':'')).join('\n')||'- (keine Stunden eingetragen)'}${t.notiz?'\nHinweise: '+t.notiz:''}
+  return `${kiCtx()}\n\n${kursKontext(k,false)}\nErstelle eine schriftliche Leistungskontrolle (${t.std?'eine Unterrichtsstunde, ca. 30–35 min Bearbeitungszeit':'ca. 20 min'}) für ${k.titel}${t.einheit?' zur Einheit „'+t.einheit+'“':''}.\nBehandelte Stunden und Lernziele:\n${st.map(s=>'- '+s.titel+(s.ziele?' (Ziel: '+s.ziele+')':'')).join('\n')||'- (keine Stunden eingetragen)'}${t.notiz?'\nHinweise: '+t.notiz:''}
 Anforderungen: Kopf mit „Name: ______  Klasse: ______  Datum: ______“, 5–7 Aufgaben vom Leichten zum Schweren (Anforderungsbereiche I–III), einfache Sprache, Punktzahl je Aufgabe, Gesamtpunktzahl und Notenschlüssel (Prozent-Grenzen). Danach eine Seite „# Lösungen“ mit Erwartungshorizont und Punkteverteilung.
 Formatiere als Markdown: Überschrift mit „# “, Aufgaben als „## Aufgabe 1 (x P.)“.`; }
 function lkGenerate(t,done){ const k=S.kurse[t.kursId]; if(!k){ toast('Bitte zuerst einen Kurs wählen'); return; }
@@ -1462,7 +1464,7 @@ async function docToPdf(id){
 
 /* ================= Differenzierung ================= */
 function diffPrompt(d,niveau){ const f=fachById(d.fachId); const text=d.kind==='md'?d.md:(d.snippet||'');
-  return `${S.settings.kiKontext}\n\nHier ist ein Arbeitsblatt${f?' für '+f.name:''}${d.stufe?', Klasse '+d.stufe:''}:\n"""\n${text.slice(0,9000)}\n"""\n\nErstelle daraus eine ${niveau==='leicht'?'LEICHTERE Fassung (Förderniveau): kürzere Sätze, einfache Wörter, Hilfen/Tipps und Satzanfänge, Lückentexte oder Auswahlantworten statt offener Fragen, Zwischenschritte vorgegeben, weniger Aufgaben':'SCHWERERE Fassung (Forderniveau): weniger Hilfen, offenere Aufgaben, Transfer- und Begründungsaufgaben, eine Knobelaufgabe am Ende'}. Gleiche Lernziele und gleiches Thema, damit beide Gruppen gemeinsam auswerten können.
+  return `${kiCtx()}\n\nHier ist ein Arbeitsblatt${f?' für '+f.name:''}${d.stufe?', Klasse '+d.stufe:''}:\n"""\n${text.slice(0,9000)}\n"""\n\nErstelle daraus eine ${niveau==='leicht'?'LEICHTERE Fassung (Förderniveau): kürzere Sätze, einfache Wörter, Hilfen/Tipps und Satzanfänge, Lückentexte oder Auswahlantworten statt offener Fragen, Zwischenschritte vorgegeben, weniger Aufgaben':'SCHWERERE Fassung (Forderniveau): weniger Hilfen, offenere Aufgaben, Transfer- und Begründungsaufgaben, eine Knobelaufgabe am Ende'}. Gleiche Lernziele und gleiches Thema, damit beide Gruppen gemeinsam auswerten können.
 Formatiere als Markdown: erste Zeile „# ${d.titel.replace(/"/g,'')} (${niveau==='leicht'?'Niveau A – leichter':'Niveau C – schwerer'})“, Aufgaben als „## Aufgabe 1“, am Ende „# Lösungen“.`; }
 function openDiff(id){ const d=S.docs[id]; if(!d) return; if(d.kind!=='md'&&!(d.snippet||'').trim()){ toast('Für dieses Dokument ist kein Text vorhanden'); return; }
   const ctx={typ:'Arbeitsblatt',fachId:d.fachId,stufe:d.stufe,ordnerId:d.ordnerId};
@@ -1498,7 +1500,7 @@ function openStoffverteilung(kid){
   $('#svAdd',m).onclick=()=>{ const v=$('#svNew',m).value.trim(); if(!v) return; themen.push({titel:v,on:true}); $('#svNew',m).value=''; drawT(); calc(); };
   drawT(); calc();
   const prompt=()=>{ const sel=themen.filter(x=>x.on); const ex=sel.filter(x=>x.vorhanden).map(x=>{ const e=k.einheiten.find(y=>y.titel===x.titel); return x.titel+': '+(e.stunden||[]).map(s=>s.titel+' ['+(s.status||'offen')+', '+dauer(s)+' Std.]').join('; '); });
-    return `${S.settings.kiKontext}\n\n${kursKontext(k,false)}\nPlane eine Stoffverteilung für ${k.titel} für die nächsten ${N} Unterrichtsstunden (bis ${fmtD(bis)}).\nThemen in dieser Reihenfolge: ${sel.map(x=>'„'+x.titel+'“').join(', ')}.${ex.length?'\nSchon geplant (offene Stunden bitte übernehmen und nur ergänzen): '+ex.join(' | '):''}
+    return `${kiCtx()}\n\n${kursKontext(k,false)}\nPlane eine Stoffverteilung für ${k.titel} für die nächsten ${N} Unterrichtsstunden (bis ${fmtD(bis)}).\nThemen in dieser Reihenfolge: ${sel.map(x=>'„'+x.titel+'“').join(', ')}.${ex.length?'\nSchon geplant (offene Stunden bitte übernehmen und nur ergänzen): '+ex.join(' | '):''}
 Rahmenplan M-V Klasse ${k.stufe}. Plane 1 Stunde Puffer/Wiederholung pro Thema und, wenn sinnvoll, eine Leistungskontrolle am Ende eines Themas (als Stunde mit Titel „Leistungskontrolle …“). Die Summe der Stunden (dauer) muss genau ${N} ergeben.
 Gib NUR JSON zurück: [{"einheit":"…","stunden":[{"titel":"…","ziele":"Die SuS können …","dauer":1}]}]`; };
   const show=arr=>{ const E=(Array.isArray(arr)?arr:(arr&&arr.einheiten)||[]).map(e=>({einheit:String(e.einheit||e.titel||''),stunden:(e.stunden||[]).map(s=>({titel:String(s.titel||''),ziele:String(s.ziele||''),dauer:Math.max(1,+s.dauer||1)})).filter(s=>s.titel)})).filter(e=>e.einheit&&e.stunden.length);
@@ -1588,13 +1590,95 @@ function openGhSetup(){
       if(info.permissions&&info.permissions.push===false){ $('#ghRes',m).innerHTML='<div class="hint">Der Token darf nur lesen. Bitte „Contents: Read and write“ vergeben.</div>'; ev.target.disabled=false; return; }
       lsSet('lo-gh',JSON.stringify({repo,token})); lsSet('lo-gh-push','0');
       $('#ghRes',m).innerHTML='<div class="info">Verbunden – erste Synchronisation läuft …</div>';
-      const ok=await ghSync({force:true}); if(ok){ closeModal(); toast('Synchronisation eingerichtet'); } else { $('#ghRes',m).innerHTML=`<div class="hint">${esc(GH.err)}</div>`; ev.target.disabled=false; }
+      const ok=await ghSync({force:true}); if(ok){ if(faecher().length){ while(modalStack.length) closeModal(); render(); } else closeModal(); toast(faecher().length?'Synchronisiert – deine Daten sind da':'Synchronisation eingerichtet – im Repository sind noch keine Daten. Richte sie zuerst auf dem Gerät mit deinen Daten ein.'); } else { $('#ghRes',m).innerHTML=`<div class="hint">${esc(GH.err)}</div>`; ev.target.disabled=false; }
     }catch(e){ $('#ghRes',m).innerHTML=`<div class="hint">Keine Verbindung zu GitHub (${esc(e.message||e)}).</div>`; ev.target.disabled=false; } };
   if($('#ghOff',m)) $('#ghOff',m).onclick=()=>{ lsSet('lo-gh',''); try{ localStorage.removeItem('lo-gh'); }catch(e){} closeModal(); ghSetStatus(''); render(); toast('Synchronisation getrennt – Daten bleiben auf diesem Gerät'); };
 }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') ghSchedule(800); });
 window.addEventListener('online',()=>ghSchedule(1500));
 setInterval(()=>{ if(document.visibilityState==='visible') ghSchedule(0); },5*60*1000);
+
+/* ================= KI-Kontext ================= */
+function kiCtx(){ const t=String(S.settings.kiKontext||'').trim(); if(t) return t; const fs=faecher().filter(f=>(f.stufen||[]).length); const st=[...new Set(fs.flatMap(f=>f.stufen))].sort((a,b)=>a-b);
+  return `Ich bin Lehrkraft an einer Schule in Mecklenburg-Vorpommern${P_().schule?' ('+P_().schule+')':''}${fs.length?' und unterrichte '+fs.map(f=>f.name).join(', '):''}${st.length?' in den Klassenstufen '+st[0]+'–'+st[st.length-1]:''}. Materialien sollen klar, altersgerecht und konform zu den Rahmenplänen M-V sein.`; }
+/* ================= Material-Assistent (rahmenplankonform, mit vorhandenem Material) ================= */
+const MAT_ARTEN={ab:'Arbeitsblatt',tafel:'Tafelbild / Merktext',luecke:'Lückentext',exp:'Experiment- / Versuchsanleitung',uebung:'Übungsaufgaben mit Lösungen',station:'Stationenlernen',quiz:'Quiz / Lernkontrolle',ha:'Hausaufgabe',info:'Infotext für Schüler',praes:'Präsentation (Folien)'};
+const rpCache={};
+async function rpVolltext(d){ if(rpCache[d.id]!=null) return rpCache[d.id]; let txt='';
+  try{ if(d.kind==='md') txt=d.md||''; else if(isPdf(d)){ const pdf=await getPdf(d); for(let i=1;i<=pdf.numPages;i++){ const tc=await (await pdf.getPage(i)).getTextContent(); txt+=tc.items.map(it=>it.str).join(' ')+'\n'; } } }catch(e){}
+  return rpCache[d.id]=txt.replace(/[ \t]+/g,' '); }
+async function rpAuszug(k,thema){ const docs=Object.values(S.docs).filter(d=>d.fachId===k.fachId&&/rahmenplan|(^|[\s_-])rp([\s_-]|$)/i.test((d.titel||'')+' '+(d.fileName||'')));
+  for(const d of docs){ const t=await rpVolltext(d); if(!t) continue; const nt=norm(t), key=norm(thema).slice(0,40); if(!key) continue;
+    const stufeIdx=[...nt.matchAll(new RegExp('(jahrgangsstufe|klassenstufe|klasse)\\s*'+k.stufe+'\\b','g'))].map(m=>m.index);
+    let best=-1; for(let i=nt.indexOf(key);i>=0;i=nt.indexOf(key,i+1)){ if(best<0) best=i; if(stufeIdx.some(s=>s<i&&i-s<60000)){ best=i; } }
+    if(best>=0) return {quelle:d.titel,text:t.slice(Math.max(0,best-200),best+4500)}; }
+  return null; }
+async function materialKontext(k,x,budget){ budget=budget||14000; let out=''; const add=s=>{ if(out.length+s.length<=budget) out+=s; };
+  const lessonDocs=(x.s.docs||[]).map(r=>S.docs[r.docId]).filter(Boolean); const ord=ordnerIn(k.fachId,k.stufe).find(o=>norm(o.name)===norm(x.e.titel));
+  const folderDocs=Object.values(S.docs).filter(d=>d.fachId===k.fachId&&String(d.stufe)===String(k.stufe)&&(!ord||d.ordnerId===ord.id)&&!lessonDocs.includes(d));
+  const text=d=>(d.kind==='md'?d.md:d.snippet||'').replace(/\s+/g,' ').trim();
+  if(lessonDocs.length){ add('\n## Bereits mit dieser Stunde verknüpftes Material\n'); lessonDocs.forEach(d=>add(`- ${d.titel} [${d.typ}]: ${text(d).slice(0,2500)}\n`)); }
+  if(folderDocs.length){ add(`\n## Weiteres Material im Themenordner „${x.e.titel}“\n`); folderDocs.slice(0,25).forEach(d=>add(`- ${d.titel} [${d.typ}]: ${text(d).slice(0,900)}\n`)); }
+  const st=x.e.stunden||[]; const i=st.findIndex(s=>s.id===x.s.id); const vor=st.slice(Math.max(0,i-3),i), nach=st.slice(i+1,i+3);
+  if(vor.length) add('\n## Vorherige Stunden der Einheit\n'+vor.map(s=>`- ${s.titel}${s.ziele?' (Ziel: '+s.ziele+')':''}${s.status==='fertig'?' – erledigt':''}${s.erreicht?' – erreicht bis: '+s.erreicht:''}`).join('\n')+'\n');
+  if(nach.length) add('\n## Folgende Stunden\n'+nach.map(s=>'- '+s.titel).join('\n')+'\n');
+  const logs=Object.values(S.logs).filter(l=>l.kursId===k.id).sort((a,b)=>(b.datum||'').localeCompare(a.datum||'')).slice(0,3);
+  if(logs.length) add('\n## Letzte Kursbucheinträge\n'+logs.map(l=>`- ${l.datum}: ${l.titel}${l.erreicht?' (bis: '+l.erreicht+')':''}${l.notiz?' – '+l.notiz:''}`).join('\n')+'\n');
+  return out; }
+async function materialPrompt(k,x,art,niveau,wunsch){
+  const f=fachById(k.fachId); const ver=S.settings.lehrplan||'bisher'; const lp=lpThemen(f.name,k.stufe,ver); const kl=klasseOf(k);
+  const thema=lp.find(t=>norm(t)===norm(x.e.titel))||lp.find(t=>norm(x.e.titel).includes(norm(t).slice(0,12))||norm(t).includes(norm(x.e.titel).slice(0,12)))||'';
+  const rp=await rpAuszug(k,thema||x.e.titel); const ctx=await materialKontext(k,x);
+  const s=x.s; const fmt=art==='praes'?'Markdown-Folien: jede Folie beginnt mit „# Titel“, Folien getrennt durch eine Zeile „---“, wenig Text, große Stichpunkte.':'Markdown: Überschrift mit „# “, Aufgaben als „## Aufgabe 1“, Platz zum Schreiben als Zeile „____“, Tabellen als Markdown-Tabelle. Am Ende „# Lösungen“ mit Erwartungshorizont.';
+  return `${kiCtx()}
+
+# Auftrag
+Erstelle ${MAT_ARTEN[art]} für die folgende Unterrichtsstunde. Es soll direkt einsetzbar sein.
+
+# Rahmenplan
+Fach ${f.name}, Klassenstufe ${k.stufe}, Rahmenplan M-V (${ver==='neu'?'neue Fassung ab 2027':'im Schuljahr 2026/27 gültige Fassung'}).
+${thema?'Themenbereich laut Rahmenplan: „'+thema+'“.':'Einheit: „'+x.e.titel+'“.'}${lp.length?'\nAlle Themen dieser Klassenstufe: '+lp.join('; ')+'.':''}
+${rp?'Auszug aus dem hinterlegten Rahmenplan („'+rp.quelle+'“) – halte dich an diese Inhalte, Kompetenzen und Begriffe:\n"""\n'+rp.text+'\n"""':'Orientiere dich an den verbindlichen Inhalten und Kompetenzen des Rahmenplans M-V für diesen Themenbereich. Gehe nicht über das Niveau der Klassenstufe hinaus.'}
+
+# Stunde
+Kurs: ${k.titel}${kl?' (Klasse '+kl.name+(+kl.schueler?', '+kl.schueler+' Schüler':'')+')':''}
+Thema der Stunde: „${s.titel}“ (${dauer(s)} × 45 min)${s.ziele?'\nLernziel: '+s.ziele:''}${s.ablauf?'\nStundenablauf:\n'+s.ablauf:''}${s.ha?'\nHausaufgabe: '+s.ha:''}${s.status==='teil'&&s.erreicht?'\nStand der letzten Stunde: '+s.erreicht:''}
+${ctx?'\n# Vorhandenes Material und Zusammenhang\nBaue darauf auf, wiederhole nichts unnötig, verwende dieselben Begriffe und Bezeichnungen:'+ctx:''}
+
+# Anforderungen
+- Niveau: ${niveau==='leicht'?'leistungsschwache Lerngruppe – kurze Sätze, einfache Wörter, Hilfen und Satzanfänge, kleinschrittig':niveau==='diff'?'differenziert – jede Aufgabe in Basis (★) und Erweiterung (★★), Tippkarten am Ende':'Regelniveau der Klassenstufe'}.
+- Passend zum Stundenablauf (Zeitbedarf der Erarbeitungsphase beachten), fachlich korrekt, Fachbegriffe wie im Rahmenplan.
+- Nur Material, das ohne Internet und mit üblicher Schulausstattung funktioniert.${wunsch?'\n- Zusätzlicher Wunsch: '+wunsch:''}
+- Format: ${fmt}
+Antworte auf Deutsch, nur mit dem Material.`; }
+function openMaterialAssistent(){
+  const e=ED; if(!e||e.type!=='lesson') return; const k=S.kurse[e.kid]; const s=e.data; if(!String(s.titel).trim()){ toast('Bitte zuerst ein Thema eingeben'); return; }
+  const x={e:k.einheiten[e.ei],s:{...s},ei:e.ei}; const lessonEd=e; pushED();
+  const f=fachById(k.fachId); const lp=lpThemen(f?f.name:'',k.stufe,S.settings.lehrplan||'bisher'); const hasRP=Object.values(S.docs).some(d=>d.fachId===k.fachId&&/rahmenplan|(^|[\s_-])rp([\s_-]|$)/i.test((d.titel||'')+' '+(d.fileName||'')));
+  const nDocs=(s.docs||[]).length+Object.values(S.docs).filter(d=>d.fachId===k.fachId&&String(d.stufe)===String(k.stufe)).length;
+  const m=openModal('Material erstellen',`<div class="stack">
+    <div class="info small">${ic('spark')} Claude berücksichtigt: <b>Rahmenplan</b> ${esc(f?f.name:'')} Kl. ${esc(k.stufe)}${lp.length?' ('+lp.length+' Themen)':''}${hasRP?' inkl. hinterlegtem Rahmenplan-Dokument':''}, <b>Stundenbeschreibung</b> (Thema, Ziel, Ablauf), <b>vorhandenes Material</b> (${nDocs} Dokumente im Ordner/an der Stunde) und die Nachbarstunden der Einheit.</div>
+    ${hasRP?'':`<div class="tiny muted">Tipp: Lade das Rahmenplan-PDF in den Fachordner (Dateiname mit „Rahmenplan“) – dann zitiert Claude die genauen Inhalte und Kompetenzen.</div>`}
+    <div class="fields"><div><label class="f">Was soll entstehen?</label><select id="maA">${opt(Object.entries(MAT_ARTEN),'ab')}</select></div>
+      <div><label class="f">Niveau</label><select id="maN">${opt([['normal','Regelniveau'],['leicht','leistungsschwache Gruppe'],['diff','differenziert (★/★★)']],/leistungsschwach/i.test(kiCtx())?'leicht':'normal')}</select></div>
+      <div class="full"><label class="f">Besondere Wünsche (optional)</label><input type="text" id="maW" placeholder="z. B. mit Alltagsbezug Fahrrad, max. 1 Seite, mit Bild-Platzhaltern"></div></div>
+    <div id="maOut"></div></div>`,
+    `<button class="btn" data-act="closeModal">Schließen</button><span style="flex:1"></span>${ENV.sample?'':'<button class="btn" id="maCopy">Prompt kopieren</button>'}<button class="btn ki" id="maGo">${ic('spark')} ${ENV.sample?'Erstellen':'Prompt kopieren & Antwort einfügen'}</button>`,{wide:true,sticky:true});
+  const save=(text,art)=>{ const ord=ensureOrdner(k.fachId,k.stufe,x.e.titel); const d=answerToDoc(text,{typ:art==='praes'?'Präsentation':art==='quiz'?'Leistungskontrolle':art==='tafel'?'Tafelbild':'Arbeitsblatt',fachId:k.fachId,stufe:k.stufe,ordnerId:ord});
+    lessonEd.data.docs.push({docId:d.id,rolle:art==='praes'||art==='tafel'?'praes':'kopie',seiten:1}); return d; };
+  $('#maGo',m).onclick=async ev=>{ const art=$('#maA',m).value, niv=$('#maN',m).value, w=$('#maW',m).value.trim(); const pr=await materialPrompt(k,x,art,niv,w);
+    if(!ENV.sample){ copyText(pr); $('#maOut',m).innerHTML=`<div class="small muted">Prompt kopiert – in der Claude-App einfügen, Antwort hier einfügen:</div><textarea id="maIn" style="min-height:160px"></textarea><button class="btn pri sm" id="maSave" style="margin-top:6px">Als Dokument speichern & verknüpfen</button>`;
+      $('#maSave',m).onclick=()=>{ const t=$('#maIn',m).value.trim(); if(!t) return; const d=save(t,art); closeModal(); renderLessonDocs(); toast('Gespeichert und mit der Stunde verknüpft'); }; return; }
+    ev.target.disabled=true; $('#maOut',m).innerHTML='<div class="ki-out md" id="maK"><span class="muted">Claude schreibt …</span></div>';
+    try{ const r=await ENV.sample(pr,{cache:false,maxTokens:12000,onText:({text})=>{ $('#maK',m).innerHTML=md(text); }}); const text=r.text; $('#maK',m).innerHTML=md(text);
+      $('#maOut',m).insertAdjacentHTML('beforeend',`<div class="row" style="margin-top:10px"><button class="btn pri" id="maSave">Speichern & mit der Stunde verknüpfen</button><button class="btn" id="maPdf">Speichern als PDF</button><button class="btn ghost" id="maNew">Neu erstellen</button></div>${r.truncated?'<div class="hint small">Die Antwort wurde wegen Länge abgeschnitten – „Neu erstellen“ mit dem Wunsch „kürzer“ hilft.</div>':''}`);
+      $('#maSave',m).onclick=()=>{ save(text,art); closeModal(); renderLessonDocs(); render(); toast('Gespeichert und mit der Stunde verknüpft'); };
+      $('#maPdf',m).onclick=async()=>{ const d=save(text,art); closeModal(); renderLessonDocs(); render(); await docToPdf(d.id); };
+      $('#maNew',m).onclick=()=>{ $('#maOut',m).innerHTML=''; ev.target.disabled=false; ev.target.click(); };
+    }catch(err){ $('#maOut',m).innerHTML=`<div class="hint">${esc(err&&(err.message||err.code)||'Fehler')}</div>`; }
+    ev.target.disabled=false; };
+  if($('#maCopy',m)) $('#maCopy',m).onclick=async()=>{ copyText(await materialPrompt(k,x,$('#maA',m).value,$('#maN',m).value,$('#maW',m).value.trim())); };
+}
 
 /* ================= PowerPoint zur Stunde ================= */
 let pptxP=null;
@@ -1625,7 +1709,7 @@ function offlineFolien(s,k){
   return F; }
 function pptPrompt(s,k){
   const docs=(s.docs||[]).map(r=>S.docs[r.docId]).filter(Boolean).map(d=>d.titel+' ('+(ROLLEN[(s.docs.find(r=>r.docId===d.id)||{}).rolle]||d.typ)+')');
-  return `${S.settings.kiKontext}\n\n${kursKontext(k,false)}
+  return `${kiCtx()}\n\n${kursKontext(k,false)}
 Erstelle die Folien für eine PowerPoint, die mich als Lehrkraft durch diese Unterrichtsstunde führt. Die Folien sieht die Klasse (kurz, einfache Sprache, große Stichpunkte, max. 5 Punkte à max. 10 Wörter). Alles, was nur für mich ist (Zeit, Methode, Sozialform, Impulsfragen, erwartete Antworten, Hinweise), kommt in "notizen".
 Stunde: „${s.titel}“ (${s.dauer||1} × 45 min)${s.ziele?'\nLernziel: '+s.ziele:''}
 Ablauf:\n${s.ablauf||'(kein Ablauf eingetragen – schlage einen sinnvollen 45-Minuten-Ablauf vor)'}${s.ha?'\nHausaufgabe: '+s.ha:''}${docs.length?'\nVerknüpftes Material: '+docs.join('; '):''}
@@ -2006,17 +2090,14 @@ const ACT={
   gapKI:o=>{ const g=findGaps()[+o.i]; if(!g||!g.ki) return; kiModal('KI-Vorschlag',gapPrompt(g.ki),gapCtx(g)); },
   gapCopy:o=>{ const g=findGaps()[+o.i]; if(g&&g.ki) copyText(gapPrompt(g.ki)); },
   pasteAnswer:o=>{ const i=+o.i; if(i<0){ pasteModal('Antwort einfügen',null); return; } const g=findGaps()[i]; pasteModal('Antwort einfügen',g?gapCtx(g):null); },
-  kiAblauf:()=>{ const e=ED; const k=S.kurse[e.kid]; const pr=S.settings.kiKontext+'\n\n'+kursKontext(k,false)+`\nPlane einen Stundenablauf (45 Minuten) für „${e.data.titel||'(Thema fehlt)'}“${e.data.ziele?' mit dem Ziel: '+e.data.ziele:''}. Kurze Phasen mit Minuten (Einstieg, Erarbeitung, Sicherung, ggf. Experiment), je 1–2 Zeilen, mit Methode und Sozialform. Nur die Phasenliste.`;
+  kiAblauf:()=>{ const e=ED; const k=S.kurse[e.kid]; const pr=kiCtx()+'\n\n'+kursKontext(k,false)+`\nPlane einen Stundenablauf (45 Minuten) für „${e.data.titel||'(Thema fehlt)'}“${e.data.ziele?' mit dem Ziel: '+e.data.ziele:''}. Kurze Phasen mit Minuten (Einstieg, Erarbeitung, Sicherung, ggf. Experiment), je 1–2 Zeilen, mit Methode und Sozialform. Nur die Phasenliste.`;
     if(!ENV.sample){ copyText(pr); toast('Prompt kopiert – in der Claude-App einfügen und Antwort ins Ablauf-Feld kopieren.'); return; }
     pushED(); const m=openModal('Ablauf-Vorschlag',`<div class="ki-out md" id="kia"></div>`,`<button class="btn" id="kiacp">Prompt kopieren</button><span style="flex:1"></span><button class="btn" data-act="closeModal">Verwerfen</button><button class="btn pri" id="kiaok" disabled>Übernehmen</button>`,{wide:true});
     $('#kiacp',m).onclick=()=>copyText(pr);
     runKI(pr,$('#kia',m)).then(t=>{ if(!t) return; const b=$('#kiaok',m); b.disabled=false; b.onclick=()=>{ closeModal(); ED.data.ablauf=(ED.data.ablauf?ED.data.ablauf+'\n\n':'')+t; const ta=$('#lablauf'); if(ta) ta.value=ED.data.ablauf; }; }); },
-  kiMaterial:()=>{ const e=ED; const k=S.kurse[e.kid]; if(!String(e.data.titel).trim()){toast('Bitte zuerst ein Thema eingeben');return;}
-    const ex=k.einheiten[e.ei]; const pr=S.settings.kiKontext+'\n\n'+kursKontext(k)+`\nFür die Stunde „${e.data.titel}“${e.data.ziele?' (Ziel: '+e.data.ziele+')':''} brauche ich Material. 1) Prüfe, ob etwas aus dem Materialordner passt. 2) Nenne kostenlose, seriöse Quellen mit Suchbegriffen. 3) Erstelle ein fertiges, einfach formuliertes Arbeitsblatt (Überschrift mit „# “, max. 6 Aufgaben, Lösungen am Ende). Antworte auf Deutsch in Markdown.`;
-    const ctx={...lessonCtx(k,{e:ex},'Arbeitsblatt'),onSave:d=>{ const ed=EDstack[EDstack.length-1]||ED; if(ed&&ed.type==='lesson'){ ed.data.docs.push({docId:d.id,rolle:'kopie',seiten:1}); setTimeout(renderLessonDocs,0); } }};
-    pushED(); if(ENV.sample) kiModal('Material für „'+e.data.titel+'“',pr,ctx); else { copyText(pr); pasteModal('Antwort aus der Claude-App einfügen',ctx); } },
+  kiMaterial:()=>openMaterialAssistent(),
   kiUnit:async o=>{ const k=S.kurse[o.k]; const e=k.einheiten[+o.ei];
-    const pr=S.settings.kiKontext+'\n\n'+kursKontext(k,false)+`\nSchlage für die Unterrichtseinheit „${e.titel}“ eine Abfolge von 5–10 Unterrichtsstunden vor (Rahmenplan M-V, Klassenstufe ${k.stufe}). Bereits vorhanden: ${(e.stunden||[]).map(s=>s.titel).join('; ')||'nichts'}. Antworte NUR mit JSON: [{"titel":"…","ziele":"Die SuS können …","dauer":1}]`;
+    const pr=kiCtx()+'\n\n'+kursKontext(k,false)+`\nSchlage für die Unterrichtseinheit „${e.titel}“ eine Abfolge von 5–10 Unterrichtsstunden vor (Rahmenplan M-V, Klassenstufe ${k.stufe}). Bereits vorhanden: ${(e.stunden||[]).map(s=>s.titel).join('; ')||'nichts'}. Antworte NUR mit JSON: [{"titel":"…","ziele":"Die SuS können …","dauer":1}]`;
     const m=openModal('Stunden für „'+e.titel+'“',`<div id="kiu">${ENV.sample?'<span class="muted">Denke nach …</span>':'<p class="small">Prompt kopieren, in der Claude-App einfügen und die JSON-Antwort hier einfügen:</p><textarea id="kiuin" style="min-height:160px;font-family:ui-monospace,monospace;font-size:13px"></textarea><button class="btn" id="kiuparse" style="margin-top:8px">Vorschläge anzeigen</button>'}</div>`,`<button class="btn" id="kiucp">Prompt kopieren</button><span style="flex:1"></span><button class="btn" data-act="closeModal">Abbrechen</button><button class="btn pri" id="kiuok" disabled>Ausgewählte übernehmen</button>`,{wide:true});
     $('#kiucp',m).onclick=()=>copyText(pr);
     const show=arr=>{ if(!Array.isArray(arr)) arr=arr&&(arr.stunden||arr.items)||[];
@@ -2025,11 +2106,11 @@ const ACT={
     if(!ENV.sample){ $('#kiuparse',m).onclick=()=>{ const raw=$('#kiuin',m).value; const mm=raw.match(/\[[\s\S]*\]/); try{ show(JSON.parse(mm?mm[0]:raw)); }catch(e){ toast('Antwort konnte nicht gelesen werden'); } }; return; }
     try{ show(await ENV.sample.json(pr,{cache:false})); }catch(err){ $('#kiu',m).innerHTML=`<div class="hint">KI-Fehler: ${esc(err&&(err.message||err.code)||'unbekannt')}</div>`; } },
   chatSend:async()=>{ const inp=$('#chatin'); const q=inp.value.trim(); if(!q) return; chatKurs=$('#chatKurs').value;
-    let content=q; if(!chat.length){ content=S.settings.kiKontext+'\n\n'+(chatKurs&&S.kurse[chatKurs]?kursKontext(S.kurse[chatKurs])+'\n':'')+'Antworte auf Deutsch in Markdown. Meine Frage:\n'+q; }
+    let content=q; if(!chat.length){ content=kiCtx()+'\n\n'+(chatKurs&&S.kurse[chatKurs]?kursKontext(S.kurse[chatKurs])+'\n':'')+'Antworte auf Deutsch in Markdown. Meine Frage:\n'+q; }
     chat.push({role:'user',content,show:q}); inp.value=''; restoreChat();
     const box=document.createElement('div'); box.className='ki-out md'; $('#chatlog').appendChild(box);
     const t=await runKI(chat.map(m=>({role:m.role,content:m.content})),box); if(t) chat.push({role:'assistant',content:t}); else chat.pop(); if(route()==='assistent') render(); },
-  chatCopy:()=>{ const q=$('#chatin').value.trim(); const k=S.kurse[$('#chatKurs').value]; copyText(S.settings.kiKontext+'\n\n'+(k?kursKontext(k)+'\n':'')+q); },
+  chatCopy:()=>{ const q=$('#chatin').value.trim(); const k=S.kurse[$('#chatKurs').value]; copyText(kiCtx()+'\n\n'+(k?kursKontext(k)+'\n':'')+q); },
   chatClear:()=>{ chat=[]; render(); },
   saveAnswer:o=>{ const k=S.kurse[chatKurs]; const d=answerToDoc(chat[+o.i].content,k?{fachId:k.fachId,stufe:k.stufe}:null); toast('Gespeichert in „'+folderLabel(d.fachId,d.stufe,d.ordnerId)+'“'); },
   copyAnswer:o=>copyText(chat[+o.i].content),
@@ -2091,7 +2172,7 @@ async function init(){
   const db=ENV.inArtifact?await cap('db'):null;
   if(db){ await initCloud(db); ENV.assets=await cap('assets'); ENV.sample=await cap('sample'); ENV.downloads=await cap('downloads'); await loadLocalFilesOnly(); }
   else { await loadLocal(); if(ENV.inArtifact){ ENV.sample=await cap('sample'); ENV.downloads=await cap('downloads'); } }
-  loaded=true; migrateDocs(); if(faecher().length){ const was=S.settings.lpDone; const n=createLehrplanOrdner(); if(n||was!==S.settings.lpDone) saveSettingsRaw(); if(n) setTimeout(()=>toast(n+' Themenordner laut Rahmenplan ergänzt'),600); } render();
+  try{ localStorage.removeItem('lo-claude'); }catch(e){} loaded=true; migrateDocs(); if(faecher().length){ const was=S.settings.lpDone; const n=createLehrplanOrdner(); if(n||was!==S.settings.lpDone) saveSettingsRaw(); if(n) setTimeout(()=>toast(n+' Themenordner laut Rahmenplan ergänzt'),600); } render();
   if(!faecher().length) profilEditor(true);
   if(ghOn()) setTimeout(()=>ghSync(),1200);
   if('serviceWorker' in navigator&&!ENV.inArtifact&&location.protocol==='https:'){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
