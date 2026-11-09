@@ -135,6 +135,17 @@ input:focus,select:focus,textarea:focus{outline:2px solid #9fd0c9;border-color:v
 table.t{width:100%;border-collapse:collapse;font-size:15px}
 table.t th,table.t td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
 table.t th{font-size:13px;color:var(--muted);font-weight:600}
+.wk{display:grid;grid-template-columns:52px repeat(5,minmax(130px,1fr));gap:4px;min-width:720px}
+.wk-h{font-size:13px;text-align:center;padding:6px 2px;border-radius:8px;background:var(--surface2)}
+.wk-h.tod{background:var(--accent);color:#fff}.wk-h.tod .linkbtn{color:#fff}
+.wk-p{font-size:12px;color:var(--muted);text-align:center;display:flex;flex-direction:column;justify-content:center}
+.wk-c{display:flex;flex-direction:column;gap:3px;min-height:46px}.wk-c.empty-c{background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(0,0,0,.025) 6px,rgba(0,0,0,.025) 12px);border-radius:8px}
+.wk-i{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:1px;padding:5px 7px;border-radius:8px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);font-size:12.5px;line-height:1.25;min-height:46px}
+.wk-i b{font-size:12.5px}.wk-i span{color:var(--ink);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.wk-i em{font-style:normal;font-size:11px;color:var(--warn)}
+.wk-i.done{opacity:.6}.wk-i.aus{opacity:.55;text-decoration:line-through}.wk-i.lk{background:#fff7ed}.wk-i.vt{background:#f3f0ea;border-left-color:#6b5b4b}
+.linkbtn{all:unset;cursor:pointer;color:var(--accent);text-decoration:underline;font-size:11.5px}
+.wk-h .linkbtn{display:block;margin:2px auto 0;opacity:.75}.wk-h .tiny{margin-top:2px}
+.grid3{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
 .slotgrid{display:grid;grid-template-columns:44px repeat(5,1fr);gap:4px}
 .slotgrid div{font-size:12px;color:var(--muted);text-align:center;align-self:center}
 .slotgrid button{min-height:36px;border:1px solid var(--line);background:#fff;border-radius:8px;cursor:pointer;font-size:13px}
@@ -211,7 +222,7 @@ const TAGE=['','Mo','Di','Mi','Do','Fr','Sa','So'];
 const fmtD=s=>s?parseD(s).toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'}):'';
 const fmtLong=s=>s?parseD(s).toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
 const norm=s=>String(s||'').toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss').replace(/[_\-.]+/g,' ');
-const ICONS={camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',book:'<path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.2a6 6 0 0 1 3.5 5.8"/>',folder:'<path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z"/>',printer:'<path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/>',check:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12l3 3 5-6"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',inbox:'<path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 2h6l1-2h5"/>',upload:'<path d="M12 15V4M7.5 8.5L12 4l4.5 4.5"/><path d="M4 15v5h16v-5"/>',play:'<path d="M7 4.5l12 7.5-12 7.5z"/>',plus:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M9 6l6 6-6 6"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',doc:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/>',move:'<path d="M4 12h14M14 7l5 5-5 5"/>',link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',text:'<path d="M5 6h14M5 12h14M5 18h9"/>',wifi:'<path d="M2 8.8a15 15 0 0 1 20 0M5.5 12.4a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/><circle cx="12" cy="19.5" r="1"/>'};
+const ICONS={cal:'<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',book:'<path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.2a6 6 0 0 1 3.5 5.8"/>',folder:'<path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2h8.5A1.5 1.5 0 0 1 21 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z"/>',printer:'<path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/>',check:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12l3 3 5-6"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',inbox:'<path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 2h6l1-2h5"/>',upload:'<path d="M12 15V4M7.5 8.5L12 4l4.5 4.5"/><path d="M4 15v5h16v-5"/>',play:'<path d="M7 4.5l12 7.5-12 7.5z"/>',plus:'<path d="M12 5v14M5 12h14"/>',chev:'<path d="M9 6l6 6-6 6"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',doc:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/>',move:'<path d="M4 12h14M14 7l5 5-5 5"/>',link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',text:'<path d="M5 6h14M5 12h14M5 18h9"/>',wifi:'<path d="M2 8.8a15 15 0 0 1 20 0M5.5 12.4a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/><circle cx="12" cy="19.5" r="1"/>'};
 const ic=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||''}</svg>`;
 const TYPEN=['Präsentation','Arbeitsblatt','Lösung','Leistungskontrolle','Lernblatt','Tafelbild','Experiment/Protokoll','Medien','Link','Elternbrief','Formular/Protokoll','KI-Entwurf','Sonstiges'];
 const TYPFARBE={'Präsentation':'#c2662d','Arbeitsblatt':'#1f6f68','Lösung':'#5d7a3a','Leistungskontrolle':'#b42318','Lernblatt':'#2d6aa0','Tafelbild':'#475467','Experiment/Protokoll':'#7a4fb5','Medien':'#a1478a','Link':'#3b82a0','Elternbrief':'#8a6d1f','Formular/Protokoll':'#6b5b4b','KI-Entwurf':'#6d4fc2','Sonstiges':'#7a7f88'};
@@ -299,7 +310,7 @@ function createLehrplanOrdner(){
   }); });
   S.settings.lpDone=ver+'-'+LP_VERSION; return n;
 }
-const COLLS=['klassen','kurse','docs','logs','aufgaben','ordner'];
+const COLLS=['klassen','kurse','docs','logs','aufgaben','ordner','termine'];
 const DEFAULT_SETTINGS={
   schuljahr:'2026/27', sjStart:'2026-08-24', sjEnde:'2027-07-02', reserve:2,
   periods:[["07:45","08:30"],["08:35","09:20"],["09:40","10:25"],["10:30","11:15"],["11:35","12:20"],["12:25","13:10"],["13:30","14:15"],["14:20","15:05"]],
@@ -307,7 +318,7 @@ const DEFAULT_SETTINGS={
   kiKontext:'Ich bin Lehrkraft an einer Regionalschule/Gesamtschule in Mecklenburg-Vorpommern und unterrichte Mathematik, Informatik, Physik und Astronomie (Klassen 7–10). Viele Klassen sind leistungsschwach; Materialien sollen klar, einfach und rahmenplankonform (Rahmenpläne M-V) sein.',
   profil:null, autoSort:true, lehrplan:'bisher', lpDone:''
 };
-let S={settings:clone(DEFAULT_SETTINGS),druck:{},klassen:{},kurse:{},docs:{},logs:{},aufgaben:{},ordner:{}};
+let S={settings:clone(DEFAULT_SETTINGS),druck:{},klassen:{},kurse:{},docs:{},logs:{},aufgaben:{},ordner:{},termine:{}};
 let DB=null, MODE='lokal', loaded=false;
 const ENV={assets:null,sample:null,downloads:null,inArtifact:false};
 
@@ -353,9 +364,11 @@ function dbWrite(path,data){
   });
   return chains[path];
 }
-function save(coll,obj,silent){ S[coll][obj.id]=obj; if(DB) dbWrite(coll+'/'+obj.id,clone(obj)); else markDirty(coll); if(!silent) render(); }
-function remove(coll,id,silent){ delete S[coll][id]; if(DB) dbWrite(coll+'/'+id,null); else markDirty(coll); if(!silent) render(); }
-function saveSettings(){ if(DB) dbWrite('meta/settings',clone(S.settings)); else markDirty('settings'); render(); }
+function save(coll,obj,silent){ obj._t=Date.now(); if(coll==='termine') TV++; S[coll][obj.id]=obj; if(DB) dbWrite(coll+'/'+obj.id,clone(obj)); else markDirty(coll); if(!silent) render(); }
+function remove(coll,id,silent){ delete S[coll][id]; if(coll==='termine') TV++; tomb(coll+'/'+id); if(DB) dbWrite(coll+'/'+id,null); else markDirty(coll); if(!silent) render(); }
+function saveSettings(){ S.settings._t=Date.now(); saveSettingsRaw(); render(); }
+function saveSettingsRaw(){ if(DB) dbWrite('meta/settings',clone(S.settings)); else markDirty('settings'); }
+let tombT=null; function tomb(k){ const d=S.settings.del||(S.settings.del={}); d[k]=Date.now(); const cut=Date.now()-200*864e5; for(const x in d) if(d[x]<cut) delete d[x]; clearTimeout(tombT); tombT=setTimeout(saveSettingsRaw,500); }
 function saveDruck(){ if(DB) dbWrite('meta/druck',{marks:clone(S.druck)}); else markDirty('druck'); }
 function initCloud(db){
   return new Promise(resolve=>{
@@ -466,14 +479,22 @@ function autoSortDoc(d){
 function isFree(d){ if(wd(d)>5) return true; return (S.settings.ferien||[]).some(f=>f.von&&f.bis&&d>=f.von&&d<=f.bis); }
 function ferienName(d){ const f=(S.settings.ferien||[]).find(f=>d>=f.von&&d<=f.bis); return f?f.name:(wd(d)>5?'Wochenende':''); }
 const sortedSlots=k=>(k.slots||[]).slice().sort((a,b)=>a.tag-b.tag||a.std-b.std);
-function slotsOn(k,d){ if(isFree(d)) return []; const w=wd(d); return (k.slots||[]).filter(s=>s.tag===w).sort((a,b)=>a.std-b.std).map(s=>({date:d,std:s.std})); }
+let TV=0,_ti=null,_tiRef=null,_tiV=-1;
+function termIdx(){ if(_ti&&_tiRef===S.termine&&_tiV===TV) return _ti; const ix={}; Object.values(S.termine||{}).forEach(t=>{ if(t&&t.datum) (ix[t.datum]||(ix[t.datum]=[])).push(t); }); _ti=ix; _tiRef=S.termine; _tiV=TV; return ix; }
+const termineAm=d=>termIdx()[d]||[];
+function slotsOn(k,d){ if(isFree(d)) return []; const w=wd(d); const T=termineAm(d); if(T.some(t=>t.art==='tagaus')) return [];
+  const ab=S.settings.abAktiv?weekType(d):null;
+  let sl=(k.slots||[]).filter(s=>s.tag===w&&(!s.woche||!ab||s.woche===ab)).map(s=>s.std);
+  sl=sl.filter(std=>!T.some(t=>t.art==='ausfall'&&t.kursId===k.id&&(!t.std||+t.std===std)));
+  T.forEach(t=>{ if(t.art==='zusatz'&&t.kursId===k.id&&t.std&&!sl.includes(+t.std)) sl.push(+t.std); });
+  return [...new Set(sl)].sort((a,b)=>a-b).map(std=>({date:d,std})); }
 function nextSlots(k,from,n){ const out=[]; if(!(k.slots||[]).length) return out; let d=from,g=0; while(out.length<n&&g<420){ out.push(...slotsOn(k,d)); d=addDays(d,1); g++; } return out.slice(0,n); }
 function countSlots(k,from,to){ if(!(k.slots||[]).length||!from||from>to) return 0; let n=0,d=from,g=0; while(d<=to&&g<800){ n+=slotsOn(k,d).length; d=addDays(d,1); g++; } return n; }
 function flat(k){ const o=[]; (k.einheiten||[]).forEach((e,ei)=>(e.stunden||[]).forEach((s,si)=>o.push({e,s,ei,si}))); return o; }
 const dauer=s=>Math.max(1,+s.dauer||1);
 function logFor(kid,date,std){ return Object.values(S.logs).find(l=>l.kursId===kid&&l.datum===date&&+l.std===+std); }
 function projection(k,from,n){
-  const slots=nextSlots(k,from,n+25).filter(s=>!logFor(k.id,s.date,s.std)).slice(0,n);
+  const slots=nextSlots(k,from,n+25).filter(s=>!logFor(k.id,s.date,s.std)&&!lkFor(k.id,s.date,s.std)).slice(0,n);
   const open=flat(k).filter(x=>x.s.status!=='fertig'); const res=[]; let li=0,used=0;
   for(const sl of slots){ if(li>=open.length){res.push({...sl,item:null});continue;} const x=open[li]; const need=x.s.status==='teil'?1:dauer(x.s);
     res.push({...sl,item:x,first:used===0,part:used+1,of:need}); used++; if(used>=need){li++;used=0;} }
@@ -544,7 +565,7 @@ function docIcon(d){ const ext=d.kind==='md'?'TEXT':d.kind==='link'?'LINK':d.kin
 function usages(docId){ const o=[]; Object.values(S.kurse).forEach(k=>flat(k).forEach(x=>{ if((x.s.docs||[]).some(r=>r.docId===docId)) o.push({k,x}); })); return o; }
 
 /* ================= Navigation ================= */
-const NAV=[[null,[['heute','clock','Heute'],['kurse','book','Kurse'],['klassen','users','Klassen']]],['Material',[['material','folder','Materialordner'],['druck','printer','Druckliste']]],['Organisation',[['aufgaben','check','Aufgaben & Termine'],['assistent','spark','KI-Assistent']]]];
+const NAV=[[null,[['heute','clock','Heute'],['woche','cal','Woche'],['kurse','book','Kurse'],['klassen','users','Klassen']]],['Material',[['material','folder','Materialordner'],['druck','printer','Druckliste']]],['Organisation',[['aufgaben','check','Aufgaben & Termine'],['assistent','spark','KI-Assistent']]]];
 let viewDate=today(), druckRange='woche', kursTab='plan', matQ='';
 let MAT={f:'',s:'',o:''};
 function route(){ return (location.hash||'#heute').slice(1)||'heute'; }
@@ -564,7 +585,7 @@ function render(){
   renderNav(); if(!loaded) return;
   const r=route(); const m=$('#main'); const y=window.scrollY;
   if(r.startsWith('kurs-')) m.innerHTML=viewKurs(r.slice(5));
-  else m.innerHTML=({heute:viewHeute,kurse:viewKurse,klassen:viewKlassen,material:viewMaterial,druck:viewDruck,assistent:viewKI,aufgaben:viewAufgaben,profil:viewProfil}[r]||viewHeute)();
+  else m.innerHTML=({heute:viewHeute,woche:viewWoche,kurse:viewKurse,klassen:viewKlassen,material:viewMaterial,druck:viewDruck,assistent:viewKI,aufgaben:viewAufgaben,profil:viewProfil}[r]||viewHeute)();
   window.scrollTo(0,y); hydrate(m);
   if(r==='assistent') restoreChat();
 }
@@ -575,34 +596,48 @@ window.addEventListener('online',renderNav); window.addEventListener('offline',r
 function dayItems(d){
   const items=[];
   kurseAktiv().forEach(k=>{ const sl=slotsOn(k,d); if(!sl.length) return; const proj=d>=today()?projection(k,today(),80):null;
-    sl.forEach(s=>{ const log=logFor(k.id,d,s.std); const p=!log&&proj?proj.find(x=>x.date===d&&x.std===s.std):null; items.push({k,std:s.std,log,p}); }); });
+    sl.forEach(s=>{ const log=logFor(k.id,d,s.std); const lk=!log?lkFor(k.id,d,s.std):null; const p=!log&&!lk&&proj?proj.find(x=>x.date===d&&x.std===s.std):null; items.push({k,std:s.std,log,p,lk}); }); });
+  if(!isFree(d)){ const T=termineAm(d); const dayOff=T.some(t=>t.art==='tagaus');
+    T.forEach(t=>{ if(t.art==='vertretung'&&!dayOff) items.push({typ:'vertretung',t,std:+t.std||0});
+      if(t.art==='ausfall'&&!dayOff){ const k=S.kurse[t.kursId]; if(!k||k.archiv) return; const ab=S.settings.abAktiv?weekType(d):null; (k.slots||[]).filter(x=>x.tag===wd(d)&&(!x.woche||!ab||x.woche===ab)&&(!t.std||+t.std===x.std)).forEach(x=>items.push({typ:'ausfall',k,t,std:x.std})); } }); }
   return items.sort((a,b)=>a.std-b.std);
 }
 function viewHeute(){
   const d=viewDate, isToday=d===today();
   const head=`<div class="page-h"><div class="grow"><h1>${isToday?'Heute':esc(fmtLong(d).split(',')[0])}</h1><div class="sub">${esc(fmtLong(d))}</div></div>
-    <div class="row nw"><button class="btn" data-act="day" data-n="-1" aria-label="Vortag">‹</button><button class="btn" data-act="day" data-n="0">Heute</button><button class="btn" data-act="day" data-n="1" aria-label="Folgetag">›</button></div></div>`;
+    <div class="row nw"><button class="btn" data-act="day" data-n="-1" aria-label="Vortag">‹</button><button class="btn" data-act="day" data-n="0">Heute</button><button class="btn" data-act="day" data-n="1" aria-label="Folgetag">›</button></div></div>
+    ${Object.keys(S.kurse).length&&!isFree(d)?`<div class="row" style="margin:-6px 0 12px;gap:6px">${termineAm(d).some(t=>t.art==='tagaus')?'':`<button class="btn sm" data-act="tagAus" data-d="${d}">Ganzer Tag fällt aus</button>`}<button class="btn sm" data-act="newTermin" data-d="${d}">${ic('plus')} Termin</button>${S.settings.abAktiv?`<span class="chip acc">${weekType(d)}-Woche</span>`:''}</div>`:''}`;
   if(!Object.keys(S.kurse).length) return head+`<div class="card stack"><h2>Los geht's</h2><p>Deine Ordnerstruktur ist angelegt. Am schnellsten: <b>Stundenplan fotografieren</b> – Klassen und Kurse mit Unterrichtszeiten werden automatisch angelegt. Oder von Hand: <b>1.</b> Klasse mit Schülerzahl anlegen → <b>2.</b> Kurs anlegen (z. B. Physik 7Ra) und Unterrichtszeiten antippen → <b>3.</b> Material in den Materialordner laden und Stunden planen.</p>
     <div class="row"><button class="btn pri" data-act="stundenplanFoto">${ic('camera')} Stundenplan fotografieren</button><button class="btn" data-act="editKlasse">${ic('plus')} Klasse anlegen</button><button class="btn" data-act="demo">Beispieldaten laden</button></div></div>`;
   const items=dayItems(d);
   let body='';
-  if(!items.length) body=`<div class="empty">${isFree(d)?esc(ferienName(d)||'Kein Unterricht')+' – kein Unterricht.':'An diesem Tag hast du laut Kursplänen keinen Unterricht.'}</div>`;
-  else { const nxtIdx=isToday?items.findIndex(it=>!it.log&&it.p&&it.p.item):-1; body=items.map((it,i)=>lessonCard(it,d,i===nxtIdx)).join(''); }
+  const tagaus=termineAm(d).find(t=>t.art==='tagaus');
+  if(tagaus) body=`<div class="card hint"><div class="row between"><div><b>${esc(tagaus.titel||'Kein Unterricht')}</b><div class="small">Dein Unterricht fällt an diesem Tag aus – alle Kurse rücken nach hinten.</div></div><button class="btn sm" data-act="delTermin" data-id="${tagaus.id}">Rückgängig</button></div></div>`;
+  else if(!items.length) body=`<div class="empty">${isFree(d)?esc(ferienName(d)||'Kein Unterricht')+' – kein Unterricht.':'An diesem Tag hast du laut Kursplänen keinen Unterricht.'}</div>`;
+  else { const nxtIdx=isToday?items.findIndex(it=>!it.typ&&!it.log&&it.p&&it.p.item):-1; body=items.map((it,i)=>it.typ?terminCard(it):lessonCard(it,d,i===nxtIdx)).join(''); }
+  const lkSoon=lkUpcoming(14).filter(x=>{ const days=Math.round((parseD(x.datum)-parseD(today()))/864e5); return days<=(+x.erinnerung||0)||x.datum===d; });
   const auf=Object.values(S.aufgaben).filter(a=>!a.erledigt).sort((a,b)=>(a.datum||'9').localeCompare(b.datum||'9')).slice(0,5);
   const jobs=printJobs(d,d); const offen=jobs.filter(j=>!S.druck[j.key]);
   const inb=inbox().length;
   const side=`<div class="stack">
+    ${lkSoon.length?`<div class="card" style="border-left:5px solid var(--warn)"><div class="card-h"><h3>📝 Leistungskontrollen</h3></div>${lkSoon.map(x=>{ const days=Math.round((parseD(x.datum)-parseD(today()))/864e5); const hasDoc=(x.docs||[]).some(id=>S.docs[id]); return `<div class="small" style="padding:6px 0;border-bottom:1px solid var(--line)"><a href="#" data-act="termin" data-id="${x.id}"><b>${esc((S.kurse[x.kursId]||{}).titel||'')}</b>: ${esc(x.titel)}</a><br><span class="muted">${days===0?'heute':days===1?'morgen':'in '+days+' Tagen'} · ${esc(fmtD(x.datum))}</span> ${hasDoc?'<span class="chip ok">erstellt</span>':'<span class="chip warn">noch nicht erstellt</span>'}</div>`; }).join('')}</div>`:''}
     <div class="card"><div class="card-h"><h3>Kopien</h3><a href="#druck" class="small">Druckliste →</a></div>
       ${jobs.length?jobs.map(j=>`<div class="row between nw small" style="padding:7px 0;border-bottom:1px solid var(--line)"><span style="${S.druck[j.key]?'opacity:.45;text-decoration:line-through':''}">${esc(j.doc.titel)}<br><span class="muted">${esc(j.k.titel)}</span></span><b style="font-size:19px">${j.anzahl}×</b></div>`).join('')+(offen.length?`<p class="small" style="margin:8px 0 0"><b>${offen.length}</b> noch zu drucken</p>`:''):'<p class="small muted" style="margin:0">Keine Kopiervorlagen für diesen Tag.</p>'}</div>
     ${inb?`<a class="card" href="#material" data-act="openInbox" style="display:block;text-decoration:none;color:inherit"><div class="row nw">${ic('inbox')}<div><b>${inb} Dokument${inb>1?'e':''} im Eingang</b><div class="small muted">Antippen und Ordner-Vorschlag bestätigen</div></div></div></a>`:''}
     <div class="card"><div class="card-h"><h3>Aufgaben</h3><a href="#aufgaben" class="small">alle →</a></div>${auf.length?auf.map(a=>`<label class="row nw small" style="padding:5px 0;align-items:flex-start"><input type="checkbox" data-act="toggleAufgabe" data-id="${a.id}" style="margin-top:3px"><span>${esc(a.text)}${a.datum?` <span class="muted">· ${esc(fmtD(a.datum))}</span>`:''}</span></label>`).join(''):'<p class="small muted" style="margin:0">Nichts offen.</p>'}</div>
   </div>`;
-  return head+`<div class="split"><div class="stack">${body}</div>${side}</div>`;
+  return head+backupBanner()+`<div class="split"><div class="stack">${body}</div>${side}</div>`;
 }
+function terminCard(it){ const t=it.t;
+  if(it.typ==='ausfall'){ const k=it.k; return `<div class="card lesson-card" style="border-left-color:${k.farbe||'#999'};opacity:.7"><div class="time">${it.std}.<small>${esc(periodTime(it.std))}</small></div><div><div class="row between"><b style="text-decoration:line-through">${esc(k.titel)}</b><span class="chip">fällt aus</span></div><div class="small muted" style="margin-top:4px">${esc(t.titel||'Die Planung rückt automatisch nach hinten.')}</div><div class="row" style="margin-top:10px"><button class="btn sm" data-act="delTermin" data-id="${t.id}">Rückgängig</button></div></div></div>`; }
+  return `<div class="card lesson-card" style="border-left-color:#6b5b4b"><div class="time">${it.std||''}.<small>${esc(periodTime(it.std))}</small></div><div><div class="row between"><b>Vertretung ${esc(t.klasse||'')}${t.fach?' · '+esc(t.fach):''}</b><span class="small muted">${esc(t.raum||'')}</span></div>${t.titel?`<div style="margin-top:4px">${esc(t.titel)}</div>`:''}${t.notiz?`<div class="small md" style="margin-top:6px">${md(t.notiz)}</div>`:''}<div class="row" style="margin-top:10px"><button class="btn sm" data-act="termin" data-id="${t.id}">Bearbeiten</button></div></div></div>`; }
 function lessonCard(it,d,isNext){
   const {k,std,log,p}=it; const kl=klasseOf(k); const col=k.farbe||'#1f6f68';
   let mid='',acts='';
-  if(log){
+  if(it.lk&&!log){ const t=it.lk; const ds=(t.docs||[]).map(id=>S.docs[id]).filter(Boolean);
+    mid=`<span class="chip warn">📝 Leistungskontrolle</span><h3 style="margin:6px 0">${esc(t.titel)}</h3><div class="row" style="gap:6px">${ds.map(x=>`<button class="chip acc" data-act="openDoc" data-id="${x.id}">${esc(x.titel)}</button>`).join('')||'<span class="small muted">noch nicht erstellt</span>'}</div>${ds.length?`<div class="small" style="margin-top:8px">${ic('printer')} <b>${kopienFor(kl)} Kopien</b></div>`:''}`;
+    acts=`<button class="btn sm" data-act="termin" data-id="${t.id}">Öffnen</button>`;
+  } else if(log){
     mid=`<div class="row"><span class="chip ok">✓ dokumentiert</span><b>${esc(log.titel||'')}</b></div><div class="small muted" style="margin-top:6px">${log.status==='aus'?'Stunde ausgefallen':log.status==='teil'?'Teilweise – erreicht bis: '+esc(log.erreicht):'Vollständig geschafft'}${log.ha?' · HA: '+esc(log.ha):''}</div>`;
     acts=`<button class="btn sm" data-act="delLog" data-id="${log.id}">Rückgängig</button>`;
   } else if(p&&p.item){
@@ -614,7 +649,7 @@ function lessonCard(it,d,isNext){
       ${docs.some(o=>o.r.rolle==='kopie')?`<div class="small" style="margin-top:8px">${ic('printer')} <b>${kopienFor(kl)} Kopien</b> je Kopiervorlage</div>`:''}`;
     acts=`<button class="btn ${isNext?'pri':'pri sm'}" data-act="present" data-k="${k.id}" data-s="${s.id}" data-d="${d}" data-std="${std}">${ic('play')} Präsentieren</button>
       ${d<=today()?`<button class="btn ${isNext?'':'sm'}" data-act="finish" data-k="${k.id}" data-s="${s.id}" data-d="${d}" data-std="${std}">✓ Abschließen</button>`:''}
-      <button class="btn ${isNext?'':'sm'} ghost" data-act="editLesson" data-k="${k.id}" data-ei="${x.ei}" data-si="${x.si}">Bearbeiten</button>`;
+      <button class="btn ${isNext?'':'sm'} ghost" data-act="editLesson" data-k="${k.id}" data-ei="${x.ei}" data-si="${x.si}">Bearbeiten</button>${d>=today()?`<button class="btn sm ghost" data-act="ausfall" data-k="${k.id}" data-d="${d}" data-std="${std}">Fällt aus</button>`:''}`;
   } else if(d<today()){
     const c=current(k); mid=`<span class="chip warn">nicht dokumentiert</span>`;
     acts=c?`<button class="btn sm" data-act="finish" data-k="${k.id}" data-s="${c.s.id}" data-d="${d}" data-std="${std}">Nachtragen</button>`:'';
@@ -636,7 +671,7 @@ function kursCard(k){
   const kl=klasseOf(k),si=sollIst(k),c=current(k); const pct=si.total?Math.round(si.ist/si.total*100):0; const nxt=projection(k,today(),1)[0];
   return `<a class="card" href="#kurs-${k.id}" style="text-decoration:none;color:inherit;border-top:4px solid ${k.farbe||'#1f6f68'}">
     <div class="row between nw"><h2>${esc(k.titel)}</h2>${statusChip(k)}</div>
-    <div class="small muted" style="margin:4px 0 12px">${esc(kl?kl.name:'ohne Klasse')} · ${sortedSlots(k).map(s=>TAGE[s.tag]+' '+s.std+'.').join(', ')||'keine Zeiten'}</div>
+    <div class="small muted" style="margin:4px 0 12px">${esc(kl?kl.name:'ohne Klasse')} · ${sortedSlots(k).map(s=>TAGE[s.tag]+' '+s.std+'.'+(s.woche?' ('+s.woche+')':'')).join(', ')||'keine Zeiten'}</div>
     <div class="progress"><div style="width:${pct}%;background:${k.farbe||'#1f6f68'}"></div></div>
     <div class="small" style="margin-top:8px">${pct}% · ${nf(si.ist)} von ${si.total} Std.${si.left!=null&&si.total-si.ist>si.left?` · <b style="color:var(--bad)">${Math.ceil(si.total-si.ist-si.left)} Std. zu viel geplant</b>`:''}</div>
     ${c?`<div class="small" style="margin-top:6px"><b>Aktuell:</b> ${esc(c.s.titel)}${nxt?` <span class="muted">· ${esc(fmtD(nxt.date))}, ${nxt.std}. Std.</span>`:''}</div>`:''}
@@ -647,7 +682,7 @@ function viewKurs(id){
   const kl=klasseOf(k),si=sollIst(k); const c=current(k);
   const head=`<div class="crumbs"><a href="#kurse">Kurse</a>›<span>${esc(fachName(k.fachId))}</span></div>
    <div class="page-h"><div class="grow"><h1 style="color:${k.farbe||'inherit'}">${esc(k.titel)}</h1>
-    <div class="sub">${esc(kl?kl.name+' · '+(+kl.schueler||0)+' Schüler':'ohne Klasse')} · ${sortedSlots(k).map(s=>TAGE[s.tag]+' '+s.std+'.').join(', ')||'keine Zeiten'}</div></div>
+    <div class="sub">${esc(kl?kl.name+' · '+(+kl.schueler||0)+' Schüler':'ohne Klasse')} · ${sortedSlots(k).map(s=>TAGE[s.tag]+' '+s.std+'.'+(s.woche?' ('+s.woche+')':'')).join(', ')||'keine Zeiten'}</div></div>
     ${statusChip(k)}<button class="btn" data-act="editKurs" data-id="${k.id}">Kurs bearbeiten</button></div>
     <div class="tabs"><button class="${kursTab==='plan'?'on':''}" data-act="kursTab" data-t="plan">Stoffverteilung</button><button class="${kursTab==='mat'?'on':''}" data-act="kursTab" data-t="mat">Materialordner</button><button class="${kursTab==='buch'?'on':''}" data-act="kursTab" data-t="buch">Kursbuch</button></div>`;
   if(kursTab==='buch'){
@@ -673,6 +708,8 @@ function viewKurs(id){
         <div class="row nw" style="gap:4px"><button class="btn sm" data-act="present" data-k="${k.id}" data-s="${s.id}" aria-label="Präsentieren">${ic('play')}</button><button class="btn sm" data-act="editLesson" data-k="${k.id}" data-ei="${ei}" data-si="${si}">Bearbeiten</button></div></div>`;}).join('')||'<div class="les"><span></span><span class="small muted">Noch keine Stunden.</span><span></span></div>'}</div>`;}).join('');
   return head+`<div class="card"><div class="row between"><div><span class="muted small">Wo stehe ich?</span><div style="font-size:17px">${c?`${esc(c.e.titel)} › <b>${esc(c.s.titel)}</b>${c.s.status==='teil'?' <span class="chip warn">ab: '+esc(c.s.erreicht||'')+'</span>':''}`:'Alle Stunden erledigt.'}</div></div>
     <div class="small muted" style="text-align:right">Soll bis heute ${si.soll??'–'} · Ist ${nf(si.ist)} · noch ${si.left??'–'} Termine im Schuljahr</div></div></div>
+    ${(()=>{ const tt=Object.values(S.termine||{}).filter(t=>t.kursId===k.id&&t.datum>=today()).sort((a,b)=>a.datum.localeCompare(b.datum)).slice(0,8);
+      return `<div class="row" style="margin:12px 0;gap:6px"><button class="btn sm" data-act="newTermin" data-art="kontrolle" data-k="${k.id}">📝 Leistungskontrolle planen</button><button class="btn sm" data-act="newTermin" data-art="ausfall" data-k="${k.id}">Ausfall eintragen</button><button class="btn sm ki" data-act="stoffverteilung" data-k="${k.id}">${ic('spark')} Stoffverteilung planen</button></div>`+(tt.length?`<div class="card" style="padding:8px 14px;margin-bottom:12px">${tt.map(t=>`<div class="row between small" style="padding:6px 0;border-bottom:1px solid var(--line)"><a href="#" data-act="termin" data-id="${t.id}">${t.art==='kontrolle'?'📝 ':t.art==='ausfall'?'✕ ':'+ '}<b>${esc(TERMIN_ARTEN[t.art])}</b>${t.titel?' · '+esc(t.titel):''}</a><span class="muted">${esc(fmtD(t.datum))}${t.std?', '+t.std+'. Std.':''}</span></div>`).join('')}</div>`:''); })()}
     ${units||'<div class="empty" style="margin-top:12px">Lege die erste Unterrichtseinheit an. Zu jeder Einheit wird automatisch ein Themenordner im Materialordner erstellt.</div>'}
     <div class="row" style="margin-top:14px"><button class="btn pri" data-act="addUnit" data-k="${k.id}">${ic('plus')} Einheit</button></div>`;
 }
@@ -838,7 +875,7 @@ function openDoc(id){
     <div><b class="small">Verwendet in:</b> ${u.length?u.map(o=>`<div class="small"><a href="#kurs-${o.k.id}" data-act="closeModal">${esc(o.k.titel)}</a> › ${esc(o.x.e.titel)} › ${esc(o.x.s.titel)}</div>`).join(''):'<span class="small muted">noch keiner Stunde zugeordnet</span>'}</div></div>`,
     `<button class="btn danger" data-act="delDoc" data-id="${d.id}">Löschen</button><span style="flex:1"></span>
      ${d.kind==='file'?`<a class="btn" data-fsrc="${d.id}" target="_blank" rel="noopener">Öffnen ↗</a>`:''}
-     <button class="btn" data-act="moveDoc" data-id="${d.id}">${ic('move')} Verschieben</button><button class="btn" data-act="editDoc" data-id="${d.id}">Bearbeiten</button>${d.kind!=='extern'&&d.kind!=='link'?`<button class="btn pri" data-act="presentDoc" data-id="${d.id}">${ic('play')} Präsentieren</button>`:''}`,{wide:true});
+     ${d.kind==='md'?`<button class="btn" data-act="pdfDoc" data-id="${d.id}">Als PDF</button>`:''}${d.kind==='md'||(isPdf(d)&&(d.snippet||'').trim())?`<button class="btn ki" data-act="diffDoc" data-id="${d.id}">${ic('spark')} Differenzieren</button>`:''}<button class="btn" data-act="moveDoc" data-id="${d.id}">${ic('move')} Verschieben</button><button class="btn" data-act="editDoc" data-id="${d.id}">Bearbeiten</button>${d.kind!=='extern'&&d.kind!=='link'?`<button class="btn pri" data-act="presentDoc" data-id="${d.id}">${ic('play')} Präsentieren</button>`:''}`,{wide:true});
   hydrate(m);
   const pv=$('#pdfprev',m);
   if(pv) getPdf(d).then(pdf=>{ const cv=document.createElement('canvas'); pv.innerHTML=''; pv.appendChild(cv); return renderPdfPage(pdf,1,cv,Math.min(pv.clientWidth||600,820),340); }).catch(()=>{ pv.innerHTML='<div class="small muted">Vorschau nicht möglich – „Öffnen“ nutzen.</div>'; });
@@ -962,7 +999,7 @@ function openLessonEditor(kid,ei,si){
     <div><label class="f">Dauer (Unterrichtsstunden)</label><input type="number" min="1" max="10" data-f="dauer" value="${esc(s.dauer||1)}"></div>
     <div><label class="f">Status</label><select data-f="status">${opt([['offen','offen'],['teil','teilweise'],['fertig','erledigt']],s.status||'offen')}</select></div>
     <div class="full"><label class="f">Lernziel(e)</label><input type="text" data-f="ziele" value="${esc(s.ziele)}" placeholder="Die SuS können …"></div>
-    <div class="full"><div class="row between"><label class="f">Ablauf / Notizen</label><button class="btn sm ki" data-act="kiAblauf">${ic('spark')} Ablauf vorschlagen</button></div><textarea data-f="ablauf" id="lablauf" style="min-height:110px">${esc(s.ablauf)}</textarea></div>
+    <div class="full"><div class="row between"><label class="f">Ablauf / Notizen</label><div class="row" style="gap:6px"><button class="btn sm ki" data-act="kiAblauf">${ic('spark')} Ablauf vorschlagen</button><button class="btn sm pri" data-act="pptStunde">${ic('play')} PowerPoint zur Stunde</button></div></div><textarea data-f="ablauf" id="lablauf" style="min-height:110px">${esc(s.ablauf)}</textarea></div>
     <div class="full"><label class="f">Hausaufgabe (Idee)</label><input type="text" data-f="ha" value="${esc(s.ha)}"></div>
     <div class="full"><div class="row between"><label class="f">Material dieser Stunde</label><div class="row" style="gap:6px">
       <button class="btn sm ki" data-act="kiMaterial">${ic('spark')} Material erstellen</button><button class="btn sm" data-act="pickDoc">${ic('folder')} Aus Materialordner</button>
@@ -1013,7 +1050,7 @@ function openKursEditor(id,klId){
   ED={type:'kurs',data:k,isNew:!id};
   const kls=Object.values(S.klassen); const np=(S.settings.periods||[]).length||8;
   let grid='<div class="slotgrid"><div></div>'+[1,2,3,4,5].map(t=>`<div><b>${TAGE[t]}</b></div>`).join('');
-  for(let p=1;p<=np;p++) grid+=`<div>${p}.</div>`+[1,2,3,4,5].map(t=>`<button class="${k.slots.some(s=>s.tag===t&&s.std===p)?'on':''}" data-act="toggleSlot" data-t="${t}" data-p="${p}">${p}.</button>`).join('');
+  for(let p=1;p<=np;p++) grid+=`<div>${p}.</div>`+[1,2,3,4,5].map(t=>{ const sl=k.slots.find(s=>s.tag===t&&s.std===p); return `<button class="${sl?'on':''}" data-act="toggleSlot" data-t="${t}" data-p="${p}">${p}.${sl&&sl.woche?' '+sl.woche:''}</button>`; }).join('');
   grid+='</div>';
   const fs=faecher().filter(f=>f.stufen&&f.stufen.length);
   openModal(id?'Kurs bearbeiten':'Neuer Kurs',`<div class="fields">
@@ -1024,7 +1061,7 @@ function openKursEditor(id,klId){
     <div><label class="f">Start der Planung</label><input type="date" data-f="start" value="${esc(k.start)}"></div>
     <div><label class="f">Farbe</label><div class="row" style="gap:6px">${FARBEN.slice(0,8).map(c=>`<button class="dot" style="background:${c};border-color:${c===k.farbe?'#1e2430':c};width:30px;height:30px" data-act="kursFarbe" data-c="${c}" aria-label="Farbe"></button>`).join('')}</div></div>
     <div class="full info" id="kInfo"></div>
-    <div class="full"><label class="f">Unterrichtszeiten im Stundenplan (antippen)</label>${grid}</div>
+    <div class="full"><label class="f">Unterrichtszeiten im Stundenplan (antippen)${S.settings.abAktiv?' – mehrfach antippen: jede Woche → nur A-Woche → nur B-Woche → aus':''}</label>${grid}</div>
     ${id?`<div class="full"><label class="row"><input type="checkbox" data-f="archiv" ${k.archiv?'checked':''}> Kurs archivieren (z. B. am Schuljahresende)</label></div>`:''}</div>`,
     `${id?'<button class="btn danger" data-act="delKurs">Löschen</button><span style="flex:1"></span>':''}<button class="btn" data-act="closeModal">Abbrechen</button><button class="btn pri" data-act="saveKurs">Speichern</button>`,{wide:true,sticky:true});
   let manualTitle=!!k.titel;
@@ -1225,9 +1262,17 @@ function viewProfil(){
     <div class="row" style="margin-top:8px"><button class="btn sm" data-act="addPeriod">${ic('plus')} Stunde</button><button class="btn sm" data-act="delPeriod">− Stunde</button></div></div>
   <div class="card"><h2>KI-Kontext</h2><p class="small muted">Wird jeder KI-Anfrage vorangestellt.</p><textarea id="sKi" style="min-height:110px">${esc(s.kiKontext)}</textarea></div>
   <div class="row"><button class="btn pri" data-act="saveSettings">Einstellungen speichern</button></div>
-  <div class="card"><h2>Speicher & Datensicherung</h2>
-    <p class="small">${MODE==='cloud'?'Diese Version speichert in deinem Claude-Konto (mit direkter KI). Die installierbare Offline-App speichert dagegen direkt auf dem iPad. Mit „Sicherung“ überträgst du alles von einer Version in die andere.':'Alle Daten und Dateien liegen auf diesem Gerät – auch ohne Internet verfügbar. Bitte regelmäßig eine Sicherung (z. B. in iCloud Drive) speichern.'}</p>
-    <div class="row"><button class="btn" data-act="exportBackup" data-files="0">Sicherung (ohne Dateien)</button><button class="btn" data-act="exportBackup" data-files="1">Sicherung mit allen Dateien</button><label class="btn">Sicherung importieren<input type="file" class="vh" id="importFile" accept=".json,application/json"></label></div></div>
+  <div class="card"><h2>A/B-Wochen & Kalender</h2>
+    <label class="row nw"><input type="checkbox" id="sAB" ${s.abAktiv?'checked':''} style="width:22px;height:22px"> Meine Schule arbeitet mit A/B-Wochen</label>
+    ${s.abAktiv?`<div class="row" style="margin-top:8px">Diese Woche (${esc(fmtD(mondayOf(today())))}) ist eine <select id="sABt" style="width:auto">${opt([['A','A-Woche'],['B','B-Woche']],weekType(today()))}</select></div><p class="small muted">Im Kurs-Editor legst du dann je Stunde fest, ob sie jede Woche, nur in A- oder nur in B-Wochen stattfindet.</p>`:''}
+    <div class="row" style="margin-top:12px"><button class="btn" data-act="icsExport">${ic('cal')} Stundenplan als Kalender (.ics) exportieren</button></div></div>
+  <div class="card"><h2>Geräte verknüpfen</h2>
+    ${MODE==='cloud'?`<div class="info" style="margin-bottom:10px">${ic('check')} <b>Diese Online-Version ist schon verknüpft:</b> Auf jedem Gerät, auf dem du mit deinem Claude-Konto angemeldet bist, siehst du über denselben Link automatisch dieselben Daten – iPad, Handy und Computer.</div>`:''}
+    <p class="small">${MODE==='cloud'?'Die installierte Offline-App auf dem iPad speichert getrennt davon. Mit dem Abgleich über iCloud Drive bringst du beide auf denselben Stand.':'Die Offline-App speichert auf diesem Gerät. Mehrere Geräte (oder Offline-App und Online-Version) verknüpfst du über eine gemeinsame Abgleich-Datei in iCloud Drive.'} ${(()=>{ const l=+lsGet('lo-lastsync',0); return l?'Letzter Abgleich: '+esc(new Date(l).toLocaleString('de-DE',{dateStyle:'medium',timeStyle:'short'}))+' ('+changesSince(l)+' Änderungen seitdem).':'Noch nie abgeglichen.'; })()}</p>
+    <button class="btn pri" data-act="abgleich">${ic('wifi')} Geräte abgleichen</button></div>
+  <div class="card"><h2>Export & Import</h2>
+    <p class="small">${MODE==='cloud'?'Daten liegen in deinem Claude-Konto.':'Alle Daten und Dateien liegen auf diesem Gerät – auch ohne Internet verfügbar.'} Eine Sicherung (z. B. in iCloud Drive) schützt vor Datenverlust. Beim Import kannst du zusammenführen oder alles ersetzen.</p>
+    <div class="row"><button class="btn" data-act="exportBackup" data-files="0">Sicherung (ohne Dateien)</button><button class="btn" data-act="exportBackup" data-files="1">Sicherung mit allen Dateien</button><button class="btn" data-act="fachExport">Material eines Fachs teilen</button><label class="btn">${ic('upload')} Importieren<input type="file" class="vh" id="importFile" accept=".json,application/json"></label></div></div>
   </div>`;
 }
 document.addEventListener('input',e=>{ const t=e.target;
@@ -1240,25 +1285,459 @@ document.addEventListener('change',e=>{ const t=e.target;
   if(t.id==='importFile'){ importBackup(t.files[0]); t.value=''; }
   if(t.id==='druckRange'){ druckRange=t.value; render(); }
   if(t.id==='sAuto'){ S.settings.autoSort=t.checked; saveSettings(); }
+  if(t.id==='sAB'){ S.settings.abAktiv=t.checked; if(t.checked&&!S.settings.abRef){ S.settings.abRef=mondayOf(today()); S.settings.abRefTyp='A'; } saveSettings(); }
+  if(t.id==='sABt'){ S.settings.abRef=mondayOf(today()); S.settings.abRefTyp=t.value; saveSettings(); }
 });
 const b64=blob=>new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(',')[1]); r.onerror=rej; r.readAsDataURL(blob); });
+
+/* ================= Termine: Ausfall, Zusatzstunde, Vertretung, Leistungskontrolle ================= */
+const TERMIN_ARTEN={ausfall:'Stunde fällt aus',tagaus:'Ganzer Tag ohne Unterricht',zusatz:'Zusatz-/Tauschstunde',vertretung:'Vertretungsstunde',kontrolle:'Leistungskontrolle'};
+const mondayOf=d=>addDays(d,1-wd(d));
+function weekType(d){ const ref=S.settings.abRef; if(!ref) return 'A'; const diff=Math.round((parseD(mondayOf(d))-parseD(mondayOf(ref)))/(7*864e5)); return (Math.abs(diff)%2===0)===(S.settings.abRefTyp!=='B')?'A':'B'; }
+function lkFor(kid,d,std){ return termineAm(d).find(t=>t.art==='kontrolle'&&t.kursId===kid&&(!t.std||+t.std===+std)); }
+function lkUpcoming(days){ const t=today(), e=addDays(t,days); return Object.values(S.termine||{}).filter(x=>x.art==='kontrolle'&&x.datum>=t&&x.datum<=e).sort((a,b)=>a.datum.localeCompare(b.datum)); }
+function openTerminEditor(t0,defaults){
+  const isNew=!t0; const t=t0?clone(t0):{id:uid(),art:'ausfall',datum:viewDate||today(),std:'',kursId:'',titel:'',notiz:'',klasse:'',fach:'',raum:'',erinnerung:7,einheit:'',docs:[],...(defaults||{})};
+  const ks=kurseAktiv(); const np=(S.settings.periods||[]).length||8;
+  const m=openModal(isNew?'Neuer Termin':'Termin bearbeiten',`<div class="fields" id="tmF">
+    <div><label class="f">Art</label><select id="tmArt">${opt(Object.entries(TERMIN_ARTEN),t.art)}</select></div>
+    <div><label class="f">Datum</label><input type="date" id="tmD" value="${esc(t.datum)}"></div>
+    <div data-for="ausfall zusatz kontrolle"><label class="f">Kurs</label><select id="tmK">${opt(ks.map(k=>[k.id,k.titel]),t.kursId||(ks[0]||{}).id)}</select></div>
+    <div data-for="ausfall zusatz vertretung kontrolle"><label class="f">Stunde</label><select id="tmS">${opt([['','– alle Stunden des Kurses an dem Tag –'],...Array.from({length:np},(_,i)=>[String(i+1),(i+1)+'. Stunde '+periodTime(i+1)])],String(t.std||''))}</select></div>
+    <div data-for="vertretung"><label class="f">Klasse</label><input type="text" id="tmKl" value="${esc(t.klasse)}" placeholder="z. B. 8b"></div>
+    <div data-for="vertretung"><label class="f">Fach</label><input type="text" id="tmFa" value="${esc(t.fach)}" placeholder="z. B. Deutsch"></div>
+    <div data-for="vertretung"><label class="f">Raum</label><input type="text" id="tmR" value="${esc(t.raum)}"></div>
+    <div data-for="kontrolle"><label class="f">Einheit</label><select id="tmE"></select></div>
+    <div data-for="kontrolle"><label class="f">Erinnerung</label><select id="tmEr">${opt([['0','keine'],['3','3 Tage vorher'],['7','1 Woche vorher'],['14','2 Wochen vorher']],String(t.erinnerung??7))}</select></div>
+    <div class="full"><label class="f" id="tmTL">Titel / Grund</label><input type="text" id="tmT" value="${esc(t.titel)}"></div>
+    <div class="full"><div class="row between"><label class="f" id="tmNL">Notiz</label><span id="tmKI"></span></div><textarea id="tmN" style="min-height:110px">${esc(t.notiz)}</textarea></div>
+    <div class="full" id="tmDocs"></div>
+    <div class="full info small" id="tmHint"></div></div>`,
+    `${isNew?'':'<button class="btn danger" id="tmDel">Löschen</button>'}<span style="flex:1"></span><button class="btn" data-act="closeModal">Abbrechen</button><button class="btn pri" id="tmOk">Speichern</button>`,{wide:true});
+  const read=()=>{ t.art=$('#tmArt',m).value; t.datum=$('#tmD',m).value; t.kursId=['ausfall','zusatz','kontrolle'].includes(t.art)?$('#tmK',m).value:''; t.std=t.art==='tagaus'?'':$('#tmS',m).value; t.klasse=$('#tmKl',m).value.trim(); t.fach=$('#tmFa',m).value.trim(); t.raum=$('#tmR',m).value.trim(); t.einheit=$('#tmE',m).value||''; t.erinnerung=+$('#tmEr',m).value; t.titel=$('#tmT',m).value.trim(); t.notiz=$('#tmN',m).value; };
+  const draw=()=>{ const a=$('#tmArt',m).value; m.querySelectorAll('[data-for]').forEach(el=>el.style.display=el.dataset.for.split(' ').includes(a)?'':'none');
+    const k=S.kurse[$('#tmK',m).value]; $('#tmE',m).innerHTML=opt([['','–'],...((k&&k.einheiten)||[]).map(e=>[e.titel,e.titel])],t.einheit||((k&&current(k))?current(k).e.titel:''));
+    const sOpt=$('#tmS',m).options[0]; sOpt.textContent=a==='vertretung'?'– bitte wählen –':a==='zusatz'?'– bitte wählen –':'– alle Stunden des Kurses an dem Tag –';
+    $('#tmTL',m).textContent=a==='kontrolle'?'Titel der Kontrolle':a==='vertretung'?'Thema / Auftrag':'Grund (optional)'; $('#tmNL',m).textContent=a==='vertretung'?'Ablauf / Material':a==='kontrolle'?'Inhalte / Hinweise':'Notiz';
+    $('#tmHint',m).innerHTML={ausfall:'Die Stunde verschwindet aus dem Plan – alle folgenden Stunden des Kurses rutschen automatisch nach hinten.',tagaus:'z. B. Wandertag, Projekttag, Zeugniskonferenz: An diesem Tag fällt dein gesamter Unterricht aus, die Planung aller Kurse verschiebt sich.',zusatz:'Eine zusätzliche Stunde für den Kurs (z. B. getauschte Stunde) – die Planung rückt nach vorn.',vertretung:'Erscheint in „Heute“ und in der Wochenansicht. Die KI kann einen Ablauf vorschlagen.',kontrolle:'Belegt die Stunde – der Stoffplan rutscht dahinter. Rechtzeitig vorher erscheint eine Erinnerung. Die KI kann die Kontrolle mit Lösungsblatt erstellen.'}[a];
+    const kib=$('#tmKI',m); kib.innerHTML=a==='vertretung'?`<button class="btn sm ki" id="tmKIb">${ic('spark')} Ablauf vorschlagen</button>`:a==='kontrolle'?`<button class="btn sm ki" id="tmKIb">${ic('spark')} Kontrolle erstellen</button>`:'';
+    if($('#tmKIb',m)) $('#tmKIb',m).onclick=()=>{ read(); if(a==='kontrolle') lkGenerate(t,()=>drawDocs()); else vertretungKI(t,txt=>{ $('#tmN',m).value=($('#tmN',m).value?$('#tmN',m).value+'\n\n':'')+txt; }); };
+    drawDocs(); };
+  const drawDocs=()=>{ const box=$('#tmDocs',m); const ds=(t.docs||[]).map(id=>S.docs[id]).filter(Boolean); box.innerHTML=ds.length?`<label class="f">Material</label><div class="row" style="gap:6px">${ds.map(d=>`<button class="chip acc" data-act="openDoc" data-id="${d.id}">${esc(d.titel)}</button>`).join('')}</div>`:''; };
+  ['tmArt','tmK'].forEach(id=>$('#'+id,m).onchange=draw); draw();
+  $('#tmOk',m).onclick=()=>{ read(); if(!t.datum){ toast('Bitte ein Datum wählen'); return; } if(['ausfall','zusatz','kontrolle'].includes(t.art)&&!t.kursId){ toast('Bitte einen Kurs wählen'); return; } if(['zusatz','vertretung'].includes(t.art)&&!t.std){ toast('Bitte die Stunde wählen'); return; }
+    if(t.art==='kontrolle'&&!t.titel) t.titel='Leistungskontrolle'+(t.einheit?' – '+t.einheit:'');
+    save('termine',t); closeModal(); toast(TERMIN_ARTEN[t.art]+' gespeichert'); };
+  if($('#tmDel',m)) $('#tmDel',m).onclick=()=>{ remove('termine',t.id); closeModal(); };
+}
+function vertretungKI(t,cb){ const pr=`${S.settings.kiKontext}\n\nIch habe eine Vertretungsstunde (45 min) in Klasse ${t.klasse||'?'}, Fach ${t.fach||'?'}${t.titel?', Auftrag/Thema: '+t.titel:''}. Schlage einen einfachen, gut durchführbaren Ablauf vor, der ohne Vorbereitung und mit wenig Material funktioniert (Phasen mit Minuten, je 1–2 Zeilen). Nur die Phasenliste.`;
+  if(!ENV.sample){ copyText(pr); toast('Prompt kopiert – in der Claude-App einfügen und Antwort ins Feld kopieren'); return; }
+  pushED(); const m=openModal('Ablauf für die Vertretung',`<div class="ki-out md" id="vkout"></div>`,`<span style="flex:1"></span><button class="btn" data-act="closeModal">Verwerfen</button><button class="btn pri" id="vkok" disabled>Übernehmen</button>`,{wide:true});
+  runKI(pr,$('#vkout',m)).then(txt=>{ if(!txt) return; const b=$('#vkok',m); b.disabled=false; b.onclick=()=>{ closeModal(); cb(txt); }; }); }
+function lkPrompt(t){ const k=S.kurse[t.kursId]; const e=(k.einheiten||[]).find(x=>x.titel===t.einheit); const st=e?(e.stunden||[]):flat(k).filter(x=>x.s.status!=='offen').map(x=>x.s);
+  return `${S.settings.kiKontext}\n\n${kursKontext(k,false)}\nErstelle eine schriftliche Leistungskontrolle (${t.std?'eine Unterrichtsstunde, ca. 30–35 min Bearbeitungszeit':'ca. 20 min'}) für ${k.titel}${t.einheit?' zur Einheit „'+t.einheit+'“':''}.\nBehandelte Stunden und Lernziele:\n${st.map(s=>'- '+s.titel+(s.ziele?' (Ziel: '+s.ziele+')':'')).join('\n')||'- (keine Stunden eingetragen)'}${t.notiz?'\nHinweise: '+t.notiz:''}
+Anforderungen: Kopf mit „Name: ______  Klasse: ______  Datum: ______“, 5–7 Aufgaben vom Leichten zum Schweren (Anforderungsbereiche I–III), einfache Sprache, Punktzahl je Aufgabe, Gesamtpunktzahl und Notenschlüssel (Prozent-Grenzen). Danach eine Seite „# Lösungen“ mit Erwartungshorizont und Punkteverteilung.
+Formatiere als Markdown: Überschrift mit „# “, Aufgaben als „## Aufgabe 1 (x P.)“.`; }
+function lkGenerate(t,done){ const k=S.kurse[t.kursId]; if(!k){ toast('Bitte zuerst einen Kurs wählen'); return; }
+  const ordId=ensureOrdner(k.fachId,k.stufe,t.einheit||TUEB); const ctx={typ:'Leistungskontrolle',fachId:k.fachId,stufe:k.stufe,ordnerId:ordId,onSave:d=>{ t.docs=[...(t.docs||[]),d.id]; if(S.termine[t.id]) save('termine',{...S.termine[t.id],docs:t.docs},true); done&&done(); }};
+  const pr=lkPrompt(t); pushED(); if(ENV.sample) kiModal('Leistungskontrolle erstellen',pr,ctx); else { copyText(pr); pasteModal('Antwort aus der Claude-App einfügen',ctx); } }
+
+/* ================= Wochenansicht ================= */
+let weekStart=null;
+function weekCells(mon){ const days=[0,1,2,3,4].map(i=>addDays(mon,i)); const cells={}; let maxStd=(S.settings.periods||[]).length||8;
+  days.forEach(d=>{ dayItems(d).forEach(it=>{ const std=it.std||0; if(std>maxStd) maxStd=std; (cells[d+'|'+std]||(cells[d+'|'+std]=[])).push(it); }); });
+  return {days,cells,maxStd}; }
+function viewWoche(){
+  const mon=weekStart||mondayOf(today()); const {days,cells,maxStd}=weekCells(mon); const t=today();
+  const ab=S.settings.abAktiv?`<span class="chip acc">${weekType(mon)}-Woche</span>`:'';
+  const cellHTML=(d,std)=>{ const its=cells[d+'|'+std]||[]; if(!its.length) return '<div class="wk-c empty-c"></div>';
+    return '<div class="wk-c">'+its.map(it=>{ if(it.typ==='vertretung') return `<button class="wk-i vt" data-act="termin" data-id="${it.t.id}"><b>Vertretung ${esc(it.t.klasse||'')}</b><span>${esc(it.t.fach||'')}${it.t.titel?' · '+esc(it.t.titel):''}</span></button>`;
+      const k=it.k; const col=k.farbe||'#1f6f68';
+      if(it.typ==='ausfall') return `<button class="wk-i aus" data-act="termin" data-id="${it.t.id}" style="border-left-color:${col}"><b>${esc(k.titel)}</b><span>fällt aus${it.t.titel?' · '+esc(it.t.titel):''}</span></button>`;
+      if(it.lk) return `<button class="wk-i lk" data-act="termin" data-id="${it.lk.id}" style="border-left-color:${col}"><b>${esc(k.titel)}</b><span>📝 ${esc(it.lk.titel||'Leistungskontrolle')}</span></button>`;
+      const s=it.log?{titel:it.log.titel}:(it.p&&it.p.item?it.p.item.s:null); const noMat=!it.log&&s&&!(it.p.item.s.docs||[]).some(r=>S.docs[r.docId]); const kop=!it.log&&s&&(it.p.item.s.docs||[]).some(r=>r.rolle==='kopie'&&S.docs[r.docId]);
+      return `<button class="wk-i ${it.log?'done':''}" data-act="wkCell" data-k="${k.id}" data-d="${d}" data-std="${std}" style="border-left-color:${col}"><b style="color:${col}">${esc(k.titel)}</b><span>${s?esc(s.titel):'<i>nichts geplant</i>'}</span><em>${it.log?'✓ ':''}${noMat?'⚠ kein Material ':''}${kop?'🖨 ':''}</em></button>`; }).join('')+'</div>'; };
+  let grid=`<div class="wk"><div class="wk-h"></div>${days.map(d=>`<div class="wk-h ${d===t?'tod':''}"><b>${esc(TAGE[wd(d)])}</b> ${esc(parseD(d).getDate()+'.'+(parseD(d).getMonth()+1)+'.')}${isFree(d)?`<div class="tiny">${esc(ferienName(d))}</div>`:termineAm(d).some(x=>x.art==='tagaus')?`<div class="tiny">${esc((termineAm(d).find(x=>x.art==='tagaus').titel)||'kein Unterricht')}</div>`:`<button class="tiny linkbtn" data-act="tagAus" data-d="${d}">Tag fällt aus</button>`}</div>`).join('')}`;
+  for(let p=1;p<=maxStd;p++) grid+=`<div class="wk-p"><b>${p}.</b><span>${esc(periodTime(p).split('–')[0]||'')}</span></div>`+days.map(d=>cellHTML(d,p)).join('');
+  grid+='</div>';
+  const jobs=printJobs(mon,addDays(mon,4)); const lks=lkUpcoming(28);
+  const gaps=[]; days.forEach(d=>Object.entries(cells).filter(([key])=>key.startsWith(d)).forEach(([,its])=>its.forEach(it=>{ if(it.p&&it.p.item&&it.p.first&&!(it.p.item.s.docs||[]).some(r=>S.docs[r.docId])) gaps.push({d,it}); })));
+  return `<div class="page-h"><div class="grow"><h1>Woche</h1><div class="sub">${esc(fmtD(mon))} – ${esc(fmtD(addDays(mon,4)))} ${ab}</div></div>
+    <div class="row nw"><button class="btn" data-act="week" data-n="-1" aria-label="Vorwoche">‹</button><button class="btn" data-act="week" data-n="0">Diese Woche</button><button class="btn" data-act="week" data-n="1" aria-label="Nächste Woche">›</button></div></div>
+    <div class="row" style="margin-bottom:12px"><button class="btn" data-act="newTermin">${ic('plus')} Termin (Ausfall, Vertretung, Kontrolle …)</button><button class="btn" data-act="icsExport">${ic('clock')} Als Kalender exportieren</button></div>
+    <div class="card" style="padding:10px;overflow-x:auto">${grid}</div>
+    <div class="grid3" style="margin-top:14px">
+      <div class="card"><h3>Zu kopieren</h3>${jobs.length?jobs.map(j=>`<div class="row between nw small" style="padding:6px 0;border-bottom:1px solid var(--line)"><span style="${S.druck[j.key]?'opacity:.45;text-decoration:line-through':''}">${esc(fmtD(j.date))} · ${esc(j.doc.titel)}<br><span class="muted">${esc(j.k.titel)}</span></span><b>${j.anzahl}×</b></div>`).join(''):'<p class="small muted">Keine Kopiervorlagen diese Woche.</p>'}</div>
+      <div class="card"><h3>Material fehlt</h3>${gaps.length?gaps.map(g=>`<div class="small" style="padding:6px 0;border-bottom:1px solid var(--line)"><a href="#" data-act="editLessonId" data-id="${g.it.k.id}|${g.it.p.item.s.id}">${esc(fmtD(g.d))} · ${esc(g.it.k.titel)}: ${esc(g.it.p.item.s.titel)}</a></div>`).join(''):'<p class="small muted">Für alle Stunden ist Material verknüpft.</p>'}</div>
+      <div class="card"><h3>Leistungskontrollen</h3>${lks.length?lks.map(x=>`<div class="small" style="padding:6px 0;border-bottom:1px solid var(--line)"><a href="#" data-act="termin" data-id="${x.id}">${esc(fmtD(x.datum))} · ${esc((S.kurse[x.kursId]||{}).titel||'')}: ${esc(x.titel)}</a></div>`).join(''):'<p class="small muted">Keine in den nächsten 4 Wochen.</p>'}</div></div>`;
+}
+function wkCellMenu(o){ const k=S.kurse[o.k]; if(!k) return; const d=o.d, std=+o.std; const it=dayItems(d).find(x=>x.k&&x.k.id===k.id&&x.std===std&&!x.typ); const x=it&&it.p&&it.p.item;
+  const m=openModal(k.titel+' · '+fmtD(d)+', '+std+'. Std.',`<div class="stack">${x?`<div><div class="small muted">${esc(x.e.titel)}</div><b>${esc(x.s.titel)}</b></div>`:it&&it.log?`<div>✓ dokumentiert: <b>${esc(it.log.titel)}</b></div>`:'<div class="small muted">Für diese Stunde ist nichts geplant.</div>'}
+    <div class="row">${x?`<button class="btn pri" data-act="present" data-k="${k.id}" data-s="${x.s.id}" data-d="${d}" data-std="${std}">${ic('play')} Präsentieren</button><button class="btn" data-act="editLesson" data-k="${k.id}" data-ei="${x.ei}" data-si="${x.si}">Stunde bearbeiten</button>`:''}
+    ${it&&!it.log?`<button class="btn" data-act="ausfall" data-k="${k.id}" data-d="${d}" data-std="${std}">Fällt aus</button><button class="btn" data-act="newTermin" data-art="kontrolle" data-k="${k.id}" data-d="${d}" data-std="${std}">📝 Leistungskontrolle hier</button>`:''}</div></div>`,`<button class="btn" data-act="closeModal">Schließen</button>`); }
+
+/* ================= Kalender-Export (iCal) ================= */
+function icsEscape(s){ return String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/([,;])/g,'\\$1'); }
+function icsFold(l){ const out=[]; let s=l; while(s.length>73){ out.push(s.slice(0,73)); s=' '+s.slice(73); } out.push(s); return out.join('\r\n'); }
+function icsDT(d,hm){ return d.replace(/-/g,'')+'T'+String(hm||'00:00').replace(':','')+'00'; }
+function buildICS(from,to,opts){
+  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Lehrer-Organizer//DE','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Unterricht'];
+  const stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,''); let n=0;
+  const ev=(uid,d,std,sum,desc,loc)=>{ const p=(S.settings.periods||[])[std-1]; if(!p||!p[0]) return; L.push('BEGIN:VEVENT','UID:'+uid+'@lehrer-organizer','DTSTAMP:'+stamp,'DTSTART:'+icsDT(d,p[0]),'DTEND:'+icsDT(d,p[1]||p[0]),icsFold('SUMMARY:'+icsEscape(sum))); if(desc) L.push(icsFold('DESCRIPTION:'+icsEscape(desc))); if(loc) L.push(icsFold('LOCATION:'+icsEscape(loc))); L.push('END:VEVENT'); n++; };
+  for(let d=from,g=0;d<=to&&g<400;d=addDays(d,1),g++){ if(wd(d)>5) continue;
+    dayItems(d).forEach(it=>{ if(it.typ==='ausfall') return;
+      if(it.typ==='vertretung'){ if(opts.vertretung) ev('vt-'+it.t.id,d,it.std,'Vertretung '+(it.t.klasse||'')+(it.t.fach?' '+it.t.fach:''),[it.t.titel,it.t.notiz].filter(Boolean).join('\n'),it.t.raum); return; }
+      const k=it.k; let sum=k.titel, desc='';
+      if(it.lk){ sum+=' – 📝 '+(it.lk.titel||'Leistungskontrolle'); }
+      else if(opts.themen&&it.p&&it.p.item){ sum+=' – '+it.p.item.s.titel; desc=[it.p.item.e.titel,it.p.item.s.ziele?'Ziel: '+it.p.item.s.ziele:''].filter(Boolean).join('\n'); }
+      ev(k.id+'-'+d+'-'+it.std,d,it.std,sum,desc,''); }); }
+  L.push('END:VCALENDAR'); return {text:L.join('\r\n'),n}; }
+function openIcsExport(){
+  const m=openModal('Stundenplan als Kalender',`<div class="stack"><p class="small">Erzeugt eine Kalenderdatei (.ics) mit deinen Unterrichtsstunden – Ausfälle und Ferien sind schon herausgerechnet. Auf dem iPad: Datei öffnen → „Alle hinzufügen“ → am besten einen eigenen Kalender „Unterricht“ wählen.</p>
+    <div class="fields"><div><label class="f">Zeitraum</label><select id="icR">${opt([['4','nächste 4 Wochen'],['ferien','bis zu den nächsten Ferien'],['sj','bis Schuljahresende']],'ferien')}</select></div><div></div>
+    <label class="row nw small"><input type="checkbox" id="icT" checked style="width:20px;height:20px"> Geplante Stundenthemen eintragen</label><label class="row nw small"><input type="checkbox" id="icV" checked style="width:20px;height:20px"> Vertretungsstunden</label></div>
+    <div class="hint small">Kalender-Apps übernehmen eine Datei als Kopie. Wenn sich die Planung ändert: den Kalender „Unterricht“ löschen und neu exportieren, sonst entstehen doppelte Einträge.</div></div>`,
+    `<button class="btn" data-act="closeModal">Abbrechen</button><button class="btn pri" id="icGo">Exportieren</button>`);
+  $('#icGo',m).onclick=async()=>{ const r=$('#icR',m).value; const t=today(); let to;
+    if(r==='4') to=addDays(t,27); else if(r==='sj') to=S.settings.sjEnde||addDays(t,300); else { const f=(S.settings.ferien||[]).filter(x=>x.von>t&&(+parseD(x.bis)-+parseD(x.von))>=2*864e5).sort((a,b)=>a.von.localeCompare(b.von))[0]; to=f?addDays(f.von,-1):addDays(t,41); }
+    const {text,n}=buildICS(t,to,{themen:$('#icT',m).checked,vertretung:$('#icV',m).checked}); if(!n){ toast('Keine Stunden im Zeitraum'); return; }
+    const name='unterricht-'+t+'.ics'; const file=new File([text],name,{type:'text/calendar'}); let ok=false;
+    if(!ENV.downloads&&navigator.canShare){ try{ if(navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:name}); ok=true; } }catch(e){ ok=e&&e.name==='AbortError'; } }
+    if(!ok) ok=await saveFile(name,text,'text/calendar'); if(ok){ closeModal(); toast(n+' Stunden exportiert'); } };
+}
+
+/* ================= Arbeitsblatt als PDF ================= */
+let pdfLibWP=null;
+function loadPdfLibW(){ if(window.PDFLib) return Promise.resolve(window.PDFLib); if(pdfLibWP) return pdfLibWP; pdfLibWP=new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='pdf-lib.min.js'; s.onload=()=>window.PDFLib?res(window.PDFLib):rej(new Error('pdf-lib fehlt')); s.onerror=()=>rej(new Error('PDF-Baustein konnte nicht geladen werden')); document.head.appendChild(s); }); pdfLibWP.catch(()=>{pdfLibWP=null;}); return pdfLibWP; }
+const PDF_MAP={'→':'->','←':'<-','⇒':'=>','≈':'~','≤':'<=','≥':'>=','≠':'!=','√':'Wurzel ','∙':'·','⋅':'·','−':'-','‑':'-','✓':'x','☐':'[ ]','□':'[ ]','✔':'x','\u00a0':' ','Δ':'Delta ','π':'pi','α':'alpha','β':'beta','γ':'gamma','λ':'lambda','ρ':'rho','Ω':'Ohm','⁴':'^4','⁵':'^5','⁻':'^-','₁':'1','₂':'2','₃':'3','₀':'0'};
+async function mdToPdf(src,opts){
+  const PL=await loadPdfLibW(); const doc=await PL.PDFDocument.create(); const F=await doc.embedFont(PL.StandardFonts.Helvetica), FB=await doc.embedFont(PL.StandardFonts.HelveticaBold), FI=await doc.embedFont(PL.StandardFonts.HelveticaOblique);
+  const enc=new Map(); const safe=s=>Array.from(String(s)).map(ch=>{ if(PDF_MAP[ch]!=null) return PDF_MAP[ch]; if(!enc.has(ch)){ try{ F.encodeText(ch); enc.set(ch,true); }catch(e){ enc.set(ch,false); } } return enc.get(ch)?ch:'?'; }).join('').replace(/\?{2,}/g,'?');
+  const W=595.28,H=841.89,M=56; const C=PL.rgb(0.106,0.263,0.196), G=PL.rgb(0.42,0.46,0.44), K=PL.rgb(0.11,0.14,0.13);
+  let page,y; const pages=[];
+  const newPage=()=>{ page=doc.addPage([W,H]); pages.push(page); y=H-M; if(opts.kopf&&pages.length===1){ page.drawText(safe(opts.kopf),{x:M,y:H-34,size:9,font:F,color:G}); } };
+  const ensure=h=>{ if(y-h<M+20) newPage(); };
+  const wrap=(txt,font,size,maxW)=>{ const words=safe(txt).split(/\s+/).filter(Boolean); const lines=[]; let cur=''; for(const w of words){ const tr=cur?cur+' '+w:w; if(font.widthOfTextAtSize(tr,size)<=maxW) cur=tr; else { if(cur) lines.push(cur); cur=w; while(font.widthOfTextAtSize(cur,size)>maxW&&cur.length>4){ let i=cur.length-1; while(i>1&&font.widthOfTextAtSize(cur.slice(0,i),size)>maxW) i--; lines.push(cur.slice(0,i)); cur=cur.slice(i); } } } if(cur) lines.push(cur); return lines.length?lines:['']; };
+  const para=(txt,{font=F,size=11.5,indent=0,color=K,gap=4,lh=1.35,prefix=''}={})=>{ const pw=prefix?font.widthOfTextAtSize(safe(prefix),size)+4:0; const lines=wrap(txt,font,size,W-2*M-indent-pw); lines.forEach((l,i)=>{ ensure(size*lh); if(i===0&&prefix) page.drawText(safe(prefix),{x:M+indent,y:y-size,size,font,color}); page.drawText(l,{x:M+indent+pw,y:y-size,size,font,color}); y-=size*lh; }); y-=gap; };
+  newPage();
+  const lines=String(src||'').replace(/\r/g,'').split('\n'); let first=true, inTable=false;
+  for(let raw of lines){ let l=raw.replace(/\s+$/,''); const plain=s=>s.replace(/\*\*(.+?)\*\*/g,'$1').replace(/(^|\W)\*(\S[^*]*?)\*(?=\W|$)/g,'$1$2').replace(/`([^`]+)`/g,'$1').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1');
+    if(/^\s*\|/.test(l)){ if(/^\s*\|?\s*:?-{3,}/.test(l)) continue; const cells=l.trim().replace(/^\||\|$/g,'').split('|').map(c=>plain(c.trim())); const cw=(W-2*M)/cells.length; const hs=cells.map(c=>wrap(c,inTable?F:FB,10.5,cw-8)); const h=Math.max(...hs.map(x=>x.length))*14+8; ensure(h);
+      cells.forEach((c,i)=>{ page.drawRectangle({x:M+i*cw,y:y-h,width:cw,height:h,borderColor:G,borderWidth:0.6,color:inTable?undefined:PL.rgb(0.95,0.97,0.96)}); hs[i].forEach((t,j)=>page.drawText(t,{x:M+i*cw+4,y:y-14-j*14,size:10.5,font:inTable?F:FB,color:K})); }); y-=h; inTable=true; continue; }
+    if(inTable){ inTable=false; y-=8; }
+    if(!l.trim()){ y-=5; continue; }
+    if(/^\s*(---|___|\*\*\*)\s*$/.test(l)){ ensure(14); page.drawLine({start:{x:M,y:y-6},end:{x:W-M,y:y-6},thickness:0.6,color:G}); y-=14; continue; }
+    let mm;
+    if((mm=l.match(/^#\s+(.+)/))){ const t=plain(mm[1]); if(/^l(ö|oe)sung/i.test(t)&&opts.loesungNeueSeite&&!first) newPage(); para(t,{font:FB,size:first?19:17,color:C,gap:first&&opts.nameZeile?6:8}); if(first&&opts.nameZeile){ para('Name: ____________________________   Klasse: ________   Datum: ____________',{size:10.5,color:G,gap:10}); } first=false; continue; }
+    if((mm=l.match(/^##\s+(.+)/))){ ensure(30); y-=4; para(plain(mm[1]),{font:FB,size:13.5,color:C,gap:5}); first=false; continue; }
+    if((mm=l.match(/^#{3,}\s+(.+)/))){ para(plain(mm[1]),{font:FB,size:12,gap:4}); continue; }
+    if((mm=l.match(/^(\s*)[-*•]\s+(.+)/))){ para(plain(mm[2]),{indent:12+Math.min(2,Math.floor(mm[1].length/2))*14,prefix:'•',gap:2}); continue; }
+    if((mm=l.match(/^(\s*)(\d+|[a-z])[.)]\s+(.+)/))){ para(plain(mm[3]),{indent:6+Math.min(2,Math.floor(mm[1].length/2))*14,prefix:mm[2]+')',gap:2}); continue; }
+    if((mm=l.match(/^>\s?(.+)/))){ para(plain(mm[1]),{font:FI,indent:12,color:G}); continue; }
+    if(/^_{4,}$/.test(l.trim())||/^\.{6,}$/.test(l.trim())){ for(let i=0;i<3;i++){ ensure(22); page.drawLine({start:{x:M,y:y-16},end:{x:W-M,y:y-16},thickness:0.5,color:G}); y-=22; } continue; }
+    const whole=/^\*\*[^*]+\*\*:?$/.test(l.trim()); para(plain(l),{font:whole?FB:F}); first=false;
+  }
+  pages.forEach((p,i)=>{ if(opts.fuss) p.drawText(safe(opts.fuss),{x:M,y:28,size:8.5,font:F,color:G}); p.drawText(String(i+1)+'/'+pages.length,{x:W-M-24,y:28,size:8.5,font:F,color:G}); });
+  return {bytes:await doc.save(),pages:pages.length}; }
+async function docToPdf(id){
+  const d=S.docs[id]; if(!d||d.kind!=='md') return;
+  const m=openModal('Als PDF speichern',`<div class="stack"><p class="small">„${esc(d.titel)}“ wird als druckfertiges PDF (A4) im selben Ordner gespeichert. Es erscheint dann wie jedes PDF in der Druckliste, wenn du es als Kopiervorlage verknüpfst.</p>
+    <label class="row nw small"><input type="checkbox" id="pdN" checked style="width:20px;height:20px"> Zeile für Name / Klasse / Datum</label>
+    <label class="row nw small"><input type="checkbox" id="pdL" checked style="width:20px;height:20px"> „Lösungen“ auf eine eigene Seite</label>
+    <label class="row nw small"><input type="checkbox" id="pdT" style="width:20px;height:20px"> Lösungen ganz weglassen (Schülerfassung)</label>
+    ${usages(id).length?`<label class="row nw small"><input type="checkbox" id="pdV" checked style="width:20px;height:20px"> in den Stunden durch das PDF ersetzen (als Kopiervorlage)</label>`:''}</div>`,
+    `<button class="btn" data-act="closeModal">Abbrechen</button><button class="btn pri" id="pdGo">PDF erstellen</button>`);
+  $('#pdGo',m).onclick=async ev=>{ ev.target.disabled=true; ev.target.textContent='Wird erstellt …';
+    try{ let src=d.md; if($('#pdT',m).checked) src=src.split(/\n(?=#{1,2}\s*L(ö|oe)sung)/i)[0];
+      const f=fachById(d.fachId); const {bytes,pages}=await mdToPdf(src,{nameZeile:$('#pdN',m).checked,loesungNeueSeite:$('#pdL',m).checked,kopf:[P_().schule,f?f.name+(d.stufe?' · Klasse '+d.stufe:''):''].filter(Boolean).join(' · '),fuss:d.titel});
+      const blob=new Blob([bytes],{type:'application/pdf'}); const name=(d.titel.replace(/[\\/:*?"<>|]+/g,'').trim()||'Arbeitsblatt')+($('#pdT',m).checked?' (ohne Lösungen)':'')+'.pdf';
+      const nd={id:uid(),titel:d.titel+($('#pdT',m).checked?' (Schülerfassung)':''),typ:d.typ==='KI-Entwurf'?'Arbeitsblatt':d.typ,fachId:d.fachId,stufe:d.stufe,ordnerId:d.ordnerId,tags:d.tags||[],fileName:name,mime:'application/pdf',size:blob.size,created:Date.now(),seiten:pages,snippet:d.snippet||'',kind:'file',...(await storeBlob(blob,name))};
+      save('docs',nd,true);
+      if($('#pdV',m)&&$('#pdV',m).checked){ usages(id).forEach(o=>{ const k=clone(S.kurse[o.k.id]); const s=k.einheiten[o.x.ei].stunden[o.x.si]; s.docs=(s.docs||[]).map(r=>r.docId===id?{...r,docId:nd.id,rolle:r.rolle==='praes'?'praes':'kopie',seiten:pages}:r); save('kurse',k,true); }); }
+      closeModal(); closeModal(); render(); toast('PDF gespeichert ('+pages+' Seite'+(pages>1?'n':'')+')'); openDoc(nd.id);
+    }catch(err){ toast('PDF fehlgeschlagen: '+(err&&err.message||err)); ev.target.disabled=false; ev.target.textContent='PDF erstellen'; } };
+}
+
+/* ================= Differenzierung ================= */
+function diffPrompt(d,niveau){ const f=fachById(d.fachId); const text=d.kind==='md'?d.md:(d.snippet||'');
+  return `${S.settings.kiKontext}\n\nHier ist ein Arbeitsblatt${f?' für '+f.name:''}${d.stufe?', Klasse '+d.stufe:''}:\n"""\n${text.slice(0,9000)}\n"""\n\nErstelle daraus eine ${niveau==='leicht'?'LEICHTERE Fassung (Förderniveau): kürzere Sätze, einfache Wörter, Hilfen/Tipps und Satzanfänge, Lückentexte oder Auswahlantworten statt offener Fragen, Zwischenschritte vorgegeben, weniger Aufgaben':'SCHWERERE Fassung (Forderniveau): weniger Hilfen, offenere Aufgaben, Transfer- und Begründungsaufgaben, eine Knobelaufgabe am Ende'}. Gleiche Lernziele und gleiches Thema, damit beide Gruppen gemeinsam auswerten können.
+Formatiere als Markdown: erste Zeile „# ${d.titel.replace(/"/g,'')} (${niveau==='leicht'?'Niveau A – leichter':'Niveau C – schwerer'})“, Aufgaben als „## Aufgabe 1“, am Ende „# Lösungen“.`; }
+function openDiff(id){ const d=S.docs[id]; if(!d) return; if(d.kind!=='md'&&!(d.snippet||'').trim()){ toast('Für dieses Dokument ist kein Text vorhanden'); return; }
+  const ctx={typ:'Arbeitsblatt',fachId:d.fachId,stufe:d.stufe,ordnerId:d.ordnerId};
+  const m=openModal('Differenzieren',`<div class="stack"><p class="small">Aus „${esc(d.titel)}“ entsteht eine leichtere und/oder schwerere Fassung zum selben Thema. Sie wird im selben Ordner gespeichert – danach kannst du sie mit „Als PDF“ druckfertig machen.</p>
+    <div class="row"><button class="btn pri" id="dfL">Leichtere Fassung</button><button class="btn pri" id="dfS">Schwerere Fassung</button></div>${d.kind!=='md'?'<div class="hint small">Bei PDFs nutzt die KI den ausgelesenen Text – Abbildungen fehlen dann.</div>':''}</div>`,`<button class="btn" data-act="closeModal">Schließen</button>`);
+  const go=niv=>{ const pr=diffPrompt(d,niv); pushED(); if(ENV.sample) kiModal(niv==='leicht'?'Leichtere Fassung':'Schwerere Fassung',pr,ctx); else { copyText(pr); pasteModal('Antwort aus der Claude-App einfügen',ctx); } };
+  $('#dfL',m).onclick=()=>go('leicht'); $('#dfS',m).onclick=()=>go('schwer'); }
+
+/* ================= Stoffverteilung für eine Einheit / bis zu den Ferien ================= */
+function nextFerienStart(from){ const f=(S.settings.ferien||[]).filter(x=>x.von>from&&(+parseD(x.bis)-+parseD(x.von))>=2*864e5).sort((a,b)=>a.von.localeCompare(b.von))[0]; return f?{d:addDays(f.von,-1),name:f.name}:{d:S.settings.sjEnde||addDays(from,120),name:'Schuljahresende'}; }
+function openStoffverteilung(kid){
+  const k=S.kurse[kid]; if(!k) return; if(!(k.slots||[]).length){ toast('Der Kurs hat noch keine Unterrichtszeiten'); return; }
+  const t=today(); const fer=nextFerienStart(t); const planned=flat(k).filter(x=>x.s.status!=='fertig').reduce((a,x)=>a+dauer(x.s),0);
+  const lp=lpThemen(fachName(k.fachId),k.stufe,S.settings.lehrplan||'bisher'); const have=(k.einheiten||[]).map(e=>norm(e.titel));
+  const zielOpts=[['ferien','bis '+fer.name+' ('+fmtD(fer.d)+')'],['sj','bis Schuljahresende'],['datum','bis Datum …']];
+  const m=openModal('Stoffverteilung planen',`<div class="stack">
+    <p class="small">Verteilt Themen auf die Unterrichtsstunden, die bis zum gewählten Zeitpunkt noch zur Verfügung stehen (Ferien, Ausfälle und Leistungskontrollen sind abgezogen).</p>
+    <div class="fields"><div><label class="f">Zeitraum</label><select id="svZ">${opt(zielOpts,'ferien')}</select></div><div id="svDW" style="display:none"><label class="f">Datum</label><input type="date" id="svD" value="${esc(addDays(t,42))}"></div>
+    <div class="full info" id="svInfo"></div>
+    <div class="full"><label class="f">Themen (Einheiten) – Reihenfolge = Unterrichtsreihenfolge</label><div id="svT"></div><div class="row nw" style="margin-top:6px"><input type="text" id="svNew" placeholder="weiteres Thema"><button class="btn" id="svAdd">${ic('plus')}</button></div></div></div>
+    <div id="svOut"></div></div>`,
+    `<button class="btn" data-act="closeModal">Abbrechen</button><button class="btn" id="svOff">Gleichmäßig verteilen (offline)</button>${ENV.sample?`<button class="btn ki" id="svKI">${ic('spark')} Mit KI planen</button>`:`<button class="btn ki" id="svCopy">${ic('spark')} Prompt kopieren</button>`}`,{wide:true,sticky:true});
+  let themen=lp.filter(x=>!have.includes(norm(x))).map(x=>({titel:x,on:false}));
+  (k.einheiten||[]).forEach(e=>{ if((e.stunden||[]).every(s=>s.status==='fertig')&&(e.stunden||[]).length) return; themen.unshift({titel:e.titel,on:true,vorhanden:true}); });
+  if(!themen.some(x=>x.on)&&themen[0]) themen[0].on=true;
+  let N=0, bis='';
+  const calc=()=>{ const z=$('#svZ',m).value; $('#svDW',m).style.display=z==='datum'?'':'none'; bis=z==='ferien'?fer.d:z==='sj'?(S.settings.sjEnde||addDays(t,300)):$('#svD',m).value;
+    N=projection(k,t,400).filter(p=>p.date<=bis).length; const sel=themen.filter(x=>x.on); const vorh=sel.filter(x=>x.vorhanden).reduce((a,x)=>a+((k.einheiten.find(e=>e.titel===x.titel)||{}).stunden||[]).filter(s=>s.status!=='fertig').reduce((b,s)=>b+dauer(s),0),0);
+    $('#svInfo',m).innerHTML=`Bis ${esc(fmtD(bis))}: <b>${N} Unterrichtsstunden</b> verfügbar.${planned?' Davon sind schon '+planned+' Stunden mit geplanten Stunden belegt'+(vorh?' (gewählte Einheiten: '+vorh+')':'')+'.':''}`; };
+  const drawT=()=>{ $('#svT',m).innerHTML=themen.map((x,i)=>`<label class="row nw" style="padding:5px 0;border-bottom:1px solid var(--line)"><input type="checkbox" data-sv="${i}" ${x.on?'checked':''} style="width:20px;height:20px"><span>${esc(x.titel)}</span>${x.vorhanden?'<span class="chip">schon im Kurs</span>':lp.includes(x.titel)?'<span class="chip acc">Rahmenplan</span>':''}<span style="flex:1"></span><button class="btn sm ghost" data-up="${i}" aria-label="nach oben">↑</button></label>`).join(''); };
+  m.addEventListener('change',e=>{ if(e.target.dataset.sv!=null){ themen[+e.target.dataset.sv].on=e.target.checked; calc(); } if(e.target.id==='svZ'||e.target.id==='svD') calc(); });
+  m.addEventListener('click',e=>{ const b=e.target.closest('[data-up]'); if(b){ e.preventDefault(); const i=+b.dataset.up; if(i>0){ [themen[i-1],themen[i]]=[themen[i],themen[i-1]]; drawT(); } } });
+  $('#svAdd',m).onclick=()=>{ const v=$('#svNew',m).value.trim(); if(!v) return; themen.push({titel:v,on:true}); $('#svNew',m).value=''; drawT(); calc(); };
+  drawT(); calc();
+  const prompt=()=>{ const sel=themen.filter(x=>x.on); const ex=sel.filter(x=>x.vorhanden).map(x=>{ const e=k.einheiten.find(y=>y.titel===x.titel); return x.titel+': '+(e.stunden||[]).map(s=>s.titel+' ['+(s.status||'offen')+', '+dauer(s)+' Std.]').join('; '); });
+    return `${S.settings.kiKontext}\n\n${kursKontext(k,false)}\nPlane eine Stoffverteilung für ${k.titel} für die nächsten ${N} Unterrichtsstunden (bis ${fmtD(bis)}).\nThemen in dieser Reihenfolge: ${sel.map(x=>'„'+x.titel+'“').join(', ')}.${ex.length?'\nSchon geplant (offene Stunden bitte übernehmen und nur ergänzen): '+ex.join(' | '):''}
+Rahmenplan M-V Klasse ${k.stufe}. Plane 1 Stunde Puffer/Wiederholung pro Thema und, wenn sinnvoll, eine Leistungskontrolle am Ende eines Themas (als Stunde mit Titel „Leistungskontrolle …“). Die Summe der Stunden (dauer) muss genau ${N} ergeben.
+Gib NUR JSON zurück: [{"einheit":"…","stunden":[{"titel":"…","ziele":"Die SuS können …","dauer":1}]}]`; };
+  const show=arr=>{ const E=(Array.isArray(arr)?arr:(arr&&arr.einheiten)||[]).map(e=>({einheit:String(e.einheit||e.titel||''),stunden:(e.stunden||[]).map(s=>({titel:String(s.titel||''),ziele:String(s.ziele||''),dauer:Math.max(1,+s.dauer||1)})).filter(s=>s.titel)})).filter(e=>e.einheit&&e.stunden.length);
+    if(!E.length){ $('#svOut',m).innerHTML='<div class="hint">Kein Plan erkannt.</div>'; return; } const sum=E.reduce((a,e)=>a+e.stunden.reduce((b,s)=>b+s.dauer,0),0);
+    $('#svOut',m).innerHTML=`<div class="info">${E.length} Einheiten · ${sum} Stunden${sum!==N?' (verfügbar: '+N+')':''}. Vorhandene Stunden bleiben erhalten, neue werden angehängt.</div>${E.map(e=>`<div class="sec">${esc(e.einheit)} · ${e.stunden.reduce((b,s)=>b+s.dauer,0)} Std.</div><div class="small">${e.stunden.map(s=>esc(s.titel)+(s.dauer>1?' ('+s.dauer+')':'')).join(' · ')}</div>`).join('')}<div class="row" style="margin-top:10px"><button class="btn pri" id="svApply">In den Kurs übernehmen</button></div>`;
+    $('#svApply',m).onclick=()=>{ const kk=clone(S.kurse[kid]); let nNeu=0; E.forEach(e=>{ let ex=kk.einheiten.find(x=>norm(x.titel)===norm(e.einheit)); if(!ex){ ex={id:uid(),titel:e.einheit,stunden:[]}; kk.einheiten.push(ex); }
+        e.stunden.forEach(s=>{ if(ex.stunden.some(y=>norm(y.titel)===norm(s.titel))) return; ex.stunden.push({id:uid(),titel:s.titel,dauer:s.dauer,ziele:s.ziele,ablauf:'',ha:'',docs:[],status:'offen',erreicht:''}); nNeu++; }); ensureOrdner(kk.fachId,kk.stufe,ex.titel); });
+      save('kurse',kk); closeModal(); toast(nNeu+' Stunden in die Stoffverteilung übernommen'); }; };
+  $('#svOff',m).onclick=()=>{ calc(); const sel=themen.filter(x=>x.on); if(!sel.length){ toast('Bitte mindestens ein Thema wählen'); return; }
+    const belegt=sel.filter(x=>x.vorhanden).reduce((a,x)=>a+((k.einheiten.find(e=>e.titel===x.titel)||{}).stunden||[]).filter(s=>s.status!=='fertig').reduce((b,s)=>b+dauer(s),0),0);
+    let frei=Math.max(sel.length,N-belegt); const neu=sel.filter(x=>!x.vorhanden); const per=neu.length?Math.max(1,Math.floor(frei/neu.length)):0; let rest=neu.length?frei-per*neu.length:0;
+    show(neu.map(x=>{ const n=per+(rest-->0?1:0); return {einheit:x.titel,stunden:Array.from({length:n},(_,i)=>({titel:i===n-1&&n>2?x.titel+' – Wiederholung / Puffer':x.titel+' – Stunde '+(i+1),ziele:'',dauer:1}))}; })); };
+  if($('#svKI',m)) $('#svKI',m).onclick=async ev=>{ calc(); if(!themen.some(x=>x.on)){ toast('Bitte mindestens ein Thema wählen'); return; } ev.target.disabled=true; $('#svOut',m).innerHTML='<div class="info">'+ic('spark')+' Stoffverteilung wird geplant …</div>'; try{ show(await ENV.sample.json(prompt(),{cache:false})); }catch(err){ $('#svOut',m).innerHTML=`<div class="hint">KI-Fehler: ${esc(err&&(err.message||err.code)||'unbekannt')}</div>`; } ev.target.disabled=false; };
+  if($('#svCopy',m)) $('#svCopy',m).onclick=()=>{ calc(); copyText(prompt()); $('#svOut',m).innerHTML=`<textarea id="svIn" style="min-height:100px" placeholder="JSON-Antwort aus der Claude-App hier einfügen"></textarea><button class="btn sm" id="svParse" style="margin-top:6px">Antwort übernehmen</button>`; $('#svParse',m).onclick=()=>{ const raw=$('#svIn',m).value; try{ const mm=raw.match(/\[[\s\S]*\]/); show(JSON.parse(mm?mm[0]:raw)); }catch(e){ toast('Antwort konnte nicht gelesen werden'); } }; };
+}
+
+/* ================= Sicherungs-Erinnerung ================= */
+function backupBanner(){
+  if(MODE==='cloud') return ''; const hasData=Object.keys(S.kurse).length||Object.keys(S.docs).length; if(!hasData) return '';
+  const last=Math.max(+lsGet('lo-lastbackup',0),+lsGet('lo-lastsync',0)); const snooze=+lsGet('lo-backupsnooze',0); const now=Date.now();
+  if(snooze>now) return ''; const days=last?Math.floor((now-last)/864e5):null; if(days!==null&&days<14) return '';
+  return `<div class="card hint" style="margin-bottom:14px"><div class="row between"><div><b>${days===null?'Noch keine Sicherung':'Letzte Sicherung vor '+days+' Tagen'}</b><div class="small">Deine Daten liegen nur auf diesem iPad. iPadOS kann Webdaten bei Speichermangel löschen – eine Sicherung in iCloud Drive schützt davor.</div></div>
+    <div class="row nw"><button class="btn sm pri" data-act="exportBackup" data-files="1">Jetzt sichern</button><button class="btn sm" data-act="abgleich">Abgleichen</button><button class="btn sm ghost" data-act="backupSnooze">Später</button></div></div></div>`; }
+
+/* ================= PowerPoint zur Stunde ================= */
+let pptxP=null;
+function loadPptx(){ if(window.PptxGenJS) return Promise.resolve(window.PptxGenJS); if(pptxP) return pptxP;
+  pptxP=new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='pptxgen.bundle.js'; s.onload=()=>window.PptxGenJS?res(window.PptxGenJS):rej(new Error('PptxGenJS fehlt')); s.onerror=()=>rej(new Error('PowerPoint-Baustein konnte nicht geladen werden')); document.head.appendChild(s); });
+  pptxP.catch(()=>{pptxP=null;}); return pptxP; }
+const PHASEN=['Begrüßung','Einstieg','Motivation','Problemstellung','Wiederholung','Hinführung','Erarbeitung','Experiment','Versuch','Auswertung','Übung','Anwendung','Vertiefung','Festigung','Sicherung','Kontrolle','Reflexion','Abschluss','Ausblick','Hausaufgabe'];
+function ablaufPhasen(txt){
+  const out=[]; const lines=String(txt||'').split(/\n/).map(l=>l.replace(/\*\*/g,'').trim()).filter(Boolean);
+  for(const raw of lines){ const l=raw.replace(/^[-–•*\d.)\s]+(?=\S)/,'').trim(); if(!l) continue;
+    const mm=l.match(/(\d{1,3})\s*(?:–|-|bis)?\s*(\d{1,3})?\s*(?:min\.?|minuten|')/i); let min=mm?+(mm[2]&&+mm[2]>+mm[1]?+mm[2]-+mm[1]:mm[1]):0;
+    const ph=PHASEN.find(p=>new RegExp('^\\W*'+p.slice(0,6),'i').test(l)||new RegExp('\\b'+p+'\\b','i').test(l.split(/[:–—]/)[0]));
+    const isNew=!!ph||!!mm||/^[-–•*\d]/.test(raw)===true&&!out.length;
+    let rest=l.replace(/\(?\s*\d{1,3}\s*(?:–|-|bis)?\s*\d{0,3}\s*(?:min\.?|minuten|')\s*\)?/ig,'').trim();
+    let name=ph||''; const sm=rest.match(/\s*(?::|–|—)\s*/); if(sm&&sm.index>0&&sm.index<40){ const head=rest.slice(0,sm.index).trim(); if(!name) name=head; rest=rest.slice(sm.index+sm[0].length).trim(); } else if(ph){ rest=rest.replace(new RegExp('^'+ph+'\\w*\\s*','i'),'').trim(); }
+    if(isNew||!out.length) out.push({phase:name||'Phase '+(out.length+1),minuten:min,text:rest?[rest]:[],roh:[raw]});
+    else { const p=out[out.length-1]; if(rest) p.text.push(rest); p.roh.push(raw); if(!p.minuten&&min) p.minuten=min; }
+  }
+  return out; }
+function offlineFolien(s,k){
+  const ph=ablaufPhasen(s.ablauf); const F=[{art:'titel',titel:s.titel}];
+  if(s.ziele) F.push({art:'ziel',titel:'Das lernst du heute',punkte:String(s.ziele).split(/\s*[;\n]\s*|(?<=\.)\s+/).filter(Boolean),notizen:'Stundenziel transparent machen.'});
+  if(ph.length>1) F.push({art:'ablauf',titel:'Unser Plan für heute',punkte:ph.map(p=>p.phase+(p.minuten?' ('+p.minuten+' min)':'')),notizen:'Kurzer Überblick über den Stundenverlauf.'});
+  ph.forEach(p=>{ const pts=p.text.flatMap(t=>t.split(/\s*;\s*|\s+–\s+/)).map(x=>x.trim()).filter(Boolean).slice(0,6);
+    F.push({art:/sicherung|kontrolle|reflexion|abschluss/i.test(p.phase)?'sicherung':/erarbeit|übung|anwend|experiment|versuch|vertief/i.test(p.phase)?'aufgabe':'inhalt',phase:p.phase,minuten:p.minuten,titel:p.phase,punkte:pts.length?pts:['…'],notizen:p.roh.join('\n')}); });
+  if(!ph.length) F.push({art:'inhalt',titel:s.titel,punkte:['(Ablauf ergänzen)'],notizen:'Im Ablauf-Feld der Stunde sind noch keine Phasen eingetragen.'});
+  if(s.ha) F.push({art:'hausaufgabe',titel:'Hausaufgabe',punkte:[s.ha],notizen:'Hausaufgabe notieren lassen.'});
+  return F; }
+function pptPrompt(s,k){
+  const docs=(s.docs||[]).map(r=>S.docs[r.docId]).filter(Boolean).map(d=>d.titel+' ('+(ROLLEN[(s.docs.find(r=>r.docId===d.id)||{}).rolle]||d.typ)+')');
+  return `${S.settings.kiKontext}\n\n${kursKontext(k,false)}
+Erstelle die Folien für eine PowerPoint, die mich als Lehrkraft durch diese Unterrichtsstunde führt. Die Folien sieht die Klasse (kurz, einfache Sprache, große Stichpunkte, max. 5 Punkte à max. 10 Wörter). Alles, was nur für mich ist (Zeit, Methode, Sozialform, Impulsfragen, erwartete Antworten, Hinweise), kommt in "notizen".
+Stunde: „${s.titel}“ (${s.dauer||1} × 45 min)${s.ziele?'\nLernziel: '+s.ziele:''}
+Ablauf:\n${s.ablauf||'(kein Ablauf eingetragen – schlage einen sinnvollen 45-Minuten-Ablauf vor)'}${s.ha?'\nHausaufgabe: '+s.ha:''}${docs.length?'\nVerknüpftes Material: '+docs.join('; '):''}
+Halte dich an die Reihenfolge und die Minuten des Ablaufs. Pro Phase 1–2 Folien, insgesamt 7–12 Folien. Beginne mit art "titel", dann "ziel" (falls Lernziel) und "ablauf" (Übersicht der Phasen mit Minuten). Aufgabenfolien: klare Arbeitsaufträge mit Sozialform und Zeit (z. B. „Partnerarbeit · 10 min“).
+Gib NUR JSON zurück: {"folien":[{"art":"titel|ziel|ablauf|inhalt|aufgabe|experiment|sicherung|hausaufgabe","phase":"Einstieg","minuten":5,"titel":"…","punkte":["…"],"notizen":"…"}]}`; }
+function normFolien(arr){ const a=Array.isArray(arr)?arr:(arr&&Array.isArray(arr.folien)?arr.folien:[]); return a.filter(f=>f&&(f.titel||(f.punkte||[]).length)).map(f=>({art:String(f.art||'inhalt'),phase:f.phase?String(f.phase):'',minuten:+f.minuten||0,titel:String(f.titel||''),punkte:(Array.isArray(f.punkte)?f.punkte:f.punkte?[f.punkte]:[]).map(String).filter(Boolean).slice(0,7),notizen:String(f.notizen||'')})); }
+async function buildPptx(F,s,k,opts){
+  const P=await loadPptx(); const p=new P(); p.layout='LAYOUT_WIDE'; p.title=s.titel; p.author=P_().name||''; p.company=P_().schule||'';
+  const TH=PPT_THEMES[opts.theme]||PPT_THEMES.gruen; const col=TH.col, tint=TH.tint; const dark='1C2421', mute='6B7570', soft=TH.soft; const kl=klasseOf(k);
+  const foot=k.titel+' · '+s.titel; const total=F.filter(f=>f.minuten).reduce((a,f)=>a+f.minuten,0); let clock=0; const W=13.333;
+  F.forEach((f,i)=>{ const sl=p.addSlide(); const start=clock; if(f.minuten) clock+=f.minuten;
+    const notes=[f.phase||f.minuten?'⏱ '+(f.phase||f.art)+(f.minuten?` · ${f.minuten} min (Min. ${start}–${start+f.minuten}${total?' von '+total:''})`:''):'',f.notizen].filter(Boolean).join('\n\n');
+    if(opts.notes&&notes) sl.addNotes(notes);
+    if(f.art==='titel'){ sl.background={color:col};
+      sl.addText(fachName(k.fachId)+(kl?' · Klasse '+kl.name:''),{x:0.8,y:1.6,w:11.7,h:0.5,fontFace:'Arial',fontSize:20,color:'FFFFFF',transparency:15});
+      sl.addText(f.titel||s.titel,{x:0.8,y:2.2,w:11.7,h:2.2,fontFace:'Arial',fontSize:46,bold:true,color:'FFFFFF',valign:'top',fit:'shrink'});
+      if(s.ziele&&!F.some(x=>x.art==='ziel')) sl.addText(s.ziele,{x:0.8,y:4.6,w:11.7,h:1,fontFace:'Arial',fontSize:20,color:'FFFFFF'});
+      sl.addShape(p.ShapeType.rect,{x:0.8,y:4.45,w:1.6,h:0.06,fill:{color:tint},line:{color:tint}});
+      sl.addText(new Date().toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'}),{x:0.8,y:6.4,w:6,h:0.4,fontFace:'Arial',fontSize:14,color:'FFFFFF'});
+      return; }
+    sl.background={color:'FFFFFF'}; sl.addShape(p.ShapeType.rect,{x:0,y:0,w:0.18,h:7.5,fill:{color:col},line:{color:col}});
+    if(opts.phasen&&(f.phase||f.minuten)){ const tag=(f.phase||'')+(f.minuten?(f.phase?' · ':'')+f.minuten+' min':''); sl.addText(tag,{x:0.6,y:0.35,w:Math.min(6,0.6+tag.length*0.12),h:0.42,fontFace:'Arial',fontSize:14,bold:true,color:'FFFFFF',fill:{color:col},shape:p.ShapeType.roundRect,rectRadius:0.12,align:'center',margin:4}); }
+    sl.addText(f.titel,{x:0.6,y:0.9,w:12,h:1.1,fontFace:'Arial',fontSize:36,bold:true,color:dark,valign:'middle',fit:'shrink'});
+    if(f.art==='ablauf'){ const n=Math.max(1,f.punkte.length), gap=0.18, w=(W-1.2-gap*(n-1))/n;
+      f.punkte.forEach((t,j)=>{ const m=t.match(/^(.*?)\s*\((\d+)\s*min\)\s*$/); const name=m?m[1]:t, mi=m?m[2]+' min':'';
+        sl.addShape(p.ShapeType.roundRect,{x:0.6+j*(w+gap),y:2.6,w,h:2.4,fill:{color:j%2?soft:tint},line:{color:col,width:1},rectRadius:0.1});
+        sl.addText(String(j+1),{x:0.6+j*(w+gap),y:2.75,w,h:0.6,align:'center',fontFace:'Arial',fontSize:22,bold:true,color:col});
+        sl.addText(name,{x:0.6+j*(w+gap)+0.08,y:3.35,w:w-0.16,h:1,align:'center',valign:'middle',fontFace:'Arial',fontSize:n>5?14:18,bold:true,color:dark,fit:'shrink'});
+        if(mi) sl.addText(mi,{x:0.6+j*(w+gap),y:4.35,w,h:0.45,align:'center',fontFace:'Arial',fontSize:14,color:mute}); });
+    } else {
+      const box=/aufgabe|experiment/.test(f.art); const big=f.punkte.length<=3;
+      if(box) sl.addShape(p.ShapeType.roundRect,{x:0.6,y:2.15,w:12.1,h:4.55,fill:{color:soft},line:{color:tint,width:1.5},rectRadius:0.12});
+      if(f.art==='hausaufgabe') sl.addShape(p.ShapeType.roundRect,{x:0.6,y:2.15,w:12.1,h:4.55,fill:{color:tint},line:{color:col,width:1},rectRadius:0.12});
+      const items=f.punkte.map(t=>({text:t,options:{bullet:f.art==='aufgabe'?{type:'number'}:{indent:28},paraSpaceAfter:14}}));
+      if(items.length) sl.addText(items,{x:box||f.art==='hausaufgabe'?0.95:0.75,y:2.3,w:11.5,h:4.25,valign:'top',fontFace:'Arial',fontSize:big?30:24,color:dark,fit:'shrink'});
+    }
+    sl.addText(foot,{x:0.6,y:6.95,w:9,h:0.35,fontFace:'Arial',fontSize:11,color:mute});
+    sl.addText(String(i+1),{x:11.9,y:6.95,w:0.8,h:0.35,align:'right',fontFace:'Arial',fontSize:11,color:mute});
+  });
+  return p.write({outputType:'blob'}); }
+function folienMd(F){ return F.map(f=>{ let t='# '+(f.titel||'')+'\n\n'; if(f.art==='titel') return t+(f.punkte||[]).join('\n'); if(f.phase||f.minuten) t+='*'+[f.phase,f.minuten?f.minuten+' min':''].filter(Boolean).join(' · ')+'*\n\n'; return t+(f.punkte||[]).map((x,i)=>(f.art==='aufgabe'?(i+1)+'. ':'- ')+x).join('\n'); }).join('\n\n---\n\n'); }
+const PPT_THEMES={gruen:{name:'Tiefes Dunkelgrün',col:'1B4332',tint:'D8E8DF',soft:'F2F6F3'},blau:{name:'Tiefes Dunkelblau',col:'1D3557',tint:'D9E3F0',soft:'F2F5F9'}};
+function openPptTool(){
+  const e=ED; if(!e||e.type!=='lesson') return; const s=e.data; const k=S.kurse[e.kid];
+  if(!String(s.titel).trim()){ toast('Bitte zuerst ein Thema eingeben'); return; }
+  const lehrerEd=e; pushED(); let F=null;
+  const m=openModal('PowerPoint zur Stunde',`<div class="stack">
+    <p class="small">Aus Thema, Lernziel, Ablauf und Hausaufgabe entsteht eine PowerPoint, die dich durch die Stunde führt: <b>Folien für die Klasse</b>, und in den <b>Notizen</b> jeder Folie stehen Phase, Minuten (mit laufender Uhr) und deine Hinweise.</p>
+    ${s.ablauf?'':'<div class="hint">Im Ablauf-Feld steht noch nichts – die KI schlägt dann einen Ablauf vor, offline entsteht nur ein Gerüst.</div>'}
+    <div class="row">${ENV.sample?`<button class="btn ki" id="ppKI">${ic('spark')} Mit KI ausarbeiten</button>`:`<button class="btn ki" id="ppCopy">${ic('spark')} Prompt für Claude-App kopieren</button>`}<button class="btn" id="ppOff">Direkt aus dem Ablauf (offline)</button></div>
+    ${ENV.sample?'':`<div id="ppBridge"><textarea id="ppIn" style="min-height:90px" placeholder="Antwort (JSON) aus der Claude-App hier einfügen"></textarea><button class="btn sm" id="ppParse" style="margin-top:6px">Antwort übernehmen</button></div>`}
+    <div id="ppOut"></div>
+    <div class="row small" style="gap:14px"><label class="row nw"><input type="checkbox" id="ppNotes" checked style="width:20px;height:20px"> Lehrerhinweise in den Notizen</label><label class="row nw"><input type="checkbox" id="ppPh" checked style="width:20px;height:20px"> Phase &amp; Minuten auf den Folien</label><label class="row nw">Farbe <select id="ppTh" style="width:auto;padding:5px 8px">${opt(Object.entries(PPT_THEMES).map(([k2,v])=>[k2,v.name]),S.settings.pptTheme||'gruen')}</select></label><label class="row nw"><input type="checkbox" id="ppMd" checked style="width:20px;height:20px"> zusätzlich für den App-Präsentator</label></div></div>`,
+    `<button class="btn" data-act="closeModal">Abbrechen</button><button class="btn pri" id="ppGo" disabled>PowerPoint erstellen</button>`,{wide:true,sticky:true});
+  const out=$('#ppOut',m);
+  const show=arr=>{ F=normFolien(arr); if(!F.length){ out.innerHTML='<div class="hint">Keine Folien erkannt.</div>'; return; } if(F[0].art!=='titel') F.unshift({art:'titel',titel:s.titel,punkte:[],notizen:'',phase:'',minuten:0});
+    const sum=F.reduce((a,f)=>a+(f.minuten||0),0);
+    out.innerHTML=`<div class="info">${F.length} Folien${sum?' · '+sum+' Minuten verplant':''} – Titel antippen zum Ändern.</div><ol class="small" style="margin:8px 0 0;padding-left:22px">${F.map((f,i)=>`<li style="margin:5px 0"><input type="text" data-pf="${i}" value="${esc(f.titel)}" style="display:inline-block;max-width:420px;padding:6px 9px"> <span class="tiny muted">${esc([f.phase,f.minuten?f.minuten+' min':'',f.punkte.length+' Punkte'].filter(Boolean).join(' · '))}</span></li>`).join('')}</ol>`;
+    out.querySelectorAll('[data-pf]').forEach(inp=>inp.oninput=()=>{ F[+inp.dataset.pf].titel=inp.value; });
+    $('#ppGo',m).disabled=false; };
+  $('#ppOff',m).onclick=()=>show(offlineFolien(s,k));
+  if($('#ppKI',m)) $('#ppKI',m).onclick=async ev=>{ ev.target.disabled=true; out.innerHTML='<div class="info">'+ic('spark')+' Folien werden ausgearbeitet … (meist 20–40 Sekunden)</div>';
+    try{ show(await ENV.sample.json(pptPrompt(s,k),{cache:false})); }catch(err){ out.innerHTML=`<div class="hint">KI-Fehler: ${esc(err&&(err.message||err.code)||'unbekannt')} – „Direkt aus dem Ablauf“ geht immer.</div>`; } ev.target.disabled=false; };
+  if($('#ppCopy',m)) $('#ppCopy',m).onclick=()=>{ copyText(pptPrompt(s,k)); toast('Prompt kopiert – in der Claude-App einfügen, Antwort hier einfügen'); };
+  if($('#ppParse',m)) $('#ppParse',m).onclick=()=>{ const raw=$('#ppIn',m).value; try{ const mm=raw.match(/\{[\s\S]*\}|\[[\s\S]*\]/); show(JSON.parse(mm?mm[0]:raw)); }catch(err){ toast('Antwort konnte nicht gelesen werden'); } };
+  $('#ppGo',m).onclick=async ev=>{ ev.target.disabled=true; ev.target.textContent='Wird erstellt …';
+    try{ const theme=$('#ppTh',m).value; if(S.settings.pptTheme!==theme){ S.settings.pptTheme=theme; saveSettingsRaw(); } const blob=await buildPptx(F,s,k,{notes:$('#ppNotes',m).checked,phasen:$('#ppPh',m).checked,theme});
+      const ex=k.einheiten[lehrerEd.ei]; const ordId=ex?ensureOrdner(k.fachId,k.stufe,ex.titel):''; const name=(s.titel.replace(/[\\/:*?"<>|]+/g,'').trim()||'Stunde')+'.pptx';
+      const d={id:uid(),titel:s.titel+' (PowerPoint)',typ:'Präsentation',fachId:k.fachId,stufe:k.stufe,ordnerId:ordId,tags:[],fileName:name,mime:'application/vnd.openxmlformats-officedocument.presentationml.presentation',size:blob.size,created:Date.now(),seiten:F.length,snippet:F.map(f=>f.titel+': '+f.punkte.join('; ')).join('\n').slice(0,1500),kind:'file',...(await storeBlob(blob,name))};
+      save('docs',d,true); lehrerEd.data.docs.push({docId:d.id,rolle:'praes',seiten:1});
+      if($('#ppMd',m).checked){ const md={id:uid(),titel:s.titel+' (Folien für die App)',typ:'Präsentation',fachId:k.fachId,stufe:k.stufe,ordnerId:ordId,tags:[],kind:'md',md:folienMd(F),created:Date.now(),seiten:F.length}; md.snippet=md.md.slice(0,1500); save('docs',md,true); lehrerEd.data.docs.push({docId:md.id,rolle:'praes',seiten:1}); }
+      closeModal(); renderLessonDocs(); render();
+      const blobFile=new File([blob],name,{type:d.mime}); let shared=false;
+      if(!ENV.downloads&&navigator.canShare){ try{ if(navigator.canShare({files:[blobFile]})){ await navigator.share({files:[blobFile],title:name}); shared=true; } }catch(err){ shared=err&&err.name==='AbortError'; } }
+      if(!shared) await saveFile(name,blob,d.mime);
+      toast('PowerPoint erstellt und mit der Stunde verknüpft – Stunde noch speichern');
+    }catch(err){ toast('Erstellen fehlgeschlagen: '+(err&&err.message||err)); ev.target.disabled=false; ev.target.textContent='PowerPoint erstellen'; } };
+}
+
+/* ================= Export / Import / Geräte-Abgleich ================= */
+const SYNC_NAME='lehrer-organizer-abgleich.json';
+const lsGet=(k,d)=>{ try{ const v=localStorage.getItem(k); return v==null?d:v; }catch(e){ return d; } };
+const lsSet=(k,v)=>{ try{ localStorage.setItem(k,v); }catch(e){} };
+function deviceName(){ let n=lsGet('lo-device',''); if(!n){ n=(MODE==='cloud'?'Online-Version':(/iPad|Macintosh/.test(navigator.userAgent)&&'ontouchend' in document?'iPad':/iPhone/.test(navigator.userAgent)?'iPhone':'Computer')); } return n; }
+function changesSince(t){ t=+t||0; let n=0; COLLS.forEach(c=>Object.values(S[c]).forEach(x=>{ if((x._t||0)>t) n++; })); Object.values(S.settings.del||{}).forEach(v=>{ if(v>t) n++; }); if((S.settings._t||0)>t) n++; return n; }
+async function buildExport(opts){
+  const data={app:'lehrer-organizer',v:3,typ:opts.typ||'voll',exported:new Date().toISOString(),geraet:deviceName()};
+  let docs;
+  if(data.typ==='fach'){ const ids=opts.fachIds||[]; data.faecher=faecher().filter(f=>ids.includes(f.id)); data.ordner={}; data.docs={};
+    Object.values(S.ordner).filter(o=>ids.includes(o.fachId)).forEach(o=>data.ordner[o.id]=o); Object.values(S.docs).filter(d=>ids.includes(d.fachId)).forEach(d=>data.docs[d.id]=d); docs=Object.values(data.docs); }
+  else { data.settings=S.settings; data.druck=S.druck; COLLS.forEach(c=>data[c]=S[c]); docs=Object.values(S.docs); }
+  if(opts.files){ data.files={}; let i=0; const fd=docs.filter(d=>d.kind==='file');
+    for(const d of fd){ i++; if(fd.length>5) progress('Dateien werden eingepackt … '+i+'/'+fd.length); try{ const b=await fileBlob(d); if(b) data.files[d.id]={type:b.type||d.mime||'',data:await b64(b)}; }catch(e){} } progress(''); }
+  return data;
+}
+function progress(t){ let el=document.getElementById('progbar'); if(!t){ if(el) el.remove(); return; } if(!el){ el=document.createElement('div'); el.id='progbar'; el.style.cssText='position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:9999;background:#1e2430;color:#fff;padding:9px 16px;border-radius:12px;font-size:14px'; document.body.appendChild(el); } el.textContent=t; }
+async function shareOrSave(filename,text){
+  const file=new File([text],filename,{type:'application/json'});
+  if(!ENV.downloads&&navigator.canShare){ try{ if(navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:filename}); return true; } }catch(e){ if(e&&e.name==='AbortError') return false; } }
+  return saveFile(filename,text,'application/json');
+}
+async function readJSONFile(file){ try{ const o=JSON.parse(await file.text()); return o&&o.app==='lehrer-organizer'?o:null; }catch(e){ return null; } }
+async function importDoc(it,o,cur){
+  if(it._fehlt&&cur&&cur.kind==='file'&&!cur._fehlt){ const r={...it,kind:'file'}; delete r._fehlt; delete r.ort; ['fileId','assetId','url'].forEach(k=>{ delete r[k]; if(cur[k]!=null) r[k]=cur[k]; }); if(cur.ort!=null) r.ort=cur.ort; return r; }
+  if(it._fehlt&&o.files&&o.files[it.id]){ it={...it,kind:'file'}; delete it.ort; }
+  if(it.kind!=='file') return it;
+  if(o.files&&o.files[it.id]){ try{ const bin=atob(o.files[it.id].data); const u8=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u8[i]=bin.charCodeAt(i); delete it.fileId; delete it.assetId; delete it.url; delete it._fehlt; Object.assign(it,await storeBlob(new Blob([u8],{type:o.files[it.id].type}),it.fileName)); return it; }catch(e){} }
+  if(cur&&cur.kind==='file'&&!cur._fehlt){ ['fileId','assetId','url'].forEach(k=>{ delete it[k]; if(cur[k]!=null) it[k]=cur[k]; }); return it; }
+  if(cur&&cur._fehlt) return {...cur,...it,kind:'extern',_fehlt:cur._fehlt,ort:cur.ort};
+  // Datei liegt nur auf dem anderen Gerät
+  return {...it,_fehlt:{kind:'file',fileId:it.fileId,assetId:it.assetId,url:it.url},kind:'extern',ort:'Datei liegt auf „'+(o.geraet||'anderem Gerät')+'“ – beim Abgleich „mit Dateien“ wählen'};
+}
+function mergeProfil(a,b){ const fa=(a&&a.faecher)||[], fb=(b&&b.faecher)||[]; const out=fa.map(f=>({...f,stufen:[...(f.stufen||[])]}));
+  fb.forEach(f=>{ const ex=out.find(x=>x.id===f.id||norm(x.name)===norm(f.name)); if(ex){ (f.stufen||[]).forEach(s=>{ if(!ex.stufen.includes(s)) ex.stufen.push(s); }); ex.stufen.sort((x,y)=>x-y); } else out.push({...f,stufen:[...(f.stufen||[])]}); });
+  return makeProfil((a&&a.name)||(b&&b.name)||'',(a&&a.schule)||(b&&b.schule)||'',out); }
+async function mergeImport(o){
+  const st={neu:0,akt:0,del:0,dateien:0}; const remDel=(o.settings&&o.settings.del)||{}; const del={...(S.settings.del||{})};
+  for(const k in remDel) if(!del[k]||remDel[k]>del[k]) del[k]=remDel[k];
+  if(o.typ==='fach'){ const pf=P_(); S.settings.profil=mergeProfil(pf,{faecher:o.faecher||[]}); }
+  // gleichnamige Ordner (z. B. Rahmenplan-Themen, auf beiden Geräten automatisch angelegt) zusammenlegen
+  const omap={}; const okey=x=>x.fachId+'|'+(x.stufe||'')+'|'+norm(x.name);
+  const locO={}; Object.values(S.ordner).forEach(x=>{ locO[okey(x)]=x.id; });
+  Object.values(o.ordner||{}).forEach(x=>{ const l=locO[okey(x)]; if(l&&l!==x.id&&!S.ordner[x.id]) omap[x.id]=l; });
+  const colls=o.typ==='fach'?['ordner','docs']:COLLS; let i=0, total=colls.reduce((a,c)=>a+Object.keys(o[c]||{}).length,0);
+  for(const c of colls){ for(const it0 of Object.values(o[c]||{})){ i++; if(total>40&&i%20===0) progress('Abgleich … '+i+'/'+total);
+      let it=clone(it0); if(c==='ordner'&&omap[it.id]) continue; if(c==='docs'&&omap[it.ordnerId]) it.ordnerId=omap[it.ordnerId];
+      const k=c+'/'+it.id, t=it._t||0; const cur=S[c][it.id];
+      const fileUpgrade=c==='docs'&&cur&&cur._fehlt&&o.files&&o.files[it.id];
+      if(!fileUpgrade){ if(del[k]&&del[k]>=t&&o.typ!=='fach') continue; if(cur&&(cur._t||0)>=t) continue; }
+      else if((cur._t||0)>t){ it=clone(cur); it.kind='file'; delete it._fehlt; delete it.ort; }
+      const val=c==='docs'?await importDoc(it,o,fileUpgrade?null:cur):it; if(c==='docs'&&o.files&&o.files[it.id]) st.dateien++;
+      S[c][it.id]=val; cur?st.akt++:st.neu++; if(DB) dbWrite(k,clone(val)); } if(!DB) markDirty(c); }
+  if(o.typ!=='fach'){ for(const k in remDel){ const [c,id]=k.split('/'); if(COLLS.includes(c)&&S[c][id]&&(S[c][id]._t||0)<remDel[k]){ delete S[c][id]; st.del++; if(DB) dbWrite(k,null); else markDirty(c); } }
+    const rs=o.settings||{}; const keepLp=S.settings.lpDone; const prof=mergeProfil(S.settings.profil,rs.profil);
+    if((rs._t||0)>(S.settings._t||0)){ S.settings={...clone(DEFAULT_SETTINGS),...clone(rs)}; } S.settings.profil=prof; S.settings.lpDone=keepLp;
+    if(o.druck){ S.druck={...o.druck,...S.druck}; if(DB) dbWrite('meta/druck',{marks:clone(S.druck)}); else markDirty('druck'); } }
+  S.settings.del=del; TV++; createLehrplanOrdner(); saveSettingsRaw(); progress('');
+  if(!DB) await flushLocal(); render(); return st;
+}
+async function replaceImport(o){
+  progress('Ersetze Daten …');
+  for(const c of COLLS){ for(const id of Object.keys(S[c])){ if(!(o[c]||{})[id]){ delete S[c][id]; if(DB) dbWrite(c+'/'+id,null); } } if(!DB) markDirty(c); }
+  if(o.settings){ S.settings={...clone(DEFAULT_SETTINGS),...clone(o.settings)}; }
+  for(const c of COLLS){ for(const it0 of Object.values(o[c]||{})){ const it=clone(it0); const val=c==='docs'?await importDoc(it,o,null):it; S[c][it.id]=val; if(DB) dbWrite(c+'/'+it.id,clone(val)); } if(!DB) markDirty(c); }
+  if(o.druck){ S.druck=o.druck; if(DB) dbWrite('meta/druck',{marks:clone(S.druck)}); else markDirty('druck'); }
+  TV++; createLehrplanOrdner(); saveSettingsRaw(); progress(''); if(!DB) await flushLocal(); render();
+}
+function statText(st){ const p=[]; if(st.neu) p.push(st.neu+' neu'); if(st.akt) p.push(st.akt+' aktualisiert'); if(st.del) p.push(st.del+' gelöscht'); if(st.dateien) p.push(st.dateien+' Dateien'); return p.length?p.join(', '):'alles war schon aktuell'; }
 async function exportBackup(withFiles){
-  toast('Sicherung wird erstellt …');
-  const data={app:'lehrer-organizer',v:2,exported:new Date().toISOString(),settings:S.settings,druck:S.druck}; COLLS.forEach(c=>data[c]=S[c]);
-  if(withFiles){ data.files={}; for(const d of Object.values(S.docs)){ if(d.kind!=='file') continue; try{ const b=await fileBlob(d); if(b) data.files[d.id]={type:b.type||d.mime||'',data:await b64(b)}; }catch(e){} } }
-  const ok=await saveFile('lehrer-organizer-sicherung-'+today()+(withFiles?'-mit-dateien':'')+'.json',JSON.stringify(data),'application/json');
-  if(ok) toast('Sicherung gespeichert');
+  const data=await buildExport({typ:'voll',files:withFiles});
+  const ok=await shareOrSave('lehrer-organizer-sicherung-'+today()+(withFiles?'-mit-dateien':'')+'.json',JSON.stringify(data));
+  if(ok){ lsSet('lo-lastbackup',String(Date.now())); toast('Sicherung gespeichert'); }
 }
 async function importBackup(file){
-  if(!file) return; let o; try{ o=JSON.parse(await file.text()); }catch(e){ toast('Datei ist keine gültige Sicherung'); return; }
-  if(o.app!=='lehrer-organizer'){ toast('Datei ist keine gültige Sicherung'); return; }
-  if(!(await ask('Sicherung importieren? Einträge mit gleicher ID werden überschrieben.','Importieren'))) return;
-  toast('Import läuft …');
-  if(o.settings){ S.settings={...clone(DEFAULT_SETTINGS),...o.settings}; if(DB) await dbWrite('meta/settings',clone(S.settings)); else markDirty('settings'); }
-  for(const c of COLLS){ for(const it0 of Object.values(o[c]||{})){ const it=clone(it0);
-      if(c==='docs'){ if(o.files&&o.files[it.id]){ try{ const bin=atob(o.files[it.id].data); const u8=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u8[i]=bin.charCodeAt(i); delete it.fileId; delete it.assetId; delete it.url; Object.assign(it,await storeBlob(new Blob([u8],{type:o.files[it.id].type}),it.fileName)); }catch(e){} } else if(it.kind==='file'&&((it.fileId&&MODE==='cloud')||(it.assetId&&MODE!=='cloud'))){ it.kind='extern'; it.ort='Datei nicht in der Sicherung enthalten'; } }
-      S[c][it.id]=it; if(DB) await dbWrite(c+'/'+it.id,it); } if(!DB) markDirty(c); }
-  if(!DB) await flushLocal(); render(); toast('Import abgeschlossen');
+  if(!file) return; const o=await readJSONFile(file); if(!o){ toast('Datei ist keine gültige Lehrer-Organizer-Datei'); return; }
+  if(o.typ==='fach'){ const n=(o.faecher||[]).map(f=>f.name).join(', '); if(!(await ask('Material für „'+n+'“ übernehmen? ('+Object.keys(o.docs||{}).length+' Dokumente, '+Object.keys(o.ordner||{}).length+' Ordner) Vorhandenes bleibt erhalten.','Übernehmen'))) return;
+    const st=await mergeImport(o); toast('Übernommen: '+statText(st)); return; }
+  const m=openModal('Datei importieren',`<p>Sicherung von <b>${esc(o.geraet||'unbekanntem Gerät')}</b>${o.exported?' vom '+esc(new Date(o.exported).toLocaleString('de-DE',{dateStyle:'medium',timeStyle:'short'})):''}${o.files?' – mit Dateien':' – ohne Dateien'}.</p>
+    <div class="stack"><button class="btn pri" id="imMerge">Zusammenführen (empfohlen)</button><div class="tiny muted" style="margin-top:-6px">Neue Einträge kommen dazu, bei Änderungen gewinnt die neuere Fassung. Nichts geht verloren.</div>
+    <button class="btn danger" id="imRepl">Alles ersetzen</button><div class="tiny muted" style="margin-top:-6px">Die Daten auf diesem Gerät werden komplett durch die Sicherung ersetzt (Wiederherstellung).</div></div>`,`<button class="btn" data-act="closeModal">Abbrechen</button>`);
+  $('#imMerge',m).onclick=async()=>{ closeModal(); const st=await mergeImport(o); toast('Abgleich: '+statText(st)); };
+  $('#imRepl',m).onclick=async()=>{ closeModal(); if(!(await ask('Wirklich alle Daten auf diesem Gerät durch die Sicherung ersetzen?','Ersetzen'))) return; await replaceImport(o); toast('Sicherung wiederhergestellt'); };
+}
+function openAbgleich(){
+  const last=+lsGet('lo-lastsync',0); const ch=changesSince(last);
+  const m=openModal('Geräte abgleichen',`<div class="stack">
+    <div class="info">So bleiben deine Geräte auf demselben Stand: Alle Geräte nutzen <b>dieselbe Abgleich-Datei in iCloud Drive</b> (z. B. Ordner „Lehrer-Organizer“). Auf jedem Gerät erst <b>laden</b>, dann <b>speichern</b> – so landen die Änderungen aller Geräte in der Datei.</div>
+    <div class="small">Dieses Gerät: <input type="text" id="abDev" value="${esc(deviceName())}" style="max-width:200px;display:inline-block"> · ${last?'letzter Abgleich '+esc(new Date(last).toLocaleString('de-DE',{dateStyle:'medium',timeStyle:'short'}))+' · '+ch+' Änderungen seitdem':'noch nie abgeglichen'}</div>
+    <div class="card" style="margin:0;padding:12px"><b>1. Abgleich-Datei laden</b><div class="tiny muted" style="margin:3px 0 8px">„${SYNC_NAME}“ aus iCloud Drive wählen. Beim allerersten Abgleich überspringen.</div>
+      <label class="btn">${ic('upload')} Datei laden &amp; zusammenführen<input type="file" class="vh" id="abFile" accept=".json,application/json"></label><div id="abRes" class="small" style="margin-top:6px"></div></div>
+    <div class="card" style="margin:0;padding:12px"><b>2. Abgleich-Datei speichern</b><div class="tiny muted" style="margin:3px 0 8px">Im Teilen-Menü „In Dateien sichern“ → denselben iCloud-Ordner → vorhandene Datei <b>ersetzen</b>.</div>
+      <label class="row nw small" style="margin-bottom:8px"><input type="checkbox" id="abFiles" style="width:20px;height:20px"> Dateien (PDFs, Bilder …) mitnehmen – größer, aber dann sind sie auf allen Geräten</label>
+      <button class="btn pri" id="abSave">Abgleich-Datei speichern</button></div></div>`,`<button class="btn" data-act="closeModal">Fertig</button>`,{wide:true});
+  $('#abDev',m).onchange=e=>lsSet('lo-device',e.target.value.trim());
+  $('#abFile',m).onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(!f) return; const o=await readJSONFile(f); if(!o){ toast('Keine gültige Abgleich-Datei'); return; }
+    const st=await mergeImport(o); $('#abRes',m).innerHTML=`${ic('check')} Übernommen von „${esc(o.geraet||'?')}“: ${esc(statText(st))}`; };
+  $('#abSave',m).onclick=async e=>{ e.target.disabled=true; try{ const data=await buildExport({typ:'voll',files:$('#abFiles',m).checked}); const ok=await shareOrSave(SYNC_NAME,JSON.stringify(data)); if(ok){ lsSet('lo-lastsync',String(Date.now())); lsSet('lo-lastbackup',String(Date.now())); toast('Abgleich-Datei gespeichert'); } } finally{ e.target.disabled=false; } };
+}
+function openFachExport(){
+  const fs=faecher().filter(f=>(f.stufen||[]).length||countIn(f.id));
+  const m=openModal('Material exportieren',`<div class="stack"><p class="small">Exportiert Ordnerstruktur und Dokumente der gewählten Fächer – z. B. für Kolleginnen und Kollegen. Klassen, Kurse, Notizen zu Stunden und Einstellungen bleiben privat.</p>
+    <div>${fs.map(f=>`<label class="row nw" style="padding:6px 0"><input type="checkbox" data-fx="${f.id}" style="width:20px;height:20px"><span class="sw" style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${f.farbe}"></span>${esc(f.name)} <span class="tiny muted">${countIn(f.id)} Dokumente</span></label>`).join('')}</div>
+    <label class="row nw small"><input type="checkbox" id="fxFiles" checked style="width:20px;height:20px"> Dateien mitnehmen</label></div>`,
+    `<button class="btn" data-act="closeModal">Abbrechen</button><button class="btn pri" id="fxGo">Exportieren</button>`);
+  $('#fxGo',m).onclick=async()=>{ const ids=[...m.querySelectorAll('[data-fx]:checked')].map(c=>c.dataset.fx); if(!ids.length){ toast('Bitte mindestens ein Fach wählen'); return; }
+    const data=await buildExport({typ:'fach',fachIds:ids,files:$('#fxFiles',m).checked}); const names=data.faecher.map(f=>f.name).join('-');
+    const ok=await shareOrSave('material-'+norm(names).replace(/[^a-z0-9]+/g,'-')+'-'+today()+'.json',JSON.stringify(data)); if(ok){ closeModal(); toast('Material exportiert'); } };
 }
 
 /* ================= Beispieldaten ================= */
@@ -1399,7 +1878,9 @@ const ACT={
   delKlasse:async()=>{ const id=ED.data.id; if(await ask('Klasse wirklich löschen? Kurse bleiben erhalten.')){ closeModal(); remove('klassen',id); } },
   sus:o=>{ const kl=clone(S.klassen[o.id]); kl.schueler=Math.max(0,(+kl.schueler||0)+(+o.n)); save('klassen',kl); },
   editKurs:o=>{ if(!Object.keys(S.klassen).length&&!o.id){ toast('Bitte zuerst eine Klasse anlegen'); openKlasseEditor(); return; } openKursEditor(o.id,o.kl); },
-  toggleSlot:(o,el)=>{ const t=+o.t,p=+o.p; const sl=ED.data.slots; const i=sl.findIndex(s=>s.tag===t&&s.std===p); if(i>=0) sl.splice(i,1); else sl.push({tag:t,std:p}); el.classList.toggle('on'); },
+  toggleSlot:(o,el)=>{ const t=+o.t,p=+o.p; const sl=ED.data.slots; const i=sl.findIndex(s=>s.tag===t&&s.std===p);
+    if(i<0) sl.push({tag:t,std:p}); else if(S.settings.abAktiv&&!sl[i].woche) sl[i].woche='A'; else if(S.settings.abAktiv&&sl[i].woche==='A') sl[i].woche='B'; else sl.splice(i,1);
+    const cur=sl.find(s=>s.tag===t&&s.std===p); el.classList.toggle('on',!!cur); el.textContent=p+'.'+(cur&&cur.woche?' '+cur.woche:''); },
   kursFarbe:(o,el)=>{ ED.data.farbe=o.c; el.parentElement.querySelectorAll('.dot').forEach(b=>b.style.borderColor=b.dataset.c===o.c?'#1e2430':b.dataset.c); },
   saveKurs:()=>{ const d=ED.data; d.stufe=+d.stufe||''; if(!String(d.titel).trim()){toast('Bitte einen Kursnamen eingeben');return;} if(!d.fachId){toast('Bitte ein Fach wählen');return;} const isNew=ED.isNew; (d.einheiten||[]).forEach(e=>ensureOrdner(d.fachId,d.stufe,e.titel)); save('kurse',d); closeModal(); if(isNew) go('kurs-'+d.id); },
   delKurs:async()=>{ const id=ED.data.id; if(await ask('Kurs mit allen Einheiten und Stunden löschen? Das Material im Ordner bleibt erhalten.')){ closeModal(); remove('kurse',id); go('kurse'); } },
@@ -1486,6 +1967,21 @@ const ACT={
   addPeriod:()=>{ S.settings.periods.push(['','']); render(); },
   delPeriod:()=>{ if(S.settings.periods.length>1) S.settings.periods.pop(); render(); },
   exportBackup:o=>exportBackup(o.files==='1'),
+  abgleich:()=>openAbgleich(),
+  pptStunde:()=>openPptTool(),
+  termin:(o,el,e)=>{ if(e) e.preventDefault(); const t=S.termine[o.id]; if(t){ if(modalStack.length) closeModal(); openTerminEditor(t); } },
+  delTermin:o=>{ remove('termine',o.id); toast('Rückgängig gemacht'); },
+  newTermin:o=>{ if(modalStack.length) closeModal(); openTerminEditor(null,{art:o.art||'ausfall',datum:o.d||viewDate||today(),kursId:o.k||'',std:o.std||''}); },
+  ausfall:o=>{ if(modalStack.length) closeModal(); save('termine',{id:uid(),art:'ausfall',kursId:o.k,datum:o.d,std:o.std?String(o.std):'',titel:'',notiz:''}); toast('Stunde fällt aus – die Planung rückt nach hinten'); },
+  tagAus:o=>{ openTerminEditor(null,{art:'tagaus',datum:o.d,titel:'Wandertag'}); },
+  week:o=>{ weekStart=+o.n===0?mondayOf(today()):addDays(weekStart||mondayOf(today()),7*+o.n); render(); },
+  wkCell:o=>wkCellMenu(o),
+  icsExport:()=>openIcsExport(),
+  backupSnooze:()=>{ lsSet('lo-backupsnooze',String(Date.now()+3*864e5)); render(); },
+  pdfDoc:o=>docToPdf(o.id),
+  diffDoc:o=>openDiff(o.id),
+  stoffverteilung:o=>openStoffverteilung(o.k),
+  fachExport:()=>openFachExport(),
 };
 function gapCtx(g){ const k=S.kurse[g.ki.kid]; if(!k) return null; const typ={stunde:'Arbeitsblatt',praes:'Präsentation',lk:'Leistungskontrolle'}[g.ki.kind]||'KI-Entwurf';
   if(g.ki.sid){ const x=findLesson(k,g.ki.sid); return {...lessonCtx(k,x,typ),onSave:d=>{ const kk=clone(S.kurse[g.ki.kid]); const y=findLesson(kk,g.ki.sid); if(y){ y.s.docs=y.s.docs||[]; y.s.docs.push({docId:d.id,rolle:typ==='Präsentation'?'praes':'kopie',seiten:1}); save('kurse',kk); } }}; }
@@ -1518,7 +2014,7 @@ async function init(){
   const db=ENV.inArtifact?await cap('db'):null;
   if(db){ await initCloud(db); ENV.assets=await cap('assets'); ENV.sample=await cap('sample'); ENV.downloads=await cap('downloads'); await loadLocalFilesOnly(); }
   else { await loadLocal(); if(ENV.inArtifact){ ENV.sample=await cap('sample'); ENV.downloads=await cap('downloads'); } }
-  loaded=true; migrateDocs(); if(faecher().length){ const was=S.settings.lpDone; const n=createLehrplanOrdner(); if(n||was!==S.settings.lpDone) saveSettings(); if(n) setTimeout(()=>toast(n+' Themenordner laut Rahmenplan ergänzt'),600); } render();
+  loaded=true; migrateDocs(); if(faecher().length){ const was=S.settings.lpDone; const n=createLehrplanOrdner(); if(n||was!==S.settings.lpDone) saveSettingsRaw(); if(n) setTimeout(()=>toast(n+' Themenordner laut Rahmenplan ergänzt'),600); } render();
   if(!faecher().length) profilEditor(true);
   if('serviceWorker' in navigator&&!ENV.inArtifact&&location.protocol==='https:'){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 }
