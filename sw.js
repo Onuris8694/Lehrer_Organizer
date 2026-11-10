@@ -1,5 +1,5 @@
 /* Lehrer-Organizer – Offline-Unterstützung */
-const VERSION = 'lo-v19';
+const VERSION = 'lo-v20';
 const CORE = ['./', './index.html', './pptxgen.bundle.js', './pdf-lib.min.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 const EXTERN = [
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',

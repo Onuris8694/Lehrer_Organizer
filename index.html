@@ -694,7 +694,7 @@ function viewKurs(id){
     const used=new Set(flat(k).flatMap(x=>(x.s.docs||[]).map(r=>r.docId)));
     const grp=[{o:null,list:docs.filter(d=>!d.ordnerId||!S.ordner[d.ordnerId])},...ords.map(o=>({o,list:docs.filter(d=>d.ordnerId===o.id)}))].filter(g=>g.list.length||g.o);
     return head+`<div class="info" style="margin-bottom:14px">${ic('folder')} Dieser Kurs nutzt den Ordner <b>${esc(folderLabel(k.fachId,k.stufe))}</b>${others.length?` – gemeinsam mit ${others.map(x=>'<b>'+esc(x.titel)+'</b>').join(', ')}`:''}. Alles, was du dort ablegst, steht allen diesen Kursen zur Verfügung.</div>
-      <div class="row" style="margin-bottom:12px"><button class="btn" data-act="openFolder" data-f="${k.fachId}" data-s="${k.stufe}">Ordner öffnen</button><label class="btn pri">${ic('upload')} In Ordner hochladen<input type="file" multiple class="vh" data-upload="${k.fachId}|${k.stufe}|" accept=".pdf,image/*,video/*,.txt,.md,.docx,.pptx,.key"></label></div>
+      <div class="row" style="margin-bottom:12px"><button class="btn" data-act="openFolder" data-f="${k.fachId}" data-s="${k.stufe}">Ordner öffnen</button><label class="btn pri">${ic('upload')} In Ordner hochladen<input type="file" multiple class="vh" data-upload="${k.fachId}|${k.stufe}|" ></label></div>
       ${docs.length?grp.map(g=>`<div class="sec">${g.o?esc(g.o.name):'Ohne Themenordner'}</div><div class="card" style="padding:4px 6px">${g.list.length?g.list.map(d=>docRow(d,used.has(d.id)?'<span class="chip ok">in diesem Kurs</span>':'')).join(''):'<div class="small muted" style="padding:10px">leer</div>'}</div>`).join(''):`<div class="empty">Der Ordner ist noch leer.</div>`}`;
   }
   const proj=projection(k,today(),200); const projBy={}; proj.forEach(p=>{ if(p.item&&p.first) projBy[p.item.s.id]=p; });
@@ -754,7 +754,7 @@ function viewMaterial(){
   const fs=faecher(); const f=fachById(MAT.f);
   const uploadAttr=`${MAT.f||''}|${MAT.s||''}|${MAT.o||''}`;
   const toolbar=`<div class="row" style="gap:8px">
-      <label class="btn pri">${ic('upload')} Hochladen<input type="file" multiple class="vh" data-upload="${uploadAttr}" accept=".pdf,image/*,video/*,.txt,.md,.csv,.docx,.pptx,.xlsx,.key,.pages,.odt,.odp"></label>
+      <label class="btn pri">${ic('upload')} Hochladen<input type="file" multiple class="vh" data-upload="${uploadAttr}" ></label>
       <button class="btn" data-act="newMd">${ic('text')} Text / Folien</button><button class="btn" data-act="newLink">${ic('link')} Link</button>
       ${f&&(!f.stufen||!f.stufen.length||MAT.s)&&!MAT.o?`<button class="btn" data-act="newOrdner">${ic('plus')} Themenordner</button>`:''}</div>`;
   const search=`<div style="position:relative;margin:14px 0"><input type="search" id="matq" placeholder="Im Materialordner suchen (Titel, Thema, Inhalt) …" value="${esc(matQ)}" style="padding-left:38px"><span style="position:absolute;left:11px;top:11px;color:var(--muted)">${ic('search')}</span></div>`;
@@ -794,7 +794,7 @@ function viewMaterial(){
     }
   }
   return `<div class="mat"><div class="card tree">${treeHTML()}</div><div>${crumbs}<div class="page-h" style="margin-bottom:6px"><div class="grow"><h1>${esc(title)}</h1><div class="sub">${esc(sub)}</div></div></div>${toolbar}${search}${content}
-    <p class="tiny muted" style="margin-top:18px">Word-, PowerPoint- und Keynote-Dateien bitte auf dem iPad als PDF exportieren (Teilen → Kopie senden/Exportieren → PDF). PDFs werden angezeigt, präsentiert, durchsucht und automatisch einsortiert.</p></div></div>`;
+    <p class="tiny muted" style="margin-top:18px">Alle Dateien werden in der App gespeichert und mit deinen Geräten synchronisiert – auch Word, PowerPoint und Excel (öffnen über „In Word öffnen / Teilen“). PDFs, Bilder und Videos kann die App zusätzlich direkt anzeigen und präsentieren.</p></div></div>`;
 }
 function recentHTML(){ const l=Object.values(S.docs).filter(d=>d.fachId).sort((a,b)=>(b.created||0)-(a.created||0)).slice(0,6); return l.length?`<div class="sec">Zuletzt hinzugefügt</div><div class="card" style="padding:4px 6px">${l.map(d=>docRow(d,`<span class="chip">${esc(folderLabel(d.fachId,d.stufe,d.ordnerId))}</span>`)).join('')}</div>`:''; }
 function sugLabel(a){ let t=fachName(a.fachId); if(a.stufe) t+=' › Kl. '+a.stufe; if(a.ordnerId&&S.ordner[a.ordnerId]) t+=' › '+S.ordner[a.ordnerId].name; else if(a.ordnerNeu) t+=' › '+a.ordnerNeu+' (neu)'; return t; }
@@ -813,7 +813,7 @@ function inboxHTML(list){
 }
 
 /* ===== Upload ===== */
-const UPLOADABLE=f=>/^(image|video)\//.test(f.type)||f.type==='application/pdf'||/\.(pdf|txt|md|csv|json)$/i.test(f.name)||/^text\//.test(f.type);
+const UPLOADABLE=f=>f.size<200*1024*1024;
 async function pdfInfo(buf){ try{ const lib=await loadPdfLib(); const pdf=await lib.getDocument({data:buf}).promise; let txt=''; for(let i=1;i<=Math.min(2,pdf.numPages);i++){ const tc=await (await pdf.getPage(i)).getTextContent(); txt+=tc.items.map(it=>it.str).join(' ')+' '; } return {pages:pdf.numPages,text:txt.replace(/\s+/g,' ').trim().slice(0,1500)}; }catch(e){ return {pages:0,text:''}; } }
 async function handleUpload(files,target,linkToLesson){
   if(!files.length) return;
@@ -822,10 +822,11 @@ async function handleUpload(files,target,linkToLesson){
   const created=[]; let auto=0, ext=0;
   for(const f of files){
     const base=f.name.replace(/\.[^.]+$/,''); const e=(f.name.split('.').pop()||'').toLowerCase();
-    const d={id:uid(),titel:base.replace(/[_]+/g,' '),typ:e==='pdf'?'Arbeitsblatt':/^image|^video/.test(f.type)?'Medien':/pptx|key|odp/.test(e)?'Präsentation':'Sonstiges',fachId:'',stufe:'',ordnerId:'',tags:[],fileName:f.name,mime:f.type,size:f.size,created:Date.now(),seiten:0,snippet:''};
+    const d={id:uid(),titel:base.replace(/[_]+/g,' '),typ:e==='pdf'?'Arbeitsblatt':/^image|^video/.test(f.type)?'Medien':/ppt|key|odp/.test(e)?'Präsentation':/^doc|odt|pages/.test(e)?'Arbeitsblatt':/^xls|ods|numbers/.test(e)?'Tabelle':'Sonstiges',fachId:'',stufe:'',ordnerId:'',tags:[],fileName:f.name,mime:f.type,size:f.size,created:Date.now(),seiten:0,snippet:''};
     try{
       if(UPLOADABLE(f)){
         if(e==='pdf'||f.type==='application/pdf'){ const inf=await pdfInfo(await f.arrayBuffer()); d.seiten=inf.pages; d.snippet=inf.text; }
+        if(OFFICE_RX.test(f.name)){ const inf=await officeInfo(f); d.seiten=inf.pages; d.snippet=inf.text; if(!d.mime) d.mime=OFFICE_MIME[e]||''; }
         if(/\.(md|txt)$/i.test(f.name)){ d.kind='md'; d.md=await f.text(); d.snippet=d.md.slice(0,1500); }
         else { d.kind='file'; Object.assign(d,await storeBlob(f,f.name)); }
       } else { d.kind='extern'; ext++; }
@@ -839,7 +840,7 @@ async function handleUpload(files,target,linkToLesson){
   const inb=created.filter(d=>!d.fachId).length;
   if(!tf) toast(`${auto} automatisch einsortiert${inb?`, ${inb} im Eingang mit Vorschlägen`:''}.`);
   else toast(created.length+' Datei(en) in „'+folderLabel(tf,ts,to)+'“ abgelegt.');
-  if(ext) setTimeout(()=>toast('Office-Dateien sind nur als Verweis gespeichert – bitte als PDF exportieren.'),1800);
+  if(ext) setTimeout(()=>toast(ext+' Datei(en) waren zu groß (über 200 MB) und sind nur als Verweis gespeichert.'),1800);
   if(linkToLesson&&ED&&ED.type==='lesson'){ created.forEach(d=>ED.data.docs.push({docId:d.id,rolle:rolleFor(d),seiten:d.seiten||1})); renderLessonDocs(); }
 }
 const rolleFor=d=>d.typ==='Präsentation'?'praes':d.typ==='Lösung'?'loesung':['Arbeitsblatt','Leistungskontrolle','Lernblatt','Experiment/Protokoll'].includes(d.typ)?'kopie':'lehrer';
@@ -866,16 +867,17 @@ function openDoc(id){
   let prev='';
   if(d.kind==='md') prev=`<div class="card md" style="max-height:340px;overflow:auto">${md(d.md)}</div>`;
   else if(d.kind==='link') prev=`<div class="info">Link: <a href="${esc(d.url)}" target="_blank" rel="noopener">${esc(d.url)}</a></div>`;
-  else if(d.kind==='extern') prev=`<div class="hint">„${esc(d.fileName)}“ ist eine Office-/Fremddatei und wird nur als Verweis geführt. Exportiere sie als PDF und lade das PDF hoch.${d.ort?`<br>Speicherort: <b>${esc(d.ort)}</b>`:''}</div>`;
+  else if(d.kind==='extern') prev=`<div class="hint">${d._fehlt?esc(d.ort||'Die Datei liegt auf einem anderen Gerät.'):'„'+esc(d.fileName||d.titel)+'“ ist bisher nur als Verweis gespeichert – die Datei selbst fehlt.'+(d.ort?'<br>Speicherort: <b>'+esc(d.ort)+'</b>':'')}<div class="row" style="margin-top:8px"><button class="btn sm pri" data-act="attachFile" data-id="${d.id}">${ic('upload')} Datei hinzufügen</button></div><div class="tiny" style="margin-top:4px">Dann ist sie in der App gespeichert und wird mit deinen anderen Geräten synchronisiert.</div></div>`;
+  else if(isOffice(d)) prev=`<div class="card" style="display:flex;gap:14px;align-items:center;margin:0">${docIcon(d)}<div style="flex:1;min-width:0"><b>${esc(d.fileName)}</b><div class="small muted">${officeApp(d)}-Datei · ${d.size?(d.size/1048576).toFixed(d.size>1048576?1:2)+' MB':''}${d.seiten?' · '+d.seiten+(officeApp(d)==='PowerPoint'?(d.seiten===1?' Folie':' Folien'):officeApp(d)==='Excel'?(d.seiten===1?' Tabellenblatt':' Tabellenblätter'):(d.seiten===1?' Seite':' Seiten')):''}</div><div class="row" style="margin-top:8px;gap:6px"><button class="btn sm pri" data-act="shareDoc" data-id="${d.id}">In ${officeApp(d)} öffnen / Teilen</button></div></div></div>${d.snippet?`<div class="card small" style="max-height:200px;overflow:auto;white-space:pre-wrap;margin:0">${esc(d.snippet)}</div>`:''}`;
   else if(isImg(d)) prev=`<img data-fsrc="${d.id}" style="max-width:100%;max-height:340px;border-radius:10px;border:1px solid var(--line)" alt="">`;
   else if(isPdf(d)) prev=`<div id="pdfprev" style="background:#eee;border-radius:10px;min-height:200px;display:grid;place-items:center"><div class="spinner dark"></div></div>`;
   else if(isVid(d)) prev=`<video data-fsrc="${d.id}" controls style="max-width:100%;max-height:340px"></video>`;
   const m=openModal(d.titel,`<div class="stack">${prev}
-    <div class="row" style="gap:6px"><button class="chip acc" data-act="moveDoc" data-id="${d.id}">${ic('folder')} ${esc(folderLabel(d.fachId,d.stufe,d.ordnerId))}</button>${[d.typ,d.seiten?d.seiten+' Seiten':''].filter(Boolean).map(t=>`<span class="chip">${esc(t)}</span>`).join('')}${(d.tags||[]).map(t=>`<span class="chip">#${esc(t)}</span>`).join('')}</div>
+    <div class="row" style="gap:6px"><button class="chip acc" data-act="moveDoc" data-id="${d.id}">${ic('folder')} ${esc(folderLabel(d.fachId,d.stufe,d.ordnerId))}</button>${[d.typ,d.seiten?d.seiten+(d.seiten===1?' Seite':' Seiten'):''].filter(Boolean).map(t=>`<span class="chip">${esc(t)}</span>`).join('')}${(d.tags||[]).map(t=>`<span class="chip">#${esc(t)}</span>`).join('')}</div>
     <div><b class="small">Verwendet in:</b> ${u.length?u.map(o=>`<div class="small"><a href="#kurs-${o.k.id}" data-act="closeModal">${esc(o.k.titel)}</a> › ${esc(o.x.e.titel)} › ${esc(o.x.s.titel)}</div>`).join(''):'<span class="small muted">noch keiner Stunde zugeordnet</span>'}</div></div>`,
     `<button class="btn danger" data-act="delDoc" data-id="${d.id}">Löschen</button><span style="flex:1"></span>
-     ${d.kind==='file'?`<a class="btn" data-fsrc="${d.id}" target="_blank" rel="noopener">Öffnen ↗</a>`:''}
-     ${d.kind==='md'?`<button class="btn" data-act="pdfDoc" data-id="${d.id}">Als PDF</button>`:''}${d.kind==='md'||(isPdf(d)&&(d.snippet||'').trim())?`<button class="btn ki" data-act="diffDoc" data-id="${d.id}">${ic('spark')} Differenzieren</button>`:''}<button class="btn" data-act="moveDoc" data-id="${d.id}">${ic('move')} Verschieben</button><button class="btn" data-act="editDoc" data-id="${d.id}">Bearbeiten</button>${d.kind!=='extern'&&d.kind!=='link'?`<button class="btn pri" data-act="presentDoc" data-id="${d.id}">${ic('play')} Präsentieren</button>`:''}`,{wide:true});
+     ${d.kind==='file'&&!isOffice(d)?`<a class="btn" data-fsrc="${d.id}" target="_blank" rel="noopener">Öffnen ↗</a>`:''}${d.kind==='file'?`<button class="btn" data-act="shareDoc" data-id="${d.id}">${isOffice(d)?'Speichern / Teilen':'Herunterladen'}</button>`:''}
+     ${d.kind==='md'?`<button class="btn" data-act="pdfDoc" data-id="${d.id}">Als PDF</button>`:''}${d.kind==='md'||(isPdf(d)&&(d.snippet||'').trim())?`<button class="btn ki" data-act="diffDoc" data-id="${d.id}">${ic('spark')} Differenzieren</button>`:''}<button class="btn" data-act="moveDoc" data-id="${d.id}">${ic('move')} Verschieben</button><button class="btn" data-act="editDoc" data-id="${d.id}">Bearbeiten</button>${d.kind!=='extern'&&d.kind!=='link'&&!isOffice(d)?`<button class="btn pri" data-act="presentDoc" data-id="${d.id}">${ic('play')} Präsentieren</button>`:''}`,{wide:true});
   hydrate(m);
   const pv=$('#pdfprev',m);
   if(pv) getPdf(d).then(pdf=>{ const cv=document.createElement('canvas'); pv.innerHTML=''; pv.appendChild(cv); return renderPdfPage(pdf,1,cv,Math.min(pv.clientWidth||600,820),340); }).catch(()=>{ pv.innerHTML='<div class="small muted">Vorschau nicht möglich – „Öffnen“ nutzen.</div>'; });
@@ -944,6 +946,7 @@ async function pRender(){
   if(d.kind==='md'){ const sl=mdSlides(d); P.pages=sl.length||1; st.innerHTML=black+`<div class="slide md">${md(sl[P.page-1]||'')}</div>`; }
   else if(isImg(d)){ P.pages=1; st.innerHTML=black+`<img alt="">`; $('img',st).src=await fileURL(d); }
   else if(isVid(d)){ P.pages=1; st.innerHTML=black+`<video controls style="max-width:100%;max-height:100%"></video>`; $('video',st).src=await fileURL(d); }
+  else if(isOffice(d)){ P.pages=1; st.innerHTML=black+`<div style="text-align:center;padding:24px;color:#fff"><b>${esc(d.titel)}</b><br><br>${officeApp(d)}-Dateien kann der App-Präsentator nicht anzeigen.<br><br><button class="btn pri" data-act="shareDoc" data-id="${d.id}">In ${officeApp(d)} öffnen</button><div class="small" style="margin-top:10px;opacity:.75">Tipp: In ${officeApp(d)} als PDF exportieren und hochladen – dann läuft sie direkt hier.</div></div>`; }
   else { st.innerHTML=black+'<div class="spinner"></div>';
     try{ const pdf=await getPdf(d); if(P?.token!==token) return; P.pages=pdf.numPages; P.page=Math.min(P.page,P.pages); const cv=document.createElement('canvas'); await renderPdfPage(pdf,P.page,cv,W,H); if(P?.token!==token) return; st.innerHTML=black; st.appendChild(cv); }
     catch(e){ st.innerHTML=black+`<div style="text-align:center;padding:20px">Dieses Dokument kann hier nicht angezeigt werden.${navigator.onLine?'':'<br>(Der PDF-Anzeiger wird beim ersten Start mit Internet geladen.)'}</div>`; }
@@ -1003,7 +1006,7 @@ function openLessonEditor(kid,ei,si){
     <div class="full"><label class="f">Hausaufgabe (Idee)</label><input type="text" data-f="ha" value="${esc(s.ha)}"></div>
     <div class="full"><div class="row between"><label class="f">Material dieser Stunde</label><div class="row" style="gap:6px">
       <button class="btn sm ki" data-act="kiMaterial">${ic('spark')} Material erstellen</button><button class="btn sm" data-act="pickDoc">${ic('folder')} Aus Materialordner</button>
-      <label class="btn sm">${ic('upload')} Hochladen<input type="file" multiple class="vh" data-upload="${k.fachId}|${k.stufe}|${ord?ord.id:''}" data-link="1" accept=".pdf,image/*,video/*,.txt,.md,.docx,.pptx,.key"></label></div></div>
+      <label class="btn sm">${ic('upload')} Hochladen<input type="file" multiple class="vh" data-upload="${k.fachId}|${k.stufe}|${ord?ord.id:''}" data-link="1" ></label></div></div>
       <div id="led-docs"></div><div class="tiny muted" style="margin-top:6px">Hochgeladenes landet in „${esc(folderLabel(k.fachId,k.stufe,ord?ord.id:''))}“ und steht damit auch den Parallelkursen zur Verfügung.</div></div>
   </div>`,`${isNew?'':'<button class="btn danger" data-act="delLesson">Löschen</button><button class="btn" data-act="moveLesson" data-n="-1" aria-label="nach oben">↑</button><button class="btn" data-act="moveLesson" data-n="1" aria-label="nach unten">↓</button>'}<span style="flex:1"></span><button class="btn" data-act="closeModal">Abbrechen</button><button class="btn pri" data-act="saveLesson">Speichern</button>`,{wide:true,sticky:true});
   renderLessonDocs();
@@ -1680,6 +1683,37 @@ function openMaterialAssistent(){
   if($('#maCopy',m)) $('#maCopy',m).onclick=async()=>{ copyText(await materialPrompt(k,x,$('#maA',m).value,$('#maN',m).value,$('#maW',m).value.trim())); };
 }
 
+/* ================= Office-Dateien (Word, PowerPoint, Excel, OpenDocument) ================= */
+const OFFICE_RX=/\.(docx?|pptx?|xlsx?|odt|odp|ods|key|pages|numbers|rtf)$/i;
+const isOffice=d=>OFFICE_RX.test(d.fileName||'');
+function officeApp(d){ const e=((d.fileName||'').split('.').pop()||'').toLowerCase(); return /^doc|odt|pages|rtf/.test(e)?'Word':/^ppt|odp|key/.test(e)?'PowerPoint':/^xls|ods|numbers/.test(e)?'Excel':'Office'; }
+const OFFICE_MIME={docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',pptx:'application/vnd.openxmlformats-officedocument.presentationml.presentation',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',doc:'application/msword',ppt:'application/vnd.ms-powerpoint',xls:'application/vnd.ms-excel',odt:'application/vnd.oasis.opendocument.text',odp:'application/vnd.oasis.opendocument.presentation',ods:'application/vnd.oasis.opendocument.spreadsheet',rtf:'application/rtf'};
+async function unzipEntries(buf,want){ const dv=new DataView(buf); let eocd=-1; for(let i=buf.byteLength-22;i>=Math.max(0,buf.byteLength-66000);i--){ if(dv.getUint32(i,true)===0x06054b50){ eocd=i; break; } } if(eocd<0) return {};
+  const cnt=dv.getUint16(eocd+10,true); let off=dv.getUint32(eocd+16,true); const out={}; const dec=new TextDecoder();
+  for(let n=0;n<cnt;n++){ if(off+46>buf.byteLength||dv.getUint32(off,true)!==0x02014b50) break; const method=dv.getUint16(off+10,true), csize=dv.getUint32(off+20,true), nlen=dv.getUint16(off+28,true), elen=dv.getUint16(off+30,true), clen=dv.getUint16(off+32,true), lho=dv.getUint32(off+42,true);
+    const name=dec.decode(new Uint8Array(buf,off+46,nlen)); off+=46+nlen+elen+clen; if(!want(name)) continue;
+    const lnlen=dv.getUint16(lho+26,true), lelen=dv.getUint16(lho+28,true); const data=new Uint8Array(buf,lho+30+lnlen+lelen,csize);
+    try{ let bytes; if(method===0) bytes=data; else if(method===8&&typeof DecompressionStream!=='undefined'){ bytes=new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer()); } else continue; out[name]=dec.decode(bytes); }catch(e){} }
+  return out; }
+const xmlText=x=>String(x||'').replace(/<\/(w:p|a:p|text:p|text:h|si|row)>/g,'\n').replace(/<(w:tab|w:br|a:br|text:tab|text:line-break)[^>]*\/>/g,' ').replace(/<[^>]+>/g,'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&amp;/g,'&').replace(/[ \t]+/g,' ').replace(/\n\s*\n+/g,'\n').trim();
+async function officeInfo(file){ const e=(file.name.split('.').pop()||'').toLowerCase(); const r={pages:0,text:''};
+  try{ const buf=await file.arrayBuffer();
+    if(e==='docx'){ const z=await unzipEntries(buf,n=>n==='word/document.xml'||n==='docProps/app.xml'); r.text=xmlText(z['word/document.xml']); const p=(z['docProps/app.xml']||'').match(/<Pages>(\d+)<\/Pages>/); r.pages=p?+p[1]:Math.max(1,Math.ceil(r.text.length/2800)); }
+    else if(e==='pptx'){ const z=await unzipEntries(buf,n=>/^ppt\/slides\/slide\d+\.xml$/.test(n)); const ks=Object.keys(z).sort((a,b)=>parseInt(a.match(/\d+/))-parseInt(b.match(/\d+/))); r.pages=ks.length; r.text=ks.map((k,i)=>'Folie '+(i+1)+': '+xmlText(z[k]).replace(/\n/g,' · ')).join('\n'); }
+    else if(e==='xlsx'){ const z=await unzipEntries(buf,n=>n==='xl/sharedStrings.xml'||/^xl\/worksheets\/sheet\d+\.xml$/.test(n)); r.pages=Object.keys(z).filter(k=>k.includes('worksheets')).length||1; r.text=xmlText(z['xl/sharedStrings.xml']).replace(/\n/g,' · '); if(!r.text) r.text=Object.keys(z).filter(k=>k.includes('worksheets')).sort().map(k=>xmlText(String(z[k]).replace(/<\/c>/g,' | </c>'))).join('\n').replace(/\|\s*\n/g,'\n'); }
+    else if(/^od[tps]$/.test(e)){ const z=await unzipEntries(buf,n=>n==='content.xml'); r.text=xmlText(z['content.xml']); r.pages=e==='odp'?((z['content.xml']||'').match(/<draw:page\b/g)||[]).length:1; }
+  }catch(err){}
+  r.text=r.text.slice(0,4000); return r; }
+async function shareDoc(id){ const d=S.docs[id]; if(!d||d.kind!=='file') return; const b=await fileBlob(d); if(!b){ toast('Datei ist auf diesem Gerät nicht vorhanden'); return; }
+  const name=d.fileName||d.titel; const type=b.type||d.mime||OFFICE_MIME[(name.split('.').pop()||'').toLowerCase()]||'application/octet-stream'; const f=new File([b],name,{type});
+  if(!ENV.downloads&&navigator.canShare){ try{ if(navigator.canShare({files:[f]})){ await navigator.share({files:[f],title:name}); return; } }catch(e){ if(e&&e.name==='AbortError') return; } }
+  await saveFile(name,b,type); }
+function attachFileToDoc(id){ const inp=document.createElement('input'); inp.type='file'; inp.className='vh'; document.body.appendChild(inp);
+  inp.onchange=async()=>{ const f=inp.files[0]; inp.remove(); if(!f) return; const d=clone(S.docs[id]); const st=await storeBlob(f,f.name); const info=OFFICE_RX.test(f.name)?await officeInfo(f):(/\.pdf$/i.test(f.name)?await pdfInfo(await f.arrayBuffer()):{pages:0,text:''});
+    delete d._fehlt; delete d.ort; delete d.fileId; delete d.assetId; delete d.url; Object.assign(d,{kind:'file',fileName:f.name,mime:f.type||OFFICE_MIME[(f.name.split('.').pop()||'').toLowerCase()]||'',size:f.size,seiten:info.pages||d.seiten||0,snippet:info.text||d.snippet||''},st);
+    save('docs',d); closeModal(); openDoc(id); toast('Datei gespeichert – sie wird jetzt mit synchronisiert'); };
+  inp.click(); }
+
 /* ================= PowerPoint zur Stunde ================= */
 let pptxP=null;
 function loadPptx(){ if(window.PptxGenJS) return Promise.resolve(window.PptxGenJS); if(pptxP) return pptxP;
@@ -2125,6 +2159,8 @@ const ACT={
   exportBackup:o=>exportBackup(o.files==='1'),
   abgleich:()=>openAbgleich(),
   pptStunde:()=>openPptTool(),
+  shareDoc:o=>shareDoc(o.id),
+  attachFile:o=>attachFileToDoc(o.id),
   ghSetup:()=>openGhSetup(),
   ghSyncNow:(o,el,e)=>{ if(e) e.preventDefault(); ghSync({force:true}).then(ok=>toast(ok?'Synchronisiert':'Synchronisation fehlgeschlagen: '+GH.err)); },
   termin:(o,el,e)=>{ if(e) e.preventDefault(); const t=S.termine[o.id]; if(t){ if(modalStack.length) closeModal(); openTerminEditor(t); } },
